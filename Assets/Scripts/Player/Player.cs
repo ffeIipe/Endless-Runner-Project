@@ -9,15 +9,16 @@ namespace Player
         private Model _model;
         private Controller _controller;
         private View _view;
-        
-        private void Awake()
+
+        protected override void Awake()
         {
-            print("Awake from " + name);
+            base.Awake();
+            
+            Cursor.lockState = CursorLockMode.Locked;
+            
             _model = new Model(this, entityData);
-            
             _controller = new Controller(_model);
-            
-            _view = new View();
+            _view = new View(_model);
         }
         
         protected void Update()

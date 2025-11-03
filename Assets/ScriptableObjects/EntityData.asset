@@ -14,5 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 100
   damage: 50
-  speed: 0.1
-  jumpForce: 1
+  acceleration: 50
+  maxSpeed: 20
+  jumpForce: 10
+  mouseSensitivity: 500
+  jumpMinDistanceAttempt: 0.35
+  slideForce: 50
