@@ -4,14 +4,14 @@ namespace Entities.MVC
 {
     public class Controller
     {
-        private Model _model;
+        private readonly Model _model;
         
         public Controller(Model model)
         {
             _model = model;
         }
         
-        public void ExecuteController()
+        public void Execute()
         {
             if (Input.GetKeyDown(KeyCode.Space) && _model.IsGrounded())
                 _model.Jump();
@@ -23,11 +23,11 @@ namespace Entities.MVC
                 _model.ResetSlide();
             
             _model.Look();
-            /*_model.IsGrounded();*/
         }
 
-        public void ExecuteFixedController()
+        public void FixedExecute()
         {
+            _model.ApplyGravity();
             _model.Move();
         }
     }

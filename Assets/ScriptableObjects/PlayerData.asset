@@ -10,13 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 93321df2b9c1481ea7b54068ee11fb69, type: 3}
-  m_Name: EntityData
+  m_Name: PlayerData
   m_EditorClassIdentifier: 
   health: 100
   damage: 50
   acceleration: 50
-  maxSpeed: 20
-  jumpForce: 10
+  maxSpeed: 40
+  jumpForce: 100
   mouseSensitivity: 500
   jumpMinDistanceAttempt: 0.35
   slideForce: 50

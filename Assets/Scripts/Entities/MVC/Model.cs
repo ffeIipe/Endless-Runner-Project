@@ -6,9 +6,11 @@ namespace Entities.MVC
     public class Model
     {
         private readonly Entity _owner;
+        private readonly CharacterController _characterController;
         private readonly EntityData _entityData;
 
-        private Vector3 _lastMaxSpeed;
+        private Vector3 _currentStrafeVelocity;
+        private Vector3 _currentForwardVelocity;
         
         private readonly Vector3 _localScale;
         private bool _isSliding;
@@ -16,6 +18,7 @@ namespace Entities.MVC
         private readonly Camera _camera;
         private float _xRotation;
         private float _mouseSensitivity;
+        private const float Gravity = -9.81f;
 
         public Model(Entity owner, EntityData entityData)
         {
@@ -24,23 +27,25 @@ namespace Entities.MVC
             _mouseSensitivity = entityData.mouseSensitivity;
             _localScale = _owner.transform.localScale;
             _camera = Camera.main;
+            _characterController = _owner.GetComponent<CharacterController>();
         }
 
-        private Vector3 _currentStrafeVelocity;
-        private Vector3 _currentForwardVelocity;
-
+        public void ApplyGravity()
+        {
+            var gravity = Vector3.down * (Gravity * Time.fixedDeltaTime);
+            _owner.transform.position += gravity;
+        }
+        
         public void Move()
         {
             var horizontalInput = Input.GetAxisRaw("Horizontal");
             var verticalInput = Input.GetAxisRaw("Vertical");
 
-            var camForward = _camera.transform.forward;
-            var camRight = _camera.transform.right;
-            /*camForward.y = 0f;
-            camRight.y = 0f;*/
+            var forwardVec = _owner.transform.forward;
+            var rightVec = _owner.transform.right;
 
-            var targetForwardVelocity = camForward * (verticalInput * _entityData.maxSpeed);
-            var targetStrafeVelocity = camRight * (horizontalInput * _entityData.maxSpeed);
+            var targetForwardVelocity = forwardVec * (verticalInput * _entityData.maxSpeed);
+            var targetStrafeVelocity = rightVec * (horizontalInput * _entityData.maxSpeed);
 
             _currentForwardVelocity = Vector3.MoveTowards(
                 _currentForwardVelocity,
@@ -60,17 +65,19 @@ namespace Entities.MVC
             {
                 finalHorizontalVelocity = finalHorizontalVelocity.normalized * _entityData.maxSpeed;
             }
-
-            _owner.GetRigidbody().velocity = new Vector3(
+            
+            var finalForce = new Vector3(
                 finalHorizontalVelocity.x,
-                _owner.GetRigidbody().velocity.y,
+                0,
                 finalHorizontalVelocity.z
             );
+            
+            _characterController.Move(finalForce * Time.fixedDeltaTime);
         }
         
         public void Jump()
         {
-            _owner.GetRigidbody().AddForce(Vector3.up * _entityData.jumpForce, ForceMode.Impulse);
+            _characterController.Move(Vector3.up * _entityData.jumpForce);
         }
 
         public bool IsGrounded()
@@ -124,14 +131,9 @@ namespace Entities.MVC
             _owner.transform.Rotate(Vector3.up * mouseX);
         }
 
-        private void Pick()
+        public void ThrowAxe()
         {
-
-        }
-
-        private void Interact()
-        {
-
+            
         }
     }
 }
