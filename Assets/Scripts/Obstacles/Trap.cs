@@ -18,7 +18,7 @@ namespace Obstacles
         {
             if (trigger != null)
             {
-                trigger.OnPlayerEnter += RotateHinge;
+                trigger.OnTriggered += RotateHinge;
             }
             else
             {
@@ -35,7 +35,7 @@ namespace Obstacles
             }
         }
 
-        private void RotateHinge(Collider obj)
+        private void RotateHinge()
         {
             if (_wasTriggered) return;
             _wasTriggered = true;

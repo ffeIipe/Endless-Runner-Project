@@ -5,7 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider))]
 public class Trigger : MonoBehaviour
 {
-    public event Action<Collider> OnPlayerEnter = delegate { };
+    [SerializeField] private string triggerName; 
+    public event Action OnTriggered = delegate { };
 
     protected virtual void Awake()
     {
@@ -14,9 +15,9 @@ public class Trigger : MonoBehaviour
 
     protected void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("Player"))
+        if (other.gameObject.CompareTag(triggerName))
         {
-            OnPlayerEnter.Invoke(other);  
+            OnTriggered.Invoke();  
         }
     }
 }

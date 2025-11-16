@@ -1,7 +1,7 @@
 using Interfaces;
 using UnityEngine;
 
-public class DamageBox : Trigger
+public class DamageBox : MonoBehaviour
 {
     private float _damage;
     
@@ -10,16 +10,25 @@ public class DamageBox : Trigger
         _damage = damage;
     }
     
-    protected override void Awake()
+    protected void Awake()
     {
-        base.Awake();
+        GetComponent<BoxCollider>().isTrigger = true;
+    }
 
-        OnPlayerEnter += Damage;
+    private void OnCollisionEnter(Collision other)
+    {
+        var hittable = other.gameObject.GetComponentInParent<IHittable>();
+
+        if (_damage == 0f)
+        {
+            Debug.Log("Damage equals zero");
+        }
+        hittable?.TakeDamage(_damage);
     }
     
-    private void Damage(Collider obj)
+    private void OnTriggerEnter(Collider other)
     {
-        var hittable = obj.gameObject.GetComponentInParent<IHittable>();
+        var hittable = other.gameObject.GetComponentInParent<IHittable>();
 
         if (_damage == 0f)
         {

@@ -1,0 +1,7 @@
+ Platform. Debe contener como mínimo:
+ a. 3 tipos de enemigos (No pueden estar precargados en escenas).
+ b. 3 tipos de powerUPs.
+ c. 3 Niveles distintos.
+ 
+ 
+ Cambiar trigger via player, por trigger via bullet

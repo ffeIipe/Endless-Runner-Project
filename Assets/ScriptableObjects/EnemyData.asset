@@ -12,11 +12,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 93321df2b9c1481ea7b54068ee11fb69, type: 3}
   m_Name: EnemyData
   m_EditorClassIdentifier: 
-  health: 0
+  health: 100
   damage: 0
   acceleration: 0
   maxSpeed: 0
-  jumpForce: 0
-  mouseSensitivity: 0
+  jumpHeight: 0
+  jumpDuration: 0
+  jumpCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   jumpMinDistanceAttempt: 0
-  slideForce: 0
+  slideDistance: 0
+  slideDuration: 0
+  slideCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  mouseSensitivity: 0
+  team: 0

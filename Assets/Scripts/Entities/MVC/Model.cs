@@ -1,3 +1,5 @@
+using System.Collections;
+using Factories;
 using Scriptables;
 using UnityEngine;
 
@@ -9,6 +11,8 @@ namespace Entities.MVC
         private readonly CharacterController _characterController;
         private readonly EntityData _entityData;
 
+        private Vector3 _lastMovementVector;
+        
         private Vector3 _currentStrafeVelocity;
         private Vector3 _currentForwardVelocity;
         
@@ -33,9 +37,9 @@ namespace Entities.MVC
         public void ApplyGravity()
         {
             var gravity = Vector3.down * (Gravity * Time.fixedDeltaTime);
-            _owner.transform.position += gravity;
+            _characterController.Move(-gravity);
         }
-        
+
         public void Move()
         {
             var horizontalInput = Input.GetAxisRaw("Horizontal");
@@ -59,25 +63,44 @@ namespace Entities.MVC
                 _entityData.acceleration * Time.fixedDeltaTime
             );
 
-            var finalHorizontalVelocity = _currentForwardVelocity + _currentStrafeVelocity;
+            var finalVelocity = _currentForwardVelocity + _currentStrafeVelocity;
 
-            if (finalHorizontalVelocity.magnitude > _entityData.maxSpeed && !_isSliding)
+            if (finalVelocity.magnitude > _entityData.maxSpeed && !_isSliding)
             {
-                finalHorizontalVelocity = finalHorizontalVelocity.normalized * _entityData.maxSpeed;
+                finalVelocity = finalVelocity.normalized * _entityData.maxSpeed;
             }
-            
+
             var finalForce = new Vector3(
-                finalHorizontalVelocity.x,
+                finalVelocity.x,
                 0,
-                finalHorizontalVelocity.z
+                finalVelocity.z
             );
-            
+
             _characterController.Move(finalForce * Time.fixedDeltaTime);
+
+            _lastMovementVector = finalVelocity.normalized;
         }
-        
-        public void Jump()
+
+        public IEnumerator Jump()
         {
-            _characterController.Move(Vector3.up * _entityData.jumpForce);
+            var timer = 0f;
+            var lastCurveValue = 0f;
+
+            while (timer < _entityData.jumpDuration)
+            {
+                timer += Time.deltaTime;
+
+                var percent = timer / _entityData.jumpDuration;
+                var curveValue = _entityData.jumpCurve.Evaluate(percent) * _entityData.jumpHeight;
+                var moveDeltaY = (curveValue - lastCurveValue);
+                var moveVector = new Vector3(0, moveDeltaY, 0);
+
+                _characterController.Move(moveVector);
+
+                lastCurveValue = curveValue;
+
+                yield return null;
+            }
         }
 
         public bool IsGrounded()
@@ -96,24 +119,43 @@ namespace Entities.MVC
             );
         }
 
-        public void Slide()
+        public IEnumerator Slide()
         {
-            _isSliding = true;
-            var direction = _camera.transform.forward;
+            if (_isSliding) yield break;
             
-            var force = direction * _entityData.slideForce;
-            _owner.GetRigidbody().AddForce(force, ForceMode.VelocityChange);
+            _isSliding = true;
             
             var newScale = new Vector3(
                 _owner.transform.localScale.x,
                 _owner.transform.localScale.y / 2f,
                 _owner.transform.localScale.z
             );
-
+            
             _owner.transform.localScale = newScale;
+            
+            var timer = 0f;
+            var lastCurveValue = 0f;
+            var previousLastMovementVector = _lastMovementVector;
+                
+            while (timer < _entityData.slideDuration)
+            {
+                timer += Time.deltaTime;
+
+                var percent = timer / _entityData.slideDuration;
+                var curveValue = _entityData.slideCurve.Evaluate(percent) * _entityData.slideDistance;
+                var moveDeltaX = curveValue - lastCurveValue;
+
+                _characterController.Move(previousLastMovementVector * moveDeltaX);
+
+                lastCurveValue = curveValue;
+
+                yield return null;
+            }
+            
+            ResetSlide();
         }
 
-        public void ResetSlide()
+        private void ResetSlide()
         {
             _owner.transform.localScale = _localScale;
             _isSliding = false;
@@ -133,7 +175,9 @@ namespace Entities.MVC
 
         public void ThrowAxe()
         {
-            
+            var bullet = BulletFactory.Instance.SpawnBullet(_owner.handPoint, _owner);
+            var finalForce = _currentForwardVelocity +  _currentStrafeVelocity;
+            bullet.Fire(_owner.handPoint.forward, _owner.transform.rotation,finalForce * 0.5f);
         }
     }
 }

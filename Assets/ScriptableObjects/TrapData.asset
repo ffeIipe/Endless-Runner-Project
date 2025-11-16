@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ccbb2a4c36f4c1ba68e76559f8fa2dd, type: 3}
   m_Name: TrapData
   m_EditorClassIdentifier: 
-  damageBoxSize: 0.8
+  damageBoxSize: 1.46
   rotationAngle: 90
-  rotationDuration: 0.4
+  rotationDuration: 0.2
   damage: 100

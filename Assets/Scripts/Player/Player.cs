@@ -21,7 +21,7 @@ namespace Player
             _characterController.center = new Vector3 (0f, GetComponentInChildren<CapsuleCollider>().height * 0.5f, 0f);
             
             _model = new Model(this, entityData);
-            _controller = new Controller(_model);
+            _controller = new Controller(_model, StartCoroutine);
             _view = new View(_model);
            
             Cursor.lockState = CursorLockMode.Locked;

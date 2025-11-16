@@ -1,4 +1,5 @@
 using System;
+using Entities.PowerUps;
 
 namespace Components
 {
@@ -32,6 +33,13 @@ namespace Components
 
             if (_health <= 0)
                 OnDead.Invoke();
+        }
+
+        public void IncreaseHealth(float health)
+        {
+            _health += health;
+            if (_health > _maxHealth)
+                _health = _maxHealth;
         }
     }
 }
