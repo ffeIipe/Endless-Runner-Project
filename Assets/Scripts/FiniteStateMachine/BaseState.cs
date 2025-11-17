@@ -1,21 +1,24 @@
+using Components;
+using Entities;
+using Scriptables;
 using UnityEngine.AI;
 
 namespace FiniteStateMachine
 {
     public abstract class BaseState
     {
-        public static bool isIdle;
-        public static bool isPatrol;
-        public static bool isAttacking;
-        public static bool isTeleporting = false;
+        protected readonly FSM FSM;
+        protected readonly NavMeshAgent Agent;
+        protected readonly VisionComponent VisionComponent;
+        protected readonly EnemyData EnemyData;
 
-        protected FSM FSM;
-        protected NavMeshAgent Agent;
-
-        public BaseState(FSM fsm,  NavMeshAgent agent)
+        protected BaseState(FSM fsm, NavMeshAgent agent)
         {
             FSM = fsm;
             Agent = agent;
+            
+            EnemyData = (EnemyData)FSM.Owner.GetData();
+            VisionComponent = FSM.Owner.GetVisionComponent();
         }
 
         public abstract void EnterState();

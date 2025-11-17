@@ -1,16 +1,22 @@
 using FiniteStateMachine.States;
 using Pool;
+using Scriptables;
 
 namespace Entities.Enemies
 {
     public class Viking : Enemy, IPoolable
     {
+        private CountdownTimer _deadTimer;
+        
         protected override void Awake()
         {
             base.Awake();
+
+            _deadTimer = new CountdownTimer(5f);
+            _deadTimer.OnTimerStop += Deactivate;
             
             GetFSM().CreateState("Idle", new IdleState(GetFSM(), GetNavMeshAgent()));
-            GetFSM().CreateState("Chase", new ChaseState(GetFSM(), GetNavMeshAgent()));
+            GetFSM().CreateState("Chase", new ChaseState(GetFSM(), GetNavMeshAgent(), EnemyData));
             GetFSM().CreateState("Attack", new AttackState(GetFSM(), GetNavMeshAgent()));
             
             GetFSM().ChangeState("Idle");
@@ -24,7 +30,12 @@ namespace Entities.Enemies
         protected override void Dead()
         {
             base.Dead();
-            Deactivate();
+            
+            GetNavMeshAgent().enabled = false;
+            
+            GetFSM().Enabled  = false;
+            
+            _deadTimer.Start();
         }
         
         public void Activate()
@@ -40,12 +51,6 @@ namespace Entities.Enemies
         public void Deactivate()
         {
             gameObject.SetActive(false);
-            
-            //GetNavMeshAgent().isStopped = true;
-            GetNavMeshAgent().enabled = false;
-            
-            GetFSM().ChangeState("Idle");
-            GetFSM().Enabled = false;
         }
     }
 }

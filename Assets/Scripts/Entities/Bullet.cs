@@ -12,6 +12,7 @@ namespace Entities
     {
         [SerializeField] private BulletData bulletData;
         private Rigidbody _rigidbody;
+        private Collider _collider;
         private Entity _owner;
         private Team _ownerTeam;
         private Vector3 _direction;
@@ -20,6 +21,7 @@ namespace Entities
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            _collider = GetComponent<Collider>();
         }
 
         private void FixedUpdate()
@@ -33,13 +35,18 @@ namespace Entities
         public void Activate()
         {
             _rigidbody.isKinematic = false;
+            _collider.enabled = true;
             _isMovementStopped = false;
+            
             gameObject.SetActive(true);
         }
 
         public void Deactivate()
         {
             gameObject.SetActive(false);
+            
+            transform.parent = null;
+            
             _rigidbody.isKinematic = true;
         }
 
@@ -65,15 +72,21 @@ namespace Entities
 
         private void OnCollisionEnter(Collision collision)
         {
+            var entity = collision.collider.GetComponentInParent<Entity>();
+            if (entity == _owner) return;
+            
             _isMovementStopped = true;
             _rigidbody.isKinematic = true;
+            _collider.enabled = false;
             
-            var entity = collision.collider.GetComponentInParent<Entity>();
             if (entity == null) return;
 
             if (entity.GetTeam() != _ownerTeam)
             {
+                transform.SetParent(entity.transform);
                 entity.TakeDamage(bulletData.damage);
+                
+                entity.GetRigidbody().AddForce(_direction.normalized * bulletData.bulletForce, ForceMode.Impulse);
             }
         }
     }

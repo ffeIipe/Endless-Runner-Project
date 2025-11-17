@@ -6,6 +6,8 @@ using UnityEngine;
 public class Trigger : MonoBehaviour
 {
     [SerializeField] private string triggerName; 
+    
+    private bool _bWasTriggered;
     public event Action OnTriggered = delegate { };
 
     protected virtual void Awake()
@@ -15,6 +17,9 @@ public class Trigger : MonoBehaviour
 
     protected void OnTriggerEnter(Collider other)
     {
+        if (_bWasTriggered) return;
+            _bWasTriggered = true;
+        
         if (other.gameObject.CompareTag(triggerName))
         {
             OnTriggered.Invoke();  

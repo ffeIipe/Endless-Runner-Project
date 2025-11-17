@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Entities.Enemies;
 
 namespace FiniteStateMachine
 {
@@ -6,11 +7,14 @@ namespace FiniteStateMachine
     {
         public bool Enabled = true;
     
+        public readonly Enemy Owner;
+        
         private Dictionary<string, BaseState> _states;
         private BaseState _actualState;
 
-        public FSM()
+        public FSM(Enemy owner)
         {
+            Owner = owner;
             _states = new Dictionary<string, BaseState>();
         }
     

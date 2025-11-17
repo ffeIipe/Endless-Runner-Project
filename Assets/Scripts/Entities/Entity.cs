@@ -6,16 +6,26 @@ using UnityEngine;
 
 namespace Entities
 {
+    [RequireComponent(typeof(Rigidbody))]
     public abstract class Entity : MonoBehaviour, IHittable, ITeammate
     {
         public EntityData entityData;
         public Transform handPoint;
         
+        private Rigidbody _rigidbody;
+        
         private AttributesComponent _attributesComponent;
         private TeamComponent _teamComponent;
         
+        public AttributesComponent GetAttributesComponent() => _attributesComponent;
+        public Team GetTeam() => _teamComponent.GetCurrentTeam();
+        public Rigidbody GetRigidbody() => _rigidbody;
+        
         protected virtual void Awake()
         {
+            _rigidbody = GetComponent<Rigidbody>();
+            _rigidbody.isKinematic = true;
+            
             _attributesComponent = new AttributesComponent(entityData.health, 0f);
             _attributesComponent.OnDead += Dead;
             
@@ -29,10 +39,8 @@ namespace Entities
 
         protected virtual void Dead()
         {
-            Debug.Log("Dead");
+            _rigidbody.isKinematic = false;
+            _rigidbody.constraints = RigidbodyConstraints.None;
         }
-        
-        public AttributesComponent GetAttributesComponent() => _attributesComponent;
-        public Team GetTeam() => _teamComponent.GetCurrentTeam();
     }
 }

@@ -15,7 +15,7 @@ namespace Obstacles
             
             _spawnPoints = new List<SpawnPoint>();
             
-            var spawnPointsInChildren = GetComponentsInChildren<SpawnPoint>();
+            var spawnPointsInChildren = gameObject.GetComponentsInChildren<SpawnPoint>();
             foreach (var spawnPoint in spawnPointsInChildren)
             {
                 _spawnPoints.Add(spawnPoint);
