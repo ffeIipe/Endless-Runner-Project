@@ -10,11 +10,16 @@ namespace Player
         private Controller _controller;
         private View _view;
         private CharacterController _characterController;
+        private bool _enabled;
 
+        public CharacterController GetCharacterController() => _characterController;
+        
         protected override void Awake()
         {
             base.Awake();
 
+            _enabled = true;
+            
             _characterController = GetComponent<CharacterController>();
             _characterController.stepOffset = 0;
             _characterController.skinWidth = 0;
@@ -23,20 +28,43 @@ namespace Player
             _model = new Model(this, entityData);
             _controller = new Controller(_model, StartCoroutine);
             _view = new View(_model);
-           
-            Cursor.lockState = CursorLockMode.Locked;
+        }
+
+        protected override void Dead()
+        {
+            base.Dead();
+            
+            _characterController.enabled = false;
         }
 
         protected void Update()
         {
-            _controller.Execute();
+            if (_enabled)
+            {
+                _controller.Execute();
+            }
         }
 
         protected void FixedUpdate()
         {
-            _controller.FixedExecute();
+            if (_enabled)
+            {
+                _controller.FixedExecute();
+            }
         }
 
-        public CharacterController GetCharacterController() => _characterController;
+        public override void PauseEntity(bool pause)
+        {
+            base.PauseEntity(pause);
+
+            if (pause)
+            {
+                _enabled = false;
+            }
+            else
+            {
+                _enabled = true;
+            }
+        }
     }
 }

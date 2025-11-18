@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using Enums;
+using ScreenManagerFolder;
 using UnityEngine;
 
 namespace Entities.MVC
@@ -25,6 +27,9 @@ namespace Entities.MVC
             
             if (Input.GetKeyDown(KeyCode.Mouse0))
                 _model.ThrowAxe();
+
+            if (Input.GetKeyDown(KeyCode.Escape))
+                _model.Pause();
             
             _model.Look();
         }

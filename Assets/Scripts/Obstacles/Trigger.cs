@@ -3,19 +3,19 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(BoxCollider))]
-public class Trigger : MonoBehaviour
+public sealed class Trigger : MonoBehaviour
 {
     [SerializeField] private string triggerName; 
     
     private bool _bWasTriggered;
     public event Action OnTriggered = delegate { };
 
-    protected virtual void Awake()
+    private void Awake()
     {
         GetComponent<BoxCollider>().isTrigger = true;
     }
 
-    protected void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collider other)
     {
         if (_bWasTriggered) return;
             _bWasTriggered = true;

@@ -36,8 +36,7 @@ public class EnemyFactory : MonoBehaviour
     public Enemy SpawnEnemy(Transform origin)
     {
         var newEnemy = _enemyPool.GetObject();
-        newEnemy.GetNavMeshAgent().transform.SetPositionAndRotation(origin.position, origin.rotation);
-            
+        newEnemy.transform.SetLocalPositionAndRotation(origin.position, origin.rotation);    
         newEnemy.GetComponent<IPoolable>()?.Activate();
             
         return newEnemy;

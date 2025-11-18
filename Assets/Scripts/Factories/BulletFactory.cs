@@ -1,5 +1,6 @@
 using System.Collections;
 using Entities;
+using Managers;
 using Pool;
 using Scriptables;
 using UnityEngine;
@@ -44,14 +45,25 @@ namespace Factories
             newBullet.GetComponent<IPoolable>()?.Activate();
             newBullet.SetOwner(owner);
             
-            StartCoroutine(ReleaseAfterTime(newBullet));
+            StartCoroutine(ReleaseAfterTime(newBullet, 5f));
             
             return newBullet;
         }
 
-        private IEnumerator ReleaseAfterTime(Bullet newBullet)
+        private IEnumerator ReleaseAfterTime(Bullet newBullet, float time)
         {
-            yield return new WaitForSeconds(5f);
+            float elapsedTime = 0;
+            while (elapsedTime < time)
+            {
+                if (!GameManager.isPaused)
+                {
+                    elapsedTime += Time.deltaTime;
+                    yield return null;
+                }
+
+                yield return null;
+            }
+            
             _bulletPool.ReturnObjectToPool(newBullet);
         }
     }

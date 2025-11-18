@@ -63,7 +63,7 @@ Material:
     - _ZWrite: 1
     - _ZWriteControl: 0
     m_Colors:
-    - _BaseColor: {r: 1, g: 1, b: 1, a: 0}
+    - _BaseColor: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 0}
     - _DissolveColor: {r: 0, g: 0.8018019, b: 1, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &287579399872719567

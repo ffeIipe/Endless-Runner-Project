@@ -62,7 +62,7 @@ namespace Components
 
                     var entity = collider.GetComponentInParent<Entity>();
             
-                    return entity && entity.GetTeam() != _ownerTeam;
+                    return entity && entity.GetTeam() != _ownerTeam && entity.GetAttributesComponent().IsAlive();
                 })
                 .ToList();
     

@@ -1,5 +1,8 @@
 using System.Collections;
+using Enums;
 using Factories;
+using Managers;
+using ScreenManagerFolder;
 using Scriptables;
 using UnityEngine;
 
@@ -88,17 +91,20 @@ namespace Entities.MVC
 
             while (timer < _entityData.jumpDuration)
             {
-                timer += Time.deltaTime;
+                if (!GameManager.isPaused) //HELP: this is valid to do?
+                {
+                    timer += Time.deltaTime;
 
-                var percent = timer / _entityData.jumpDuration;
-                var curveValue = _entityData.jumpCurve.Evaluate(percent) * _entityData.jumpHeight;
-                var moveDeltaY = (curveValue - lastCurveValue);
-                var moveVector = new Vector3(0, moveDeltaY, 0);
+                    var percent = timer / _entityData.jumpDuration;
+                    var curveValue = _entityData.jumpCurve.Evaluate(percent) * _entityData.jumpHeight;
+                    var moveDeltaY = (curveValue - lastCurveValue);
+                    var moveVector = new Vector3(0, moveDeltaY, 0);
 
-                _characterController.Move(moveVector);
+                    _characterController.Move(moveVector);
 
-                lastCurveValue = curveValue;
-
+                    lastCurveValue = curveValue;
+                }
+                
                 yield return null;
             }
         }
@@ -139,15 +145,18 @@ namespace Entities.MVC
                 
             while (timer < _entityData.slideDuration)
             {
-                timer += Time.deltaTime;
+                if (!GameManager.isPaused)
+                {
+                    timer += Time.deltaTime;
 
-                var percent = timer / _entityData.slideDuration;
-                var curveValue = _entityData.slideCurve.Evaluate(percent) * _entityData.slideDistance;
-                var moveDeltaX = curveValue - lastCurveValue;
+                    var percent = timer / _entityData.slideDuration;
+                    var curveValue = _entityData.slideCurve.Evaluate(percent) * _entityData.slideDistance;
+                    var moveDeltaX = curveValue - lastCurveValue;
 
-                _characterController.Move(previousLastMovementVector * moveDeltaX);
+                    _characterController.Move(previousLastMovementVector * moveDeltaX);
 
-                lastCurveValue = curveValue;
+                    lastCurveValue = curveValue;
+                }
 
                 yield return null;
             }
@@ -178,6 +187,12 @@ namespace Entities.MVC
             var bullet = BulletFactory.Instance.SpawnBullet(_owner.handPoint, _owner);
             var finalForce = _currentForwardVelocity +  _currentStrafeVelocity;
             bullet.Fire(_owner.handPoint.forward, _owner.transform.rotation,finalForce * 0.5f);
+        }
+
+        public void Pause()
+        {
+            ScreenManager.Instance.PushScreen(ScreenType.PauseMenu, false);
+            GameManager.Instance.TogglePause();
         }
     }
 }

@@ -1,6 +1,5 @@
 using FiniteStateMachine.States;
 using Pool;
-using Scriptables;
 
 namespace Entities.Enemies
 {
@@ -15,9 +14,9 @@ namespace Entities.Enemies
             _deadTimer = new CountdownTimer(5f);
             _deadTimer.OnTimerStop += Deactivate;
             
-            GetFSM().CreateState("Idle", new IdleState(GetFSM(), GetNavMeshAgent()));
-            GetFSM().CreateState("Chase", new ChaseState(GetFSM(), GetNavMeshAgent(), EnemyData));
-            GetFSM().CreateState("Attack", new AttackState(GetFSM(), GetNavMeshAgent()));
+            GetFSM().CreateState("Idle", new IdleState(GetFSM()));
+            GetFSM().CreateState("Chase", new ChaseState(GetFSM()));
+            GetFSM().CreateState("Attack", new AttackState(GetFSM()));
             
             GetFSM().ChangeState("Idle");
         }
@@ -31,8 +30,6 @@ namespace Entities.Enemies
         {
             base.Dead();
             
-            GetNavMeshAgent().enabled = false;
-            
             GetFSM().Enabled  = false;
             
             _deadTimer.Start();
@@ -40,9 +37,9 @@ namespace Entities.Enemies
         
         public void Activate()
         {
+            RemoveDissolveEffect();
+            GetRigidbody().constraints = SavedRigidbodyConstraints;
             gameObject.SetActive(true);
-            
-            GetNavMeshAgent().enabled = true;
             
             GetFSM().ChangeState("Idle");
             GetFSM().Enabled = true;
@@ -50,7 +47,7 @@ namespace Entities.Enemies
 
         public void Deactivate()
         {
-            gameObject.SetActive(false);
+            ApplyDissolveEffect();
         }
     }
 }

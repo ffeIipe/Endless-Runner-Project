@@ -16,5 +16,8 @@ namespace Scriptables
         public LayerMask targetLayer;
         public LayerMask obstacleLayer;
         public int maxTargets;
+        
+        [Header("Effects Settings")]
+        public float dissolveEffectDuration;
     }
 }

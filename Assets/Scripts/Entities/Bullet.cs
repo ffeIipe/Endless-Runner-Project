@@ -1,6 +1,7 @@
 using System;
 using Enums;
 using Interfaces;
+using Managers;
 using Pool;
 using Scriptables;
 using UnityEngine;
@@ -8,7 +9,7 @@ using UnityEngine;
 namespace Entities
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class Bullet : MonoBehaviour, IPoolable
+    public class Bullet : MonoBehaviour, IPoolable, IPausable
     {
         [SerializeField] private BulletData bulletData;
         private Rigidbody _rigidbody;
@@ -22,6 +23,8 @@ namespace Entities
         {
             _rigidbody = GetComponent<Rigidbody>();
             _collider = GetComponent<Collider>();
+            
+            EventManager.Instance.gameEvents.Pause += PauseEntity;
         }
 
         private void FixedUpdate()
@@ -87,6 +90,20 @@ namespace Entities
                 entity.TakeDamage(bulletData.damage);
                 
                 entity.GetRigidbody().AddForce(_direction.normalized * bulletData.bulletForce, ForceMode.Impulse);
+            }
+        }
+
+        public void PauseEntity(bool pause)
+        {
+            if (pause)
+            {
+                _rigidbody.isKinematic = true;
+                _isMovementStopped = true;
+            }
+            else
+            {
+                _rigidbody.isKinematic = false;
+                _isMovementStopped = false;
             }
         }
     }

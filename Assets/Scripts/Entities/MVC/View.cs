@@ -8,5 +8,10 @@ namespace Entities.MVC
         {
             _model = model;
         }
+
+        public void OnEntityDead()
+        {
+            
+        }
     }
 }

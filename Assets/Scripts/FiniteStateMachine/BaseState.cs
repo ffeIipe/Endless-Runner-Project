@@ -1,5 +1,6 @@
 using Components;
 using Entities;
+using Entities.Enemies;
 using Scriptables;
 using UnityEngine.AI;
 
@@ -8,14 +9,14 @@ namespace FiniteStateMachine
     public abstract class BaseState
     {
         protected readonly FSM FSM;
-        protected readonly NavMeshAgent Agent;
+        protected readonly Enemy Owner;
         protected readonly VisionComponent VisionComponent;
         protected readonly EnemyData EnemyData;
 
-        protected BaseState(FSM fsm, NavMeshAgent agent)
+        protected BaseState(FSM fsm)
         {
             FSM = fsm;
-            Agent = agent;
+            Owner = FSM.Owner;
             
             EnemyData = (EnemyData)FSM.Owner.GetData();
             VisionComponent = FSM.Owner.GetVisionComponent();

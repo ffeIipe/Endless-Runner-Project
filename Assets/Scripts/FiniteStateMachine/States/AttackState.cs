@@ -8,7 +8,7 @@ namespace FiniteStateMachine.States
     {
         private CountdownTimer _countdownTimer;
 
-        public AttackState(FSM fsm, NavMeshAgent agent) : base(fsm, agent)
+        public AttackState(FSM fsm) : base(fsm)
         {
             _countdownTimer = new CountdownTimer(Random.Range(EnemyData.attackCooldown, EnemyData.attackCooldown * 1.5f));
             _countdownTimer.OnTimerStop += TryAttack;
@@ -39,13 +39,14 @@ namespace FiniteStateMachine.States
         {
             if (!VisionComponent.GetTarget()) return;
 
-            var dir = (VisionComponent.GetTarget().transform.position - Agent.transform.position).normalized;
+            var dir = (VisionComponent.GetTarget().transform.position - Owner.transform.position).normalized;
             
-            var angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            var targetRotation = Quaternion.Euler(0, 0, angle - 90f);
+            var targetRotation = Quaternion.LookRotation(dir);
+            targetRotation.x = 0;
+            targetRotation.z = 0;
             
-            Agent.transform.rotation = Quaternion.Slerp(
-                Agent.transform.rotation, 
+            Owner.transform.rotation = Quaternion.Slerp(
+                Owner.transform.rotation, 
                 targetRotation, 
                 Time.deltaTime * 10f); 
         }
@@ -58,9 +59,15 @@ namespace FiniteStateMachine.States
                 return;
             }
 
-            BulletFactory.Instance.SpawnBullet(Agent.transform, FSM.Owner);
+            ThrowAxe();
             
             _countdownTimer.Start();
+        }
+
+        private void ThrowAxe()
+        {
+            var bullet = BulletFactory.Instance.SpawnBullet(Owner.transform, Owner);
+            bullet.Fire(Owner.handPoint.forward, Owner.transform.rotation, Vector3.one);
         }
     }
 }

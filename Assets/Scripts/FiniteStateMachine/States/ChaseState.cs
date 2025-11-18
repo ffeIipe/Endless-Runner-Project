@@ -6,7 +6,7 @@ namespace FiniteStateMachine.States
 {
     public class ChaseState : BaseState
     {
-        public ChaseState(FSM fsm, NavMeshAgent agent, EnemyData enemyData) : base(fsm, agent) { }
+        public ChaseState(FSM fsm) : base(fsm) { }
 
         public override void EnterState()
         {

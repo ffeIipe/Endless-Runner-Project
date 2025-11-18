@@ -45,3 +45,4 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   maxTargets: 1
+  dissolveEffectDuration: 1
