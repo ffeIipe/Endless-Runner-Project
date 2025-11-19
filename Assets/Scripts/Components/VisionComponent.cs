@@ -14,7 +14,7 @@ namespace Components
     {
         private readonly Enemy _owner;
         private readonly EnemyData _enemyData;
-        private readonly Team _ownerTeam;
+        private readonly TeamType _ownerTeamType;
         private readonly Func<IEnumerator, Coroutine> _startCoroutine;
         private bool _enabled;
         
@@ -26,7 +26,7 @@ namespace Components
             _owner = owner;
             _enemyData = enemyData;
             _startCoroutine = startCoroutine;
-            _ownerTeam = _owner.GetTeam();
+            _ownerTeamType = _owner.GetTeam();
 
             _enabled = true;
             _validTargets = new HashSet<Entity>();
@@ -101,7 +101,7 @@ namespace Components
                     var entity = col.GetComponentInParent<Entity>();
 
                     if (entity != null && 
-                        entity.GetTeam() != _ownerTeam && 
+                        entity.GetTeam() != _ownerTeamType && 
                         entity.GetAttributesComponent().IsAlive())
                     {
                         _validTargets.Add(entity);

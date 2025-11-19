@@ -15,7 +15,7 @@ namespace Entities
         private Rigidbody _rigidbody;
         private Collider _collider;
         private Entity _owner;
-        private Team _ownerTeam;
+        private TeamType _ownerTeamType;
         private Vector3 _direction;
         private bool _isMovementStopped;
             
@@ -68,7 +68,7 @@ namespace Entities
         public void SetOwner(Entity owner)
         {
             _owner = owner;
-            _ownerTeam = owner.GetTeam();
+            _ownerTeamType = owner.GetTeam();
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -77,12 +77,12 @@ namespace Entities
             if (entity == _owner) return;
             
             _isMovementStopped = true;
-            _rigidbody.isKinematic = true;
+            _rigidbody.isKinematic = !collision.collider.GetComponent<Bullet>(); //Event OnAxeCollided = play sound
             _collider.enabled = false;
             
             if (entity == null) return;
 
-            if (entity.GetTeam() != _ownerTeam)
+            if (entity.GetTeam() != _ownerTeamType)
             {
                 transform.SetParent(entity.transform);
                 entity.TakeDamage(bulletData.damage);

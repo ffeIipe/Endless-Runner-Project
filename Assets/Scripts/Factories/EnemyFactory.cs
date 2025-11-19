@@ -11,7 +11,7 @@ namespace Factories
         
         [SerializeField] private PoolData poolData;
         private Pool<Enemy> _enemyPool;
-        
+
         private void Awake()
         {
             Instance = this;
@@ -20,17 +20,11 @@ namespace Factories
             {
                 Destroy(gameObject);
             }
-            
+
             _enemyPool = new Pool<Enemy>(
                 () => Instantiate((Enemy)poolData.prefabToSpawn)
-                , o =>
-                {
-                    o.Activate();
-                }
-                , o =>
-                {
-                    o.Deactivate();
-                }
+                , enemy => enemy.Activate()
+                , enemy => enemy.Deactivate()
                 , poolData.poolSize
             );
         }

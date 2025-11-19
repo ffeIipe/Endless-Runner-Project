@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 8243734226340072086, guid: 3c35357aab2548144b08caefafb24c5b,
     type: 3}
-  poolSize: 10
+  poolSize: 100

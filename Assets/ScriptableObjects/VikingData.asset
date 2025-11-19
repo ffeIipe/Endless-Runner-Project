@@ -12,20 +12,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 13f82a98743845f7992e37f58db5c1e6, type: 3}
   m_Name: VikingData
   m_EditorClassIdentifier: 
-  health: 100
-  team: 0
-  maxPatrolDistance: 10
-  attackDistance: 10
-  minAttackCooldown: 1.2
-  maxAttackCooldown: 1.5
+  health: 1
+  teamType: 0
+  maxPatrolDistance: NaN
+  attackDistance: 20
+  minAttackCooldown: 0.8
+  maxAttackCooldown: 1.2
   interpSpeed: 5
-  spread: 10
+  spread: 2
   targetLayer:
     serializedVersion: 2
     m_Bits: 128
   obstacleLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   scanInterval: 0.8
-  dissolveEffectDuration: 1
+  dissolveEffectDuration: 1.5
   timeUntilDeactivation: 1

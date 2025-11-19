@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: BulletData
   m_EditorClassIdentifier: 
   bulletForce: 70
-  damage: 100
+  damage: 1

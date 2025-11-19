@@ -1,6 +1,6 @@
 namespace Enums
 {
-    public enum Team
+    public enum TeamType
     {
         Red,
         Blue

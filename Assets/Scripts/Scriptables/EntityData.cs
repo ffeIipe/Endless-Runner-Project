@@ -9,6 +9,6 @@ namespace Scriptables
         public float health;
         
         [Header("Team Settings")]
-        public Team team;
+        public TeamType teamType;
     }
 }

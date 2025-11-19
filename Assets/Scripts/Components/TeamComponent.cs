@@ -5,13 +5,13 @@ namespace Components
 {
     public class TeamComponent
     {
-        private readonly Team _currentTeam;
+        private readonly TeamType _currentTeamType;
         
-        public TeamComponent(Team team)
+        public TeamComponent(TeamType teamType)
         {
-            _currentTeam = team;
+            _currentTeamType = teamType;
         }
 
-        public Team GetCurrentTeam() => _currentTeam;
+        public TeamType GetCurrentTeam() => _currentTeamType;
     }
 }
