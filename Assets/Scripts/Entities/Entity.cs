@@ -8,7 +8,7 @@ using UnityEngine;
 namespace Entities
 {
     [RequireComponent(typeof(Rigidbody))]
-    public abstract class Entity : MonoBehaviour, IHittable, ITeammate, IPausable
+    public abstract class Entity : MonoBehaviour, ITeammate, IPausable, IHittable
     {
         public EntityData entityData;
         public Transform handPoint;
@@ -28,6 +28,7 @@ namespace Entities
         protected virtual void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
+            
             _rigidbody.isKinematic = true;
             SavedRigidbodyConstraints = _rigidbody.constraints;
             
@@ -35,8 +36,11 @@ namespace Entities
             _attributesComponent.OnDead += Dead;
             
             _teamComponent = new TeamComponent(entityData.team);
-            
-            EventManager.Instance.gameEvents.Pause += PauseEntity;
+        }
+
+        protected virtual void Start()
+        {
+            EventManager.GameEvents.Pause += PauseEntity;
         }
         
         public void TakeDamage(float damage)
@@ -52,6 +56,11 @@ namespace Entities
 
         public virtual void PauseEntity(bool pause)
         {
+            if(!_rigidbody)
+            {
+                return;
+            }
+            
             if (pause)
             {
                 _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
@@ -60,6 +69,11 @@ namespace Entities
             {
                 _rigidbody.constraints = SavedRigidbodyConstraints;
             }
+        }
+        
+        protected virtual void OnDestroy()
+        {
+            EventManager.GameEvents.Pause -= PauseEntity;
         }
     }
 }

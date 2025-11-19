@@ -9,7 +9,7 @@ namespace FiniteStateMachine
     
         public readonly Enemy Owner;
         
-        private Dictionary<string, BaseState> _states;
+        private readonly Dictionary<string, BaseState> _states;
         private BaseState _actualState;
 
         public FSM(Enemy owner)

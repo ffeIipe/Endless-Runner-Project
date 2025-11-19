@@ -1,18 +1,12 @@
 using FiniteStateMachine.States;
-using Pool;
 
 namespace Entities.Enemies
 {
-    public class Viking : Enemy, IPoolable
+    public class Viking : Enemy
     {
-        private CountdownTimer _deadTimer;
-        
         protected override void Awake()
         {
             base.Awake();
-
-            _deadTimer = new CountdownTimer(5f);
-            _deadTimer.OnTimerStop += Deactivate;
             
             GetFSM().CreateState("Idle", new IdleState(GetFSM()));
             GetFSM().CreateState("Chase", new ChaseState(GetFSM()));
@@ -25,29 +19,15 @@ namespace Entities.Enemies
         {
             GetFSM().Execute();
         }
-
-        protected override void Dead()
-        {
-            base.Dead();
-            
-            GetFSM().Enabled  = false;
-            
-            _deadTimer.Start();
-        }
         
-        public void Activate()
+        /*public override void Activate()
         {
-            RemoveDissolveEffect();
-            GetRigidbody().constraints = SavedRigidbodyConstraints;
-            gameObject.SetActive(true);
-            
-            GetFSM().ChangeState("Idle");
-            GetFSM().Enabled = true;
+            base.Activate();   
         }
 
-        public void Deactivate()
+        public override void Deactivate()
         {
-            ApplyDissolveEffect();
-        }
+           base.Deactivate();
+        }*/
     }
 }

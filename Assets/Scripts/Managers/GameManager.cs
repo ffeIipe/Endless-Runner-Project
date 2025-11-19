@@ -1,4 +1,5 @@
-using System;
+using Enums;
+using ScreenManagerFolder;
 using UnityEngine;
 
 namespace Managers
@@ -6,10 +7,13 @@ namespace Managers
     public class GameManager : MonoBehaviour
     {
         public static GameManager Instance { get; private set; }
-        public static bool isPaused;
+        public static bool IsPaused { get; private set; }
+        public Player.Player player;
 
         private void Awake()
         {
+            IsPaused = false;
+            
             if (Instance == null)
             {
                 Instance = this;
@@ -18,11 +22,12 @@ namespace Managers
             {
                 Destroy(gameObject);
             }
+            //DontDestroyOnLoad(gameObject);
         }
 
         private void Start()
         {
-            if (!isPaused)
+            if (!IsPaused)
             {
                 Cursor.lockState = CursorLockMode.Locked;
             }
@@ -30,10 +35,21 @@ namespace Managers
 
         public void TogglePause()
         {
-            isPaused = !isPaused;
-            EventManager.Instance.gameEvents.Pause.Invoke(isPaused);
+            if (!player.GetAttributesComponent().IsAlive()) return;
+            
+            IsPaused = !IsPaused;
+            EventManager.GameEvents.Pause.Invoke(IsPaused);
+    
+            Cursor.lockState = IsPaused ? CursorLockMode.None : CursorLockMode.Locked;
 
-            Cursor.lockState = isPaused ? CursorLockMode.None : CursorLockMode.Locked;
+            if (IsPaused)
+            {
+                ScreenManager.Instance.PushScreen(ScreenType.PauseMenu, false);
+            }
+            else
+            {
+                ScreenManager.Instance.PopScreen();
+            }
         }
     }
 }

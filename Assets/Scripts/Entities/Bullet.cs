@@ -23,8 +23,11 @@ namespace Entities
         {
             _rigidbody = GetComponent<Rigidbody>();
             _collider = GetComponent<Collider>();
-            
-            EventManager.Instance.gameEvents.Pause += PauseEntity;
+        }
+
+        private void Start()
+        {
+            EventManager.GameEvents.Pause += PauseEntity;
         }
 
         private void FixedUpdate()
@@ -65,12 +68,7 @@ namespace Entities
         public void SetOwner(Entity owner)
         {
             _owner = owner;
-
-            var team = _owner.GetComponent<ITeammate>();
-            if (team != null)
-            {
-                _ownerTeam = team.GetTeam();
-            }
+            _ownerTeam = owner.GetTeam();
         }
 
         private void OnCollisionEnter(Collision collision)
@@ -105,6 +103,11 @@ namespace Entities
                 _rigidbody.isKinematic = false;
                 _isMovementStopped = false;
             }
+        }
+        
+        protected virtual void OnDestroy()
+        {
+            EventManager.GameEvents.Pause -= PauseEntity;
         }
     }
 }

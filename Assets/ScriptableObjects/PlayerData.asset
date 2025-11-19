@@ -9,13 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93321df2b9c1481ea7b54068ee11fb69, type: 3}
+  m_Script: {fileID: 11500000, guid: f286f8df2ff55b442a2b213f27b878cc, type: 3}
   m_Name: PlayerData
   m_EditorClassIdentifier: 
   health: 100
-  damage: 50
-  acceleration: 60
-  maxSpeed: 20
+  team: 1
+  acceleration: 50
+  maxSpeed: 15
   jumpHeight: 10
   jumpDuration: 1
   jumpCurve:
@@ -39,11 +39,26 @@ MonoBehaviour:
       weightedMode: 0
       inWeight: 0
       outWeight: 0
+    - serializedVersion: 3
+      time: 1.0056278
+      value: 1.008289
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  jumpMinDistanceAttempt: 0.35
-  slideDistance: 5
+  castOriginOffset: 1
+  jumpMinDistanceAttempt: 0.3
+  groundCheckRadius: 1.5
+  groundSnapDistance: 10
+  groundMask:
+    serializedVersion: 2
+    m_Bits: 8
+  slideDistance: 2
   slideDuration: 1
   slideCurve:
     serializedVersion: 2
@@ -59,7 +74,7 @@ MonoBehaviour:
       outWeight: 0
     - serializedVersion: 3
       time: 1
-      value: 1.5
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -69,5 +84,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  scaleSmoothingSpeed: 10
+  slideResetDuration: 0.25
   mouseSensitivity: 500
-  team: 1

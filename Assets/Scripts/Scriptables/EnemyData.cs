@@ -10,14 +10,18 @@ namespace Scriptables
 
         [Header("Attack Settings")]
         public float attackDistance;
-        public float attackCooldown;
+        public float minAttackCooldown;
+        public float maxAttackCooldown;
+        public float interpSpeed;
+        public int spread;
         
         [Header("Vision Settings")]
         public LayerMask targetLayer;
         public LayerMask obstacleLayer;
-        public int maxTargets;
+        public float scanInterval;
         
         [Header("Effects Settings")]
         public float dissolveEffectDuration;
+        public float timeUntilDeactivation;
     }
 }

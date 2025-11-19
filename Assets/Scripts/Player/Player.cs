@@ -1,16 +1,18 @@
 using Entities;
 using Entities.MVC;
+using Managers;
+using Scriptables;
 using UnityEngine;
 
 namespace Player
 {
     public class Player : Entity
     {
+        private PlayerData PlayerData => (PlayerData)entityData;
         private Model _model;
         private Controller _controller;
         private View _view;
         private CharacterController _characterController;
-        private bool _enabled;
 
         public CharacterController GetCharacterController() => _characterController;
         
@@ -18,39 +20,47 @@ namespace Player
         {
             base.Awake();
 
-            _enabled = true;
+            GetAttributesComponent().OnDead += () =>
+            {
+                EventManager.PlayerEvents.OnPlayerDead.Invoke();
+                Cursor.lockState = CursorLockMode.None;
+            };
             
             _characterController = GetComponent<CharacterController>();
             _characterController.stepOffset = 0;
             _characterController.skinWidth = 0;
             _characterController.center = new Vector3 (0f, GetComponentInChildren<CapsuleCollider>().height * 0.5f, 0f);
             
-            _model = new Model(this, entityData);
+            _model = new Model(this, PlayerData);
             _controller = new Controller(_model, StartCoroutine);
             _view = new View(_model);
         }
 
+        protected override void Start()
+        {
+            base.Start();
+
+            GameManager.Instance.player = this;
+            
+            EventManager.UIEvents.OnSensitivityChanged += _model.ChangeSensitivity;
+            EventManager.UIEvents.OnSoundVolumeChanged += _view.UpdateVolumeSound;
+        }
+        
         protected override void Dead()
         {
             base.Dead();
             
-            _characterController.enabled = false;
+            _controller.Enabled = false;
         }
 
         protected void Update()
         {
-            if (_enabled)
-            {
-                _controller.Execute();
-            }
+            _controller.Execute();
         }
 
         protected void FixedUpdate()
         {
-            if (_enabled)
-            {
-                _controller.FixedExecute();
-            }
+            _controller.FixedExecute();
         }
 
         public override void PauseEntity(bool pause)
@@ -59,11 +69,11 @@ namespace Player
 
             if (pause)
             {
-                _enabled = false;
+                _controller.Enabled = false;
             }
             else
             {
-                _enabled = true;
+                _controller.Enabled = true;
             }
         }
     }

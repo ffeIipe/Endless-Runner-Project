@@ -2,14 +2,17 @@ using System.Collections;
 using Components;
 using FiniteStateMachine;
 using Managers;
+using Pool;
 using Scriptables;
 using UnityEngine;
 
 namespace Entities.Enemies
 {
-    public abstract class Enemy : Entity
+    public abstract class Enemy : Entity, IPoolable
     {
-        protected EnemyData EnemyData;
+        protected CountdownTimer DeadTimer;
+        
+        private EnemyData EnemyData => (EnemyData)entityData;
         private FSM _fsm;
         private VisionComponent _visionComponent;
         private Material _dissolveMaterial;
@@ -22,13 +25,43 @@ namespace Entities.Enemies
         {
             base.Awake();
             
-            EnemyData = (EnemyData)entityData;
+            DeadTimer = new CountdownTimer(2f);
+            DeadTimer.OnTimerStop += ApplyDissolveEffect;
+            
+            GetAttributesComponent().OnDead += () => DeadTimer.Start();
             
             _visionComponent = new VisionComponent(this, EnemyData, StartCoroutine);
             _fsm = new FSM(this);
             _dissolveMaterial = GetComponentInChildren<MeshRenderer>().material;
         }
 
+        private void FixedUpdate()
+        {
+            DeadTimer.Tick(Time.fixedDeltaTime);
+        }
+
+        protected override void Dead()
+        {
+            base.Dead();
+            
+            GetFSM().Enabled  = false;
+        }
+        
+        public virtual void Activate()
+        {
+            GetRigidbody().constraints = SavedRigidbodyConstraints;
+            gameObject.SetActive(true);
+            
+            GetFSM().ChangeState("Idle");
+            GetFSM().Enabled = true;
+        }
+
+        public virtual void Deactivate()
+        {
+            gameObject.SetActive(false);
+            RemoveDissolveEffect();
+        }
+        
         public override void PauseEntity(bool pause)
         {
             base.PauseEntity(pause);
@@ -45,17 +78,15 @@ namespace Entities.Enemies
         
         private IEnumerator DissolveEffect()
         {
-            Debug.Log("Dissolve Effect");
             var time = 0f;
     
             _dissolveMaterial.SetFloat("_DissolveAmount", 0f);
 
             while (time < EnemyData.dissolveEffectDuration)
             {
-                Debug.Log("Applying Dissolve Effect");
-                if (!GameManager.isPaused)
+                if (!GameManager.IsPaused)
                 {
-                    time += Time.deltaTime;
+                    time += Time.fixedDeltaTime;
             
                     var t = Mathf.Clamp01(time / EnemyData.dissolveEffectDuration);
                     var value = Mathf.Lerp(0f, 1f, t);
@@ -67,10 +98,14 @@ namespace Entities.Enemies
             }
 
             _dissolveMaterial.SetFloat("_DissolveAmount", 1f);
-            gameObject.SetActive(false);
+            yield return new WaitForSeconds(EnemyData.timeUntilDeactivation);
+            
+            //OnDissolveFinished? += Deactivate
+            Deactivate();
         }
-        protected void ApplyDissolveEffect() => StartCoroutine(DissolveEffect());
-        protected void RemoveDissolveEffect() => _dissolveMaterial.SetFloat("_DissolveAmount", 0f);
+
+        private void ApplyDissolveEffect() => StartCoroutine(DissolveEffect());
+        private void RemoveDissolveEffect() => _dissolveMaterial.SetFloat("_DissolveAmount", 0f);
         
         private void OnDrawGizmos()
         {

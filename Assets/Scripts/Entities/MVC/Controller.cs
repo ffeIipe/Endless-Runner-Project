@@ -1,13 +1,13 @@
 using System;
 using System.Collections;
-using Enums;
-using ScreenManagerFolder;
+using Managers;
 using UnityEngine;
 
 namespace Entities.MVC
 {
     public class Controller
     {
+        public bool Enabled;
         private readonly Model _model;
         private readonly Func<IEnumerator, Coroutine> _startCoroutine;
         
@@ -15,10 +15,17 @@ namespace Entities.MVC
         {
             _model = model;
             _startCoroutine = startCoroutine;
+
+            Enabled = true;
         }
         
         public void Execute()
         {
+            if (Input.GetKeyDown(KeyCode.Escape))
+                GameManager.Instance.TogglePause();
+            
+            if (!Enabled) return;
+            
             if (Input.GetKeyDown(KeyCode.Space) && _model.IsGrounded())
                 _startCoroutine(_model.Jump());
             
@@ -27,15 +34,14 @@ namespace Entities.MVC
             
             if (Input.GetKeyDown(KeyCode.Mouse0))
                 _model.ThrowAxe();
-
-            if (Input.GetKeyDown(KeyCode.Escape))
-                _model.Pause();
             
             _model.Look();
         }
 
         public void FixedExecute()
         {
+            if (!Enabled) return;
+            
             _model.ApplyGravity();
             _model.Move();
         }

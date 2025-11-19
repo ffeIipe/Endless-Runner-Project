@@ -10,7 +10,7 @@ namespace FiniteStateMachine.States
 
         public AttackState(FSM fsm) : base(fsm)
         {
-            _countdownTimer = new CountdownTimer(Random.Range(EnemyData.attackCooldown, EnemyData.attackCooldown * 1.5f));
+            _countdownTimer = new CountdownTimer(Random.Range(EnemyData.minAttackCooldown, EnemyData.minAttackCooldown * EnemyData.maxAttackCooldown));
             _countdownTimer.OnTimerStop += TryAttack;
         }
 
@@ -48,17 +48,13 @@ namespace FiniteStateMachine.States
             Owner.transform.rotation = Quaternion.Slerp(
                 Owner.transform.rotation, 
                 targetRotation, 
-                Time.deltaTime * 10f); 
+                Time.deltaTime * EnemyData.interpSpeed); 
         }
         
         private void TryAttack()
         {
-            if (!VisionComponent.GetTarget())
-            {
-                _countdownTimer.Start();
-                return;
-            }
-
+            if (!VisionComponent.GetTarget()) return;
+            
             ThrowAxe();
             
             _countdownTimer.Start();
@@ -66,8 +62,20 @@ namespace FiniteStateMachine.States
 
         private void ThrowAxe()
         {
+            var errorAngle = EnemyData.spread; 
+
+            var randomX = Random.Range(-errorAngle, errorAngle);
+            var randomY = Random.Range(-errorAngle, errorAngle);
+
+            var spreadRotation = Quaternion.Euler(randomX, randomY, 0);
+
+            var deviatedDirection = spreadRotation * Owner.handPoint.forward;
+
+            var deviatedRotation = Quaternion.LookRotation(deviatedDirection);
+
             var bullet = BulletFactory.Instance.SpawnBullet(Owner.transform, Owner);
-            bullet.Fire(Owner.handPoint.forward, Owner.transform.rotation, Vector3.one);
+    
+            bullet.Fire(deviatedDirection, deviatedRotation, Vector3.one);
         }
     }
 }

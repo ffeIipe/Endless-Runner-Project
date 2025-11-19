@@ -25,13 +25,13 @@ namespace Factories
             
             _bulletPool = new Pool<Bullet>(
                 () => Instantiate((Bullet)poolData.prefabToSpawn)
-                , o =>
+                , bullet =>
                 {
-                    o.GetComponent<IPoolable>().Activate();
+                    bullet.Activate();
                 }
-                , o =>
+                , bullet =>
                 {
-                    o.GetComponent<IPoolable>().Deactivate();
+                    bullet.Deactivate();
                 }
                 , poolData.poolSize
             );
@@ -42,7 +42,7 @@ namespace Factories
             var newBullet = _bulletPool.GetObject();
             newBullet.transform.SetPositionAndRotation(origin.position, origin.rotation);
             
-            newBullet.GetComponent<IPoolable>()?.Activate();
+            newBullet.Activate();
             newBullet.SetOwner(owner);
             
             StartCoroutine(ReleaseAfterTime(newBullet, 5f));
@@ -55,7 +55,7 @@ namespace Factories
             float elapsedTime = 0;
             while (elapsedTime < time)
             {
-                if (!GameManager.isPaused)
+                if (!GameManager.IsPaused)
                 {
                     elapsedTime += Time.deltaTime;
                     yield return null;

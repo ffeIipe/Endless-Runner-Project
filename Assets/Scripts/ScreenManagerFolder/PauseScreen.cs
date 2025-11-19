@@ -1,15 +1,16 @@
 using Enums;
 using Managers;
+using UnityEngine.SceneManagement;
 
 namespace ScreenManagerFolder
 {
     public class PauseScreen : BaseScreen
     {
-        public override void Hide()
+        public void Resume()
         {
-            base.Hide();
-
-            if (GameManager.isPaused)
+            ScreenManager.Instance.PopScreen();
+            
+            if (GameManager.IsPaused)
             {
                 GameManager.Instance.TogglePause();
             }
@@ -18,6 +19,11 @@ namespace ScreenManagerFolder
         public void Options()
         {
             ScreenManager.Instance.PushScreen(ScreenType.Options, true);
+        }
+
+        public void Restart()
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
         
         public void MainMenu()

@@ -13,5 +13,10 @@ namespace Entities.MVC
         {
             
         }
+
+        public void UpdateVolumeSound(float newVolume)
+        {
+            
+        }
     }
 }

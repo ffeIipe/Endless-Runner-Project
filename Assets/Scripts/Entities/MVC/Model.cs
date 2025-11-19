@@ -1,8 +1,6 @@
 using System.Collections;
-using Enums;
 using Factories;
 using Managers;
-using ScreenManagerFolder;
 using Scriptables;
 using UnityEngine;
 
@@ -12,7 +10,7 @@ namespace Entities.MVC
     {
         private readonly Entity _owner;
         private readonly CharacterController _characterController;
-        private readonly EntityData _entityData;
+        private readonly PlayerData _entityData;
 
         private Vector3 _lastMovementVector;
         
@@ -21,13 +19,15 @@ namespace Entities.MVC
         
         private readonly Vector3 _localScale;
         private bool _isSliding;
+        
+        private bool _stopJumpRequest; 
 
         private readonly Camera _camera;
         private float _xRotation;
         private float _mouseSensitivity;
         private const float Gravity = -9.81f;
 
-        public Model(Entity owner, EntityData entityData)
+        public Model(Entity owner, PlayerData entityData)
         {
             _owner = owner;
             _entityData = entityData;
@@ -84,14 +84,26 @@ namespace Entities.MVC
             _lastMovementVector = finalVelocity.normalized;
         }
 
+        private void CancelJump()
+        {
+            _stopJumpRequest = true;
+        }
+
         public IEnumerator Jump()
         {
+            _stopJumpRequest = false;
+            
             var timer = 0f;
             var lastCurveValue = 0f;
 
             while (timer < _entityData.jumpDuration)
             {
-                if (!GameManager.isPaused) //HELP: this is valid to do?
+                if (_stopJumpRequest)
+                {
+                    yield break;
+                }
+
+                if (!GameManager.IsPaused) 
                 {
                     timer += Time.deltaTime;
 
@@ -111,18 +123,34 @@ namespace Entities.MVC
 
         public bool IsGrounded()
         {
-            var origin = _owner.transform.position + new Vector3(0, .25f, 0);
-            var distance = _entityData.jumpMinDistanceAttempt;
+            var castOriginOffset = _entityData.castOriginOffset; 
+            var baseOrigin = _owner.transform.position + Vector3.up * castOriginOffset;
             
-            Debug.DrawLine(_owner.transform.position,
-                origin + Vector3.down * distance, Color.blue, 1f);
-            
-            return Physics.Raycast(
-                origin,
-                Vector3.down,
-                distance,
-                LayerMask.GetMask("Ground")
-            );
+            var checkDistance = castOriginOffset + _entityData.jumpMinDistanceAttempt;
+
+            Vector3[] offsets =
+            {
+                Vector3.zero,
+                Vector3.forward * _entityData.groundCheckRadius,
+                Vector3.back * _entityData.groundCheckRadius,
+                Vector3.right * _entityData.groundCheckRadius,
+                Vector3.left * _entityData.groundCheckRadius
+            };
+
+            foreach (var offset in offsets)
+            {
+                var worldOffset = _owner.transform.TransformDirection(offset);
+                var rayOrigin = baseOrigin + worldOffset;
+
+                Debug.DrawRay(rayOrigin, Vector3.down * checkDistance, Color.red, 1f);
+
+                if (Physics.Raycast(rayOrigin, Vector3.down, out _, checkDistance, _entityData.groundMask))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public IEnumerator Slide()
@@ -130,14 +158,16 @@ namespace Entities.MVC
             if (_isSliding) yield break;
             
             _isSliding = true;
-            
-            var newScale = new Vector3(
+
+            CancelJump();
+
+            SnapToGround(); 
+
+            var targetScale = new Vector3(
                 _owner.transform.localScale.x,
                 _owner.transform.localScale.y / 2f,
                 _owner.transform.localScale.z
             );
-            
-            _owner.transform.localScale = newScale;
             
             var timer = 0f;
             var lastCurveValue = 0f;
@@ -145,7 +175,7 @@ namespace Entities.MVC
                 
             while (timer < _entityData.slideDuration)
             {
-                if (!GameManager.isPaused)
+                if (!GameManager.IsPaused)
                 {
                     timer += Time.deltaTime;
 
@@ -156,16 +186,46 @@ namespace Entities.MVC
                     _characterController.Move(previousLastMovementVector * moveDeltaX);
 
                     lastCurveValue = curveValue;
+                    
+                    _owner.transform.localScale = Vector3.Lerp(
+                        _owner.transform.localScale, 
+                        targetScale, 
+                        Time.deltaTime * _entityData.scaleSmoothingSpeed
+                    );
                 }
 
                 yield return null;
             }
             
-            ResetSlide();
+            yield return ResetSlide();
         }
 
-        private void ResetSlide()
+        private void SnapToGround()
         {
+            if (Physics.Raycast(_owner.transform.position, Vector3.down, out RaycastHit hit, _entityData.groundSnapDistance, _entityData.groundMask))
+            {
+                _characterController.Move(Vector3.down * hit.distance);
+            }
+        }
+
+        private IEnumerator ResetSlide()
+        {
+            var timer = 0f;
+            var duration = _entityData.slideResetDuration;
+            var startScale = _owner.transform.localScale;
+
+            while (timer < duration)
+            {
+                if (!GameManager.IsPaused)
+                {
+                    timer += Time.deltaTime;
+                    var progress = timer / duration;
+                    
+                    _owner.transform.localScale = Vector3.Lerp(startScale, _localScale, progress);
+                }
+                yield return null;
+            }
+
             _owner.transform.localScale = _localScale;
             _isSliding = false;
         }
@@ -189,10 +249,9 @@ namespace Entities.MVC
             bullet.Fire(_owner.handPoint.forward, _owner.transform.rotation,finalForce * 0.5f);
         }
 
-        public void Pause()
+        public void ChangeSensitivity(float newSens)
         {
-            ScreenManager.Instance.PushScreen(ScreenType.PauseMenu, false);
-            GameManager.Instance.TogglePause();
+            _mouseSensitivity = Mathf.Lerp(100f, 1000f, newSens);
         }
     }
 }

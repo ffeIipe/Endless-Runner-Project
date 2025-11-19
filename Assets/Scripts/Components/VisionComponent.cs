@@ -18,59 +18,50 @@ namespace Components
         private readonly Func<IEnumerator, Coroutine> _startCoroutine;
         private bool _enabled;
         
-        private List<Collider> _currentTargets;
+        private readonly HashSet<Entity> _validTargets;
+        private readonly WaitForSeconds _scanInterval;
 
         public VisionComponent(Enemy owner, EnemyData enemyData, Func<IEnumerator, Coroutine> startCoroutine)
         {
             _owner = owner;
             _enemyData = enemyData;
             _startCoroutine = startCoroutine;
+            _ownerTeam = _owner.GetTeam();
 
             _enabled = true;
-            _currentTargets = new List<Collider>();
-            _startCoroutine(SearchTargets());
+            _validTargets = new HashSet<Entity>();
+            _scanInterval = new WaitForSeconds(enemyData.scanInterval);
             
-            _ownerTeam = _owner.GetTeam();
+            _startCoroutine(SearchTargets());
         }
         
-        public Collider GetTarget()
+        public Entity GetTarget()
         {
-            return GetTargets().Count == 0 ? null : GetTargets()[0];
+            _validTargets.RemoveWhere(entity => !entity || !entity.GetAttributesComponent().IsAlive());
+
+            return _validTargets.FirstOrDefault();
         }
 
         public Vector3 GetTargetDirection()
         {
-            if (GetTarget())
+            var target = GetTarget();
+            if (target != null)
             {
-                return GetTarget().transform.position - _owner.transform.position;
+                return target.transform.position - _owner.transform.position;
             }
 
             return Vector3.zero;
         }
 
-        private List<Collider> GetTargets()
+        public List<Entity> GetTargetsList()
         {
-            if (_currentTargets.Count <= 0) 
-            {
-                return new List<Collider>(); 
-            }
-            
-            var castedTargets = _currentTargets
-                .Where(collider =>
-                {
-                    if (!collider) return false;
-
-                    var entity = collider.GetComponentInParent<Entity>();
-            
-                    return entity && entity.GetTeam() != _ownerTeam && entity.GetAttributesComponent().IsAlive();
-                })
-                .ToList();
-    
-            return castedTargets;
+            _validTargets.RemoveWhere(e => e == null || !e.GetAttributesComponent().IsAlive());
+            return _validTargets.ToList();
         }
 
         public void EnableVision()
         {
+            if (_enabled) return;
             _enabled = true;
             _startCoroutine(SearchTargets());
         }
@@ -78,33 +69,50 @@ namespace Components
         public void DisableVision()
         {
             _enabled = false;
+            _validTargets.Clear();
         }
         
         public bool HasLineOfSight()
         {
+            var target = GetTarget();
+            if (target == null) return false;
+
             var startLocation = _owner.transform.position;
-            var endLocation = Vector3.zero;
-            if (GetTarget())
-                endLocation = GetTarget().transform.position;
+            var endLocation = target.transform.position;
 
             var direction = (endLocation - startLocation).normalized;
             var distance = Vector3.Distance(startLocation, endLocation);
 
-            Debug.DrawLine(startLocation, endLocation, Color.magenta, 1f);
-            return !Physics.Raycast(startLocation, direction * _enemyData.attackDistance, distance, _enemyData.obstacleLayer);
+            return !Physics.Raycast(startLocation, direction, distance, _enemyData.obstacleLayer);
         }
         
         private IEnumerator SearchTargets()
         {
             while (_enabled)
             {
-                if (_currentTargets.Count >= _enemyData.maxTargets) 
-                    yield return null;
+                var colliders = Physics.OverlapSphere(_owner.transform.position, _enemyData.attackDistance, _enemyData.targetLayer);
                 
-                var results = Physics.OverlapSphere(_owner.transform.position, _enemyData.attackDistance, _enemyData.targetLayer);
-                _currentTargets = results.ToList();
+                _validTargets.Clear();
+
+                foreach (var col in colliders)
+                {
+                    if (col == null) continue;
+
+                    var entity = col.GetComponentInParent<Entity>();
+
+                    if (entity != null && 
+                        entity.GetTeam() != _ownerTeam && 
+                        entity.GetAttributesComponent().IsAlive())
+                    {
+                        _validTargets.Add(entity);
+                    }
+                    else
+                    {
+                        _validTargets.Remove(entity);
+                    }
+                }
                 
-                yield return null;
+                yield return _scanInterval;
             }
         }
     }

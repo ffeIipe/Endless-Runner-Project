@@ -13,36 +13,19 @@ MonoBehaviour:
   m_Name: VikingData
   m_EditorClassIdentifier: 
   health: 100
-  damage: 0
-  acceleration: 0
-  maxSpeed: 0
-  jumpHeight: 0
-  jumpDuration: 0
-  jumpCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  jumpMinDistanceAttempt: 0
-  slideDistance: 0
-  slideDuration: 0
-  slideCurve:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  mouseSensitivity: 0
   team: 0
   maxPatrolDistance: 10
   attackDistance: 10
-  attackCooldown: 0.5
+  minAttackCooldown: 1.2
+  maxAttackCooldown: 1.5
+  interpSpeed: 5
+  spread: 10
   targetLayer:
     serializedVersion: 2
     m_Bits: 128
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 0
-  maxTargets: 1
+  scanInterval: 0.8
   dissolveEffectDuration: 1
+  timeUntilDeactivation: 1

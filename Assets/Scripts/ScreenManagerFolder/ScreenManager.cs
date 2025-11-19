@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Enums;
+using Managers;
 using UnityEngine;
 
 namespace ScreenManagerFolder
@@ -9,7 +10,7 @@ namespace ScreenManagerFolder
     {
         public static ScreenManager Instance { get; private set; }
         public List<ScreenRegistration> screenPrefabs;
-        
+
         private Stack<BaseScreen> _screenStack = new();
 
         private void Awake()
@@ -26,7 +27,7 @@ namespace ScreenManagerFolder
 
         private void Start()
         {
-            foreach (var registration in screenPrefabs) 
+            foreach (var registration in screenPrefabs)
             {
                 if (registration.screen != null)
                 {
@@ -35,6 +36,8 @@ namespace ScreenManagerFolder
             }
 
             PushScreen(ScreenType.Gameplay, false);
+
+            EventManager.PlayerEvents.OnPlayerDead += () => PushScreen(ScreenType.DeathMenu, false);
         }
 
         public void PopScreen()
@@ -62,7 +65,6 @@ namespace ScreenManagerFolder
                 _screenStack.Push(newScreen);
                 newScreen.Show();
             }
-            else Debug.LogWarning("¡Pantalla no encontrada!: " + screenType);
         }
 
         public void SwitchToScreen(ScreenType screenType)
