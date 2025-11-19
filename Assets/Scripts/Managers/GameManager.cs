@@ -22,7 +22,6 @@ namespace Managers
             {
                 Destroy(gameObject);
             }
-            //DontDestroyOnLoad(gameObject);
         }
 
         private void Start()
@@ -33,23 +32,50 @@ namespace Managers
             }
         }
 
-        public void TogglePause()
+        public void HandlePauseInput()
         {
-            if (!player.GetAttributesComponent().IsAlive()) return;
-            
-            IsPaused = !IsPaused;
-            EventManager.GameEvents.Pause.Invoke(IsPaused);
-    
-            Cursor.lockState = IsPaused ? CursorLockMode.None : CursorLockMode.Locked;
+            if (!player || !player.GetAttributesComponent().IsAlive()) return;
 
-            if (IsPaused)
+            if (!IsPaused)
             {
-                ScreenManager.Instance.PushScreen(ScreenType.PauseMenu, false);
+                PauseGame();
             }
             else
             {
+                var currentScreen = ScreenManager.Instance.GetCurrentScreenType();
+
+                if (currentScreen == ScreenType.PauseMenu)
+                {
+                    ResumeGame();
+                }
+                else
+                {
+                    ScreenManager.Instance.PopScreen();
+                }
+            }
+        }
+
+        private void PauseGame()
+        {
+            if (!player.GetAttributesComponent().IsAlive()) return;
+
+            if (IsPaused)
+            {
                 ScreenManager.Instance.PopScreen();
             }
+            
+            IsPaused = true;
+            ScreenManager.Instance.PushScreen(ScreenType.PauseMenu, false);
+            EventManager.GameEvents.Pause.Invoke(true);
+            Cursor.lockState = CursorLockMode.None;
+        }
+
+        public void ResumeGame()
+        {
+            IsPaused = false;
+            ScreenManager.Instance.PopScreen();
+            EventManager.GameEvents.Pause.Invoke(false);
+            Cursor.lockState = CursorLockMode.Locked;
         }
     }
 }

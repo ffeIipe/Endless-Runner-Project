@@ -3,42 +3,45 @@ using Pool;
 using Scriptables;
 using UnityEngine;
 
-public class EnemyFactory : MonoBehaviour
+namespace Factories
 {
-    public static EnemyFactory Instance { get; private set; }
-        
-    [SerializeField] private PoolData poolData;
-    private Pool<Enemy> _enemyPool;
-        
-    private void Awake()
+    public class EnemyFactory : MonoBehaviour
     {
-        Instance = this;
-
-        if (Instance != this)
+        public static EnemyFactory Instance { get; private set; }
+        
+        [SerializeField] private PoolData poolData;
+        private Pool<Enemy> _enemyPool;
+        
+        private void Awake()
         {
-            Destroy(gameObject);
-        }
-            
-        _enemyPool = new Pool<Enemy>(
-            () => Instantiate((Enemy)poolData.prefabToSpawn)
-            , o =>
-            {
-                o.GetComponent<IPoolable>().Activate();
-            }
-            , o =>
-            {
-                o.GetComponent<IPoolable>().Deactivate();
-            }
-            , poolData.poolSize
-        );
-    }
+            Instance = this;
 
-    public Enemy SpawnEnemy(Transform origin)
-    {
-        var newEnemy = _enemyPool.GetObject();
-        newEnemy.transform.SetLocalPositionAndRotation(origin.position, origin.rotation);    
-        newEnemy.GetComponent<IPoolable>()?.Activate();
+            if (Instance != this)
+            {
+                Destroy(gameObject);
+            }
             
-        return newEnemy;
+            _enemyPool = new Pool<Enemy>(
+                () => Instantiate((Enemy)poolData.prefabToSpawn)
+                , o =>
+                {
+                    o.Activate();
+                }
+                , o =>
+                {
+                    o.Deactivate();
+                }
+                , poolData.poolSize
+            );
+        }
+
+        public Enemy SpawnEnemy(Transform origin)
+        {
+            var newEnemy = _enemyPool.GetObject();
+            newEnemy.transform.SetLocalPositionAndRotation(origin.position, origin.rotation);    
+            newEnemy.Activate();
+            
+            return newEnemy;
+        }
     }
 }

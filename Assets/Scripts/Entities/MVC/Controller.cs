@@ -21,8 +21,8 @@ namespace Entities.MVC
         
         public void Execute()
         {
-            if (Input.GetKeyDown(KeyCode.Escape))
-                GameManager.Instance.TogglePause();
+            if (Input.GetKeyDown(KeyCode.Q))
+                GameManager.Instance.HandlePauseInput();
             
             if (!Enabled) return;
             

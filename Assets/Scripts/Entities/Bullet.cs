@@ -9,7 +9,7 @@ using UnityEngine;
 namespace Entities
 {
     [RequireComponent(typeof(Rigidbody))]
-    public class Bullet : MonoBehaviour, IPoolable, IPausable
+    public sealed class Bullet : MonoBehaviour, IPoolable, IPausable
     {
         [SerializeField] private BulletData bulletData;
         private Rigidbody _rigidbody;
@@ -86,8 +86,7 @@ namespace Entities
             {
                 transform.SetParent(entity.transform);
                 entity.TakeDamage(bulletData.damage);
-                
-                entity.GetRigidbody().AddForce(_direction.normalized * bulletData.bulletForce, ForceMode.Impulse);
+                entity.GetHit(_direction.normalized, bulletData.bulletForce);
             }
         }
 
@@ -104,8 +103,8 @@ namespace Entities
                 _isMovementStopped = false;
             }
         }
-        
-        protected virtual void OnDestroy()
+
+        private void OnDestroy()
         {
             EventManager.GameEvents.Pause -= PauseEntity;
         }

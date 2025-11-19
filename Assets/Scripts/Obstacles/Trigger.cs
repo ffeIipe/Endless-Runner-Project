@@ -1,28 +1,37 @@
 using System;
 using UnityEngine;
 
-
-[RequireComponent(typeof(BoxCollider))]
-public sealed class Trigger : MonoBehaviour
+namespace Obstacles
 {
-    [SerializeField] private string triggerName; 
-    
-    private bool _bWasTriggered;
-    public event Action OnTriggered = delegate { };
-
-    private void Awake()
+    [RequireComponent(typeof(BoxCollider))]
+    public sealed class Trigger : MonoBehaviour
     {
-        GetComponent<BoxCollider>().isTrigger = true;
-    }
+        [SerializeField] private string triggerName; 
+        private BoxCollider _boxCollider;
+        private bool _bWasTriggered;
+        public event Action OnTriggered = delegate { };
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (_bWasTriggered) return;
-            _bWasTriggered = true;
-        
-        if (other.gameObject.CompareTag(triggerName))
+        private void Awake()
         {
-            OnTriggered.Invoke();  
+            _boxCollider = GetComponent<BoxCollider>();
+            _boxCollider.isTrigger = true;
+        }
+
+        private void OnTriggerEnter(Collider other)
+        {
+            if (_bWasTriggered) return;
+        
+            if (other.gameObject.CompareTag(triggerName))
+            {
+                OnTriggered.Invoke();
+                _bWasTriggered = true;
+            }
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(transform.position, .75f);
         }
     }
 }

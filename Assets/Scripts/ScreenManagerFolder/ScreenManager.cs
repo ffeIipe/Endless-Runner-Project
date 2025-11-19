@@ -83,5 +83,24 @@ namespace ScreenManagerFolder
             var registration = screenPrefabs.FirstOrDefault(s => s.screenType == screenType);
             return registration?.screen;
         }
+
+        public int GetScreenCount()
+        {
+            return _screenStack.Count;
+        }
+
+        public ScreenType GetCurrentScreenType()
+        {
+            if (_screenStack.Count == 0) 
+            {
+                return ScreenType.None; 
+            }
+
+            var topScreen = _screenStack.Peek();
+
+            var match = screenPrefabs.FirstOrDefault(x => x.screen == topScreen);
+
+            return match?.screenType ?? ScreenType.None;
+        }
     }
 }

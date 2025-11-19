@@ -8,12 +8,7 @@ namespace ScreenManagerFolder
     {
         public void Resume()
         {
-            ScreenManager.Instance.PopScreen();
-            
-            if (GameManager.IsPaused)
-            {
-                GameManager.Instance.TogglePause();
-            }
+            GameManager.Instance.ResumeGame();
         }
 
         public void Options()

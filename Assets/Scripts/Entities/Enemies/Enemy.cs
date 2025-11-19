@@ -10,12 +10,11 @@ namespace Entities.Enemies
 {
     public abstract class Enemy : Entity, IPoolable
     {
-        protected CountdownTimer DeadTimer;
-        
         private EnemyData EnemyData => (EnemyData)entityData;
         private FSM _fsm;
         private VisionComponent _visionComponent;
         private Material _dissolveMaterial;
+        private DeathProp _deathProp;
         
         public VisionComponent GetVisionComponent() => _visionComponent;
         protected FSM GetFSM() => _fsm;
@@ -25,19 +24,23 @@ namespace Entities.Enemies
         {
             base.Awake();
             
-            DeadTimer = new CountdownTimer(2f);
-            DeadTimer.OnTimerStop += ApplyDissolveEffect;
-            
-            GetAttributesComponent().OnDead += () => DeadTimer.Start();
+            GetAttributesComponent().OnDead += ApplyDissolveEffect;
             
             _visionComponent = new VisionComponent(this, EnemyData, StartCoroutine);
             _fsm = new FSM(this);
             _dissolveMaterial = GetComponentInChildren<MeshRenderer>().material;
+            
+            _deathProp = GetComponentInChildren<DeathProp>();
         }
 
-        private void FixedUpdate()
+        public override void GetHit(Vector3 hitPoint, float force)
         {
-            DeadTimer.Tick(Time.fixedDeltaTime);
+            base.GetHit(hitPoint, force);
+
+            if (!GetAttributesComponent().IsAlive())
+            {
+                _deathProp.ActivateDeathProp(hitPoint * force);
+            }
         }
 
         protected override void Dead()
@@ -59,6 +62,8 @@ namespace Entities.Enemies
         public virtual void Deactivate()
         {
             gameObject.SetActive(false);
+            
+            _deathProp.ResetDeathProp();
             RemoveDissolveEffect();
         }
         
@@ -72,7 +77,8 @@ namespace Entities.Enemies
             }
             else
             {
-                GetFSM().Enabled = true;
+                if(GetAttributesComponent().IsAlive())
+                    GetFSM().Enabled = true;
             }
         }
         
@@ -80,6 +86,7 @@ namespace Entities.Enemies
         {
             var time = 0f;
     
+            _deathProp.ActivateDeathProp(GetRigidbody().velocity);
             _dissolveMaterial.SetFloat("_DissolveAmount", 0f);
 
             while (time < EnemyData.dissolveEffectDuration)
@@ -87,7 +94,7 @@ namespace Entities.Enemies
                 if (!GameManager.IsPaused)
                 {
                     time += Time.fixedDeltaTime;
-            
+                    
                     var t = Mathf.Clamp01(time / EnemyData.dissolveEffectDuration);
                     var value = Mathf.Lerp(0f, 1f, t);
             

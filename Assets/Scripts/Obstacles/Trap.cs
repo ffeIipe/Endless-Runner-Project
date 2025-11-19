@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Scriptables;
 using UnityEngine;
@@ -64,7 +63,8 @@ namespace Obstacles
 
         private void OnDrawGizmos()
         {
-            hinge.transform.localScale = new Vector3(1, trapData.damageBoxSize, 1);
+            Gizmos.color = Color.yellow;
+            Gizmos.DrawSphere(hinge.position, 0.75f);
         }
     }
 }

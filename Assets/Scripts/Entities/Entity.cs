@@ -17,6 +17,7 @@ namespace Entities
             
         private Rigidbody _rigidbody;
         private Vector3 _currentVelocity;
+        private Vector3 _currentAngularVelocity;
         
         private AttributesComponent _attributesComponent;
         private TeamComponent _teamComponent;
@@ -28,7 +29,6 @@ namespace Entities
         protected virtual void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
-            
             _rigidbody.isKinematic = true;
             SavedRigidbodyConstraints = _rigidbody.constraints;
             
@@ -48,10 +48,19 @@ namespace Entities
             _attributesComponent.ReceiveDamage(damage);
         }
 
+        public virtual void GetHit(Vector3 hitPoint, float force)
+        {
+            if (!GetAttributesComponent().IsAlive())
+            {
+                _rigidbody.AddForce(hitPoint.normalized * force, ForceMode.Impulse);
+            }
+        }
+
         protected virtual void Dead()
         {
             _rigidbody.isKinematic = false;
-            _rigidbody.constraints = RigidbodyConstraints.None;
+            SavedRigidbodyConstraints = RigidbodyConstraints.None;
+            _rigidbody.constraints = SavedRigidbodyConstraints;
         }
 
         public virtual void PauseEntity(bool pause)
@@ -63,11 +72,17 @@ namespace Entities
             
             if (pause)
             {
+                _currentAngularVelocity = _rigidbody.angularVelocity;
+                _currentVelocity =  _rigidbody.velocity;
+                
                 _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
             }
             else
             {
                 _rigidbody.constraints = SavedRigidbodyConstraints;
+                
+                _rigidbody.angularVelocity = _currentAngularVelocity;
+                _rigidbody.velocity = _currentVelocity;
             }
         }
         
