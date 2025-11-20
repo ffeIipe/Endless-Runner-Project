@@ -15,7 +15,8 @@ MonoBehaviour:
   health: 3
   teamType: 1
   acceleration: 50
-  maxSpeed: 20
+  maxSpeed: 22
+  speedDecayRate: 0.5
   jumpHeight: 10
   jumpDuration: 1
   jumpCurve:
@@ -58,7 +59,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 8
-  slideDistance: 2
+  slideDistance: 3
   slideDuration: 1
   slideCurve:
     serializedVersion: 2
@@ -68,6 +69,15 @@ MonoBehaviour:
       value: 0
       inSlope: 2
       outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.6
+      value: 1.0021205
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
@@ -84,6 +94,9 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  scaleSmoothingSpeed: 10
-  slideResetDuration: 0.25
+  scaleSmoothingSpeed: 15
+  slideResetDuration: 0.1
+  snapDuration: 0.3
+  timeBetweenAttacks: 0.6
   mouseSensitivity: 500
+  momentumDecay: 5

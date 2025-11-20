@@ -14,7 +14,7 @@ namespace Entities.Enemies
         private FSM _fsm;
         private VisionComponent _visionComponent;
         private Material _dissolveMaterial;
-        private DeathProp _deathProp;
+        private VikingHelmet _vikingHelmet;
         
         public VisionComponent GetVisionComponent() => _visionComponent;
         protected FSM GetFSM() => _fsm;
@@ -26,11 +26,11 @@ namespace Entities.Enemies
             
             GetAttributesComponent().OnDead += ApplyDissolveEffect;
             
-            _visionComponent = new VisionComponent(this, EnemyData, StartCoroutine);
+            _visionComponent = new VisionComponent(this, EnemyData, StartCoroutine, StopCoroutine);
             _fsm = new FSM(this);
             _dissolveMaterial = GetComponentInChildren<MeshRenderer>().material;
             
-            _deathProp = GetComponentInChildren<DeathProp>();
+            _vikingHelmet = GetComponentInChildren<VikingHelmet>();
         }
 
         public override void GetHit(Vector3 hitPoint, float force)
@@ -39,14 +39,14 @@ namespace Entities.Enemies
 
             if (!GetAttributesComponent().IsAlive())
             {
-                _deathProp.ActivateDeathProp(hitPoint * force);
+                _vikingHelmet.ActivateDeathProp(hitPoint * force);
             }
         }
 
         protected override void Dead()
         {
             base.Dead();
-            
+            _visionComponent.DisableVision();
             GetFSM().Enabled  = false;
         }
         
@@ -55,15 +55,18 @@ namespace Entities.Enemies
             GetRigidbody().constraints = SavedRigidbodyConstraints;
             gameObject.SetActive(true);
             
+            _visionComponent.EnableVision();
+
             GetFSM().ChangeState("Idle");
             GetFSM().Enabled = true;
         }
 
         public virtual void Deactivate()
         {
+            _visionComponent.DisableVision();
             gameObject.SetActive(false);
             
-            _deathProp.ResetDeathProp();
+            _vikingHelmet.ResetDeathProp();
             RemoveDissolveEffect();
         }
         
@@ -86,7 +89,7 @@ namespace Entities.Enemies
         {
             var time = 0f;
     
-            _deathProp.ActivateDeathProp(GetRigidbody().velocity);
+            _vikingHelmet.ActivateDeathProp(GetRigidbody().velocity);
             _dissolveMaterial.SetFloat("_DissolveAmount", 0f);
 
             while (time < EnemyData.dissolveEffectDuration)
@@ -107,7 +110,6 @@ namespace Entities.Enemies
             _dissolveMaterial.SetFloat("_DissolveAmount", 1f);
             yield return new WaitForSeconds(EnemyData.timeUntilDeactivation);
             
-            //OnDissolveFinished? += Deactivate
             Deactivate();
         }
 
@@ -117,7 +119,8 @@ namespace Entities.Enemies
         private void OnDrawGizmos()
         {
             Gizmos.color = Color.red;
-            Gizmos.DrawWireSphere(transform.position, EnemyData.attackDistance);
+            if(entityData != null) 
+                Gizmos.DrawWireSphere(transform.position, EnemyData.attackDistance);
         }
     }
 }

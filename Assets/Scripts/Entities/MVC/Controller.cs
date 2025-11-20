@@ -35,6 +35,7 @@ namespace Entities.MVC
             if (Input.GetKeyDown(KeyCode.Mouse0))
                 _model.ThrowAxe();
             
+            _model.ExecuteCooldowns();
             _model.Look();
         }
 

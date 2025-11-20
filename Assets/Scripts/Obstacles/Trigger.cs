@@ -6,10 +6,12 @@ namespace Obstacles
     [RequireComponent(typeof(BoxCollider))]
     public sealed class Trigger : MonoBehaviour
     {
-        [SerializeField] private string triggerName; 
+        [SerializeField] private string triggerName;
+        
         private BoxCollider _boxCollider;
         private bool _bWasTriggered;
         public event Action OnTriggered = delegate { };
+        public event Action<Collider, Vector3> OnTriggeredCollider = delegate { };
 
         private void Awake()
         {
@@ -23,7 +25,11 @@ namespace Obstacles
         
             if (other.gameObject.CompareTag(triggerName))
             {
-                OnTriggered.Invoke();
+                OnTriggered?.Invoke();
+                
+                var dir =  other.transform.position - transform.position;
+                OnTriggeredCollider?.Invoke(other, dir);
+                
                 _bWasTriggered = true;
             }
         }

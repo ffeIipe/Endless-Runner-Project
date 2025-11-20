@@ -1,0 +1,10 @@
+using UnityEngine;
+
+namespace Scriptables
+{
+    [CreateAssetMenu(fileName = "LogData", menuName = "LogData", order = 0)]
+    public class LogData : ScriptableObject
+    {
+        public float damage;
+    }
+}

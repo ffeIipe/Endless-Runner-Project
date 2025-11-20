@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using Factories;
 using Managers;
@@ -10,15 +11,15 @@ namespace Entities.MVC
     {
         private readonly Entity _owner;
         private readonly CharacterController _characterController;
-        private readonly PlayerData _entityData;
+        private readonly PlayerData _playerData;
 
         private Vector3 _lastMovementVector;
         
-        private Vector3 _currentStrafeVelocity;
-        private Vector3 _currentForwardVelocity;
+        private Vector3 _currentVelocity;
         
         private readonly Vector3 _localScale;
         private bool _isSliding;
+        private bool _stopSlideRequest; 
         
         private bool _stopJumpRequest; 
 
@@ -26,17 +27,24 @@ namespace Entities.MVC
         private float _xRotation;
         private float _mouseSensitivity;
         private const float Gravity = -9.81f;
+        
+        private readonly CountdownTimer _attackCooldown;
+        private bool _canAttack;
 
-        public Model(Entity owner, PlayerData entityData)
+        public Model(Entity owner, PlayerData playerData)
         {
             _owner = owner;
-            _entityData = entityData;
-            _mouseSensitivity = entityData.mouseSensitivity;
+            _playerData = playerData;
+            _mouseSensitivity = playerData.mouseSensitivity;
             _localScale = _owner.transform.localScale;
             _camera = Camera.main;
             _characterController = _owner.GetComponent<CharacterController>();
-        }
 
+            _canAttack = true;
+            _attackCooldown = new CountdownTimer(playerData.timeBetweenAttacks);
+            _attackCooldown.OnTimerStop += () => _canAttack = true;
+        }
+        
         public void ApplyGravity()
         {
             var gravity = Vector3.down * (Gravity * Time.fixedDeltaTime);
@@ -51,37 +59,19 @@ namespace Entities.MVC
             var forwardVec = _owner.transform.forward;
             var rightVec = _owner.transform.right;
 
-            var targetForwardVelocity = forwardVec * (verticalInput * _entityData.maxSpeed);
-            var targetStrafeVelocity = rightVec * (horizontalInput * _entityData.maxSpeed);
+            var targetVelocity = forwardVec * (verticalInput * _playerData.maxSpeed) + rightVec * (horizontalInput * _playerData.maxSpeed);
 
-            _currentForwardVelocity = Vector3.MoveTowards(
-                _currentForwardVelocity,
-                targetForwardVelocity,
-                _entityData.acceleration * Time.fixedDeltaTime
-            );
-
-            _currentStrafeVelocity = Vector3.MoveTowards(
-                _currentStrafeVelocity,
-                targetStrafeVelocity,
-                _entityData.acceleration * Time.fixedDeltaTime
-            );
-
-            var finalVelocity = _currentForwardVelocity + _currentStrafeVelocity;
-
-            if (finalVelocity.magnitude > _entityData.maxSpeed && !_isSliding)
-            {
-                finalVelocity = finalVelocity.normalized * _entityData.maxSpeed;
-            }
+            _currentVelocity = Vector3.MoveTowards(_currentVelocity, targetVelocity, Time.deltaTime * _playerData.acceleration);
 
             var finalForce = new Vector3(
-                finalVelocity.x,
+                _currentVelocity.x,
                 0,
-                finalVelocity.z
+                _currentVelocity.z
             );
 
             _characterController.Move(finalForce * Time.fixedDeltaTime);
 
-            _lastMovementVector = finalVelocity.normalized;
+            _lastMovementVector = _currentVelocity.normalized;
         }
 
         private void CancelJump()
@@ -93,10 +83,12 @@ namespace Entities.MVC
         {
             _stopJumpRequest = false;
             
+            CancelSlide();
+            
             var timer = 0f;
             var lastCurveValue = 0f;
 
-            while (timer < _entityData.jumpDuration)
+            while (timer < _playerData.jumpDuration)
             {
                 if (_stopJumpRequest)
                 {
@@ -107,8 +99,8 @@ namespace Entities.MVC
                 {
                     timer += Time.deltaTime;
 
-                    var percent = timer / _entityData.jumpDuration;
-                    var curveValue = _entityData.jumpCurve.Evaluate(percent) * _entityData.jumpHeight;
+                    var percent = timer / _playerData.jumpDuration;
+                    var curveValue = _playerData.jumpCurve.Evaluate(percent) * _playerData.jumpHeight;
                     var moveDeltaY = (curveValue - lastCurveValue);
                     var moveVector = new Vector3(0, moveDeltaY, 0);
 
@@ -123,18 +115,18 @@ namespace Entities.MVC
 
         public bool IsGrounded()
         {
-            var castOriginOffset = _entityData.castOriginOffset; 
+            var castOriginOffset = _playerData.castOriginOffset; 
             var baseOrigin = _owner.transform.position + Vector3.up * castOriginOffset;
             
-            var checkDistance = castOriginOffset + _entityData.jumpMinDistanceAttempt;
+            var checkDistance = castOriginOffset + _playerData.jumpMinDistanceAttempt;
 
             Vector3[] offsets =
             {
                 Vector3.zero,
-                Vector3.forward * _entityData.groundCheckRadius,
-                Vector3.back * _entityData.groundCheckRadius,
-                Vector3.right * _entityData.groundCheckRadius,
-                Vector3.left * _entityData.groundCheckRadius
+                Vector3.forward * _playerData.groundCheckRadius,
+                Vector3.back * _playerData.groundCheckRadius,
+                Vector3.right * _playerData.groundCheckRadius,
+                Vector3.left * _playerData.groundCheckRadius
             };
 
             foreach (var offset in offsets)
@@ -144,7 +136,7 @@ namespace Entities.MVC
 
                 Debug.DrawRay(rayOrigin, Vector3.down * checkDistance, Color.red, 1f);
 
-                if (Physics.Raycast(rayOrigin, Vector3.down, out _, checkDistance, _entityData.groundMask))
+                if (Physics.Raycast(rayOrigin, Vector3.down, out _, checkDistance, _playerData.groundMask))
                 {
                     return true;
                 }
@@ -153,14 +145,19 @@ namespace Entities.MVC
             return false;
         }
 
+        private void CancelSlide()
+        {
+            _stopSlideRequest = true;
+        }
+
         public IEnumerator Slide()
         {
             if (_isSliding) yield break;
             
             _isSliding = true;
+            _stopSlideRequest = false;
 
             CancelJump();
-
             SnapToGround(); 
 
             var targetScale = new Vector3(
@@ -172,15 +169,15 @@ namespace Entities.MVC
             var timer = 0f;
             var lastCurveValue = 0f;
             var previousLastMovementVector = _lastMovementVector;
-                
-            while (timer < _entityData.slideDuration)
+            
+            while (timer < _playerData.slideDuration)
             {
                 if (!GameManager.IsPaused)
                 {
                     timer += Time.deltaTime;
 
-                    var percent = timer / _entityData.slideDuration;
-                    var curveValue = _entityData.slideCurve.Evaluate(percent) * _entityData.slideDistance;
+                    var percent = timer / _playerData.slideDuration;
+                    var curveValue = _playerData.slideCurve.Evaluate(percent) * _playerData.slideDistance;
                     var moveDeltaX = curveValue - lastCurveValue;
 
                     _characterController.Move(previousLastMovementVector * moveDeltaX);
@@ -190,28 +187,28 @@ namespace Entities.MVC
                     _owner.transform.localScale = Vector3.Lerp(
                         _owner.transform.localScale, 
                         targetScale, 
-                        Time.deltaTime * _entityData.scaleSmoothingSpeed
+                        Time.deltaTime * _playerData.scaleSmoothingSpeed
                     );
+                }
+                
+                if (_stopSlideRequest)
+                { 
+                    break;
                 }
 
                 yield return null;
             }
             
-            yield return ResetSlide();
-        }
+            _isSliding = false;
+            _stopSlideRequest = false;
 
-        private void SnapToGround()
-        {
-            if (Physics.Raycast(_owner.transform.position, Vector3.down, out RaycastHit hit, _entityData.groundSnapDistance, _entityData.groundMask))
-            {
-                _characterController.Move(Vector3.down * hit.distance);
-            }
+            _owner.StartCoroutine(ResetSlide());
         }
 
         private IEnumerator ResetSlide()
         {
             var timer = 0f;
-            var duration = _entityData.slideResetDuration;
+            var duration = _playerData.slideResetDuration;
             var startScale = _owner.transform.localScale;
 
             while (timer < duration)
@@ -227,8 +224,48 @@ namespace Entities.MVC
             }
 
             _owner.transform.localScale = _localScale;
-            _isSliding = false;
         }
+        
+        private void SnapToGround()
+        {
+            _owner.StartCoroutine(DoSnapToGround());
+        }
+
+        private IEnumerator DoSnapToGround()
+        {
+            if (Physics.Raycast(_owner.transform.position, Vector3.down, out RaycastHit hit, _playerData.groundSnapDistance, _playerData.groundMask))
+            {
+                var timer = 0f;
+                var duration = _playerData.snapDuration; 
+                
+                var startDistance = 0f;
+                var targetDistance = hit.distance;
+                var lastDistanceMoved = 0f;
+
+                while (timer < duration && _isSliding && !_stopSlideRequest)
+                {
+                    if (!GameManager.IsPaused)
+                    {
+                        timer += Time.deltaTime;
+                        var t = timer / duration;
+                        var currentTotalDrop = Mathf.Lerp(startDistance, targetDistance, t);
+                        var deltaToMove = currentTotalDrop - lastDistanceMoved;
+                        
+                        _characterController.Move(Vector3.down * deltaToMove);
+                        
+                        lastDistanceMoved = currentTotalDrop;
+                    }
+                    
+                    yield return null;
+                }
+                
+                if (_isSliding && !_stopSlideRequest && lastDistanceMoved < targetDistance)
+                {
+                     _characterController.Move(Vector3.down * (targetDistance - lastDistanceMoved));
+                }
+            }
+        }
+
 
         public void Look()
         {
@@ -244,11 +281,20 @@ namespace Entities.MVC
 
         public void ThrowAxe()
         {
+            if(!_canAttack) return;
+            
+            _canAttack = false;
             var bullet = BulletFactory.Instance.SpawnBullet(_owner.handPoint, _owner);
-            var finalForce = _currentForwardVelocity +  _currentStrafeVelocity;
-            bullet.Fire(_owner.handPoint.forward, _owner.transform.rotation,finalForce * 0.5f);
+            bullet.Fire(_owner.handPoint.forward, _owner.transform.rotation,_currentVelocity);
+            
+            _attackCooldown.Start();
         }
 
+        public void ExecuteCooldowns()
+        {
+            _attackCooldown.Tick(Time.deltaTime);
+        }
+        
         public void ChangeSensitivity(float newSens)
         {
             _mouseSensitivity = Mathf.Lerp(100f, 1000f, newSens);

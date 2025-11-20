@@ -23,7 +23,7 @@ namespace Factories
 
             _enemyPool = new Pool<Enemy>(
                 () => Instantiate((Enemy)poolData.prefabToSpawn)
-                , enemy => enemy.Activate()
+                , enemy => { } 
                 , enemy => enemy.Deactivate()
                 , poolData.poolSize
             );
@@ -32,6 +32,7 @@ namespace Factories
         public Enemy SpawnEnemy(Transform origin)
         {
             var newEnemy = _enemyPool.GetObject();
+            
             newEnemy.transform.SetLocalPositionAndRotation(origin.position, origin.rotation);    
             newEnemy.Activate();
             

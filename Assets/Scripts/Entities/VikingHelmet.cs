@@ -2,7 +2,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(SphereCollider))]
-public class DeathProp : MonoBehaviour
+public class VikingHelmet : MonoBehaviour
 {
     private Rigidbody _rigidbody;
     private SphereCollider _collider;

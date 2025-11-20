@@ -19,15 +19,5 @@ namespace Entities.Enemies
         {
             GetFSM().Execute();
         }
-        
-        /*public override void Activate()
-        {
-            base.Activate();   
-        }
-
-        public override void Deactivate()
-        {
-           base.Deactivate();
-        }*/
     }
 }

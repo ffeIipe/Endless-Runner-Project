@@ -8,6 +8,7 @@ namespace Scriptables
         [Header("Movement Settings")]
         public float acceleration;
         public float maxSpeed;
+        public float speedDecayRate;
         
         [Header("Jump Settings")]
         public float jumpHeight;
@@ -25,9 +26,14 @@ namespace Scriptables
         public AnimationCurve slideCurve;
         public float scaleSmoothingSpeed;
         public float slideResetDuration;
+        public float snapDuration;
 
+        [Header("Attack Settings")]
+        public float timeBetweenAttacks;
+        
         [Header("Controller Settings")] 
         public float mouseSensitivity;
 
+        public float momentumDecay = 5f;
     }
 }

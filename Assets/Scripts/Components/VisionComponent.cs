@@ -16,29 +16,27 @@ namespace Components
         private readonly EnemyData _enemyData;
         private readonly TeamType _ownerTeamType;
         private readonly Func<IEnumerator, Coroutine> _startCoroutine;
-        private bool _enabled;
+        private readonly Action<Coroutine> _stopCoroutine;
         
+        private Coroutine _searchCoroutine;
         private readonly HashSet<Entity> _validTargets;
         private readonly WaitForSeconds _scanInterval;
 
-        public VisionComponent(Enemy owner, EnemyData enemyData, Func<IEnumerator, Coroutine> startCoroutine)
+        public VisionComponent(Enemy owner, EnemyData enemyData, Func<IEnumerator, Coroutine> startCoroutine, Action<Coroutine> stopCoroutine)
         {
             _owner = owner;
             _enemyData = enemyData;
             _startCoroutine = startCoroutine;
+            _stopCoroutine = stopCoroutine;
             _ownerTeamType = _owner.GetTeam();
 
-            _enabled = true;
             _validTargets = new HashSet<Entity>();
             _scanInterval = new WaitForSeconds(enemyData.scanInterval);
-            
-            _startCoroutine(SearchTargets());
         }
         
         public Entity GetTarget()
         {
             _validTargets.RemoveWhere(entity => !entity || !entity.GetAttributesComponent().IsAlive());
-
             return _validTargets.FirstOrDefault();
         }
 
@@ -61,24 +59,27 @@ namespace Components
 
         public void EnableVision()
         {
-            if (_enabled) return;
-            _enabled = true;
-            _startCoroutine(SearchTargets());
+            if (_searchCoroutine != null) return;
+            _searchCoroutine = _startCoroutine(SearchTargets());
         }
 
         public void DisableVision()
         {
-            _enabled = false;
+            if (_searchCoroutine != null)
+            {
+                _stopCoroutine(_searchCoroutine);
+                _searchCoroutine = null;
+            }
             _validTargets.Clear();
         }
         
         public bool HasLineOfSight()
         {
             var target = GetTarget();
-            if (target == null) return false;
+            if (!target) return false;
 
-            var startLocation = _owner.transform.position;
-            var endLocation = target.transform.position;
+            var startLocation = _owner.transform.position + Vector3.up;
+            var endLocation = target.transform.position + Vector3.up;
 
             var direction = (endLocation - startLocation).normalized;
             var distance = Vector3.Distance(startLocation, endLocation);
@@ -88,30 +89,33 @@ namespace Components
         
         private IEnumerator SearchTargets()
         {
-            while (_enabled)
+            while (true)
             {
-                var colliders = Physics.OverlapSphere(_owner.transform.position, _enemyData.attackDistance, _enemyData.targetLayer);
+                if (_owner == null) yield break;
+
+                var colliders = Physics.OverlapSphere(
+                    _owner.transform.position, 
+                    _enemyData.attackDistance, 
+                    _enemyData.targetLayer,
+                    QueryTriggerInteraction.Ignore 
+                );
                 
+                var startPos = _owner.handPoint != null ? _owner.handPoint.position : _owner.transform.position;
+                Debug.DrawLine(startPos, startPos + _owner.transform.forward * _enemyData.attackDistance, Color.red, 0.5f);
+        
                 _validTargets.Clear();
 
                 foreach (var col in colliders)
                 {
-                    if (col == null) continue;
+                    if (!col) continue; 
 
                     var entity = col.GetComponentInParent<Entity>();
 
-                    if (entity != null && 
-                        entity.GetTeam() != _ownerTeamType && 
-                        entity.GetAttributesComponent().IsAlive())
-                    {
-                        _validTargets.Add(entity);
-                    }
-                    else
-                    {
-                        _validTargets.Remove(entity);
-                    }
+                    if (!entity || !entity.GetAttributesComponent().IsAlive()) continue;
+                    
+                    if (entity.GetTeam() != _ownerTeamType) _validTargets.Add(entity);
                 }
-                
+        
                 yield return _scanInterval;
             }
         }
