@@ -7,7 +7,6 @@ namespace Scriptables
     {
         public float damage;
         public float speed;
-        public float rotationRate;
         public float duration;
     }
 }

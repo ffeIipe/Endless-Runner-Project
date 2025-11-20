@@ -42,7 +42,7 @@ namespace Obstacles
         
                 if (logModel)
                 {
-                    logModel.transform.Rotate(Vector3.up, logData.rotationRate * Time.deltaTime, Space.Self);
+                    logModel.transform.Rotate(Vector3.up, logData.speed * -20 * Time.deltaTime, Space.Self);
                 }
 
                 yield return null;
