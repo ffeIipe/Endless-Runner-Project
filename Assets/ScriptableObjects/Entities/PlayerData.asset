@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 3
   teamType: 1
-  acceleration: 50
+  acceleration: 70
   maxSpeed: 22
   speedDecayRate: 0.5
   jumpHeight: 10

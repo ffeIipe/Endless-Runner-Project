@@ -13,3 +13,6 @@ MonoBehaviour:
   m_Name: LogData
   m_EditorClassIdentifier: 
   damage: 1
+  speed: 15
+  rotationRate: 15
+  duration: 5

@@ -67,6 +67,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   triggerName: Player
+  triggerOnce: 1
 --- !u!1 &1372971388793899315
 GameObject:
   m_ObjectHideFlags: 0

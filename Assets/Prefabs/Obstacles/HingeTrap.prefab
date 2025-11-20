@@ -269,6 +269,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   triggerName: Bullet
+  triggerOnce: 1
 --- !u!33 &5437045225966754962
 MeshFilter:
   m_ObjectHideFlags: 0

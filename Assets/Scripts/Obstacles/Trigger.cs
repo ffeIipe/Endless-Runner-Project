@@ -7,6 +7,7 @@ namespace Obstacles
     public sealed class Trigger : MonoBehaviour
     {
         [SerializeField] private string triggerName;
+        [SerializeField] private bool triggerOnce;
         
         private BoxCollider _boxCollider;
         private bool _bWasTriggered;
@@ -21,7 +22,7 @@ namespace Obstacles
 
         private void OnTriggerEnter(Collider other)
         {
-            if (_bWasTriggered) return;
+            if (_bWasTriggered && triggerOnce) return;
         
             if (other.gameObject.CompareTag(triggerName))
             {
