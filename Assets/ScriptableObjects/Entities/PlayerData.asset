@@ -59,7 +59,7 @@ MonoBehaviour:
   groundMask:
     serializedVersion: 2
     m_Bits: 8
-  slideDistance: 3
+  slideDistance: 5
   slideDuration: 1
   slideCurve:
     serializedVersion: 2
@@ -97,6 +97,6 @@ MonoBehaviour:
   scaleSmoothingSpeed: 15
   slideResetDuration: 0.1
   snapDuration: 0.3
-  timeBetweenAttacks: 0.6
+  timeBetweenAttacks: 0.3
   mouseSensitivity: 500
   momentumDecay: 5

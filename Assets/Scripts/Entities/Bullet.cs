@@ -34,6 +34,7 @@ namespace Entities
         {
             if (gameObject.activeInHierarchy && !_isMovementStopped)
             {
+                //Debug.DrawLine(_owner.handPoint.position, _owner.handPoint.position + _direction.normalized * 1000f, Color.red);
                 transform.position += _direction * Time.fixedDeltaTime;
             }
         }
@@ -56,10 +57,9 @@ namespace Entities
             _rigidbody.isKinematic = true;
         }
 
-        public void Fire(Vector3 direction, Quaternion rotation, Vector3 velocity)
+        public void Fire(Vector3 direction, Vector3 velocity)
         {
             _rigidbody.velocity += velocity;
-            transform.rotation = rotation;
             
             _direction = direction * bulletData.bulletForce;
             _rigidbody.AddTorque(transform.right, ForceMode.Impulse);

@@ -66,16 +66,15 @@ namespace FiniteStateMachine.States
 
             var randomX = Random.Range(-errorAngle, errorAngle);
             var randomY = Random.Range(-errorAngle, errorAngle);
-
+            
             var spreadRotation = Quaternion.Euler(randomX, randomY, 0);
-
-            var deviatedDirection = spreadRotation * Owner.handPoint.forward;
-
-            var deviatedRotation = Quaternion.LookRotation(deviatedDirection);
-
-            var bullet = BulletFactory.Instance.SpawnBullet(Owner.transform, Owner);
+            var dir = VisionComponent.GetTargetDirection().normalized;
+            var deviatedDirection = spreadRotation * dir;
+            var bullet = BulletFactory.Instance.SpawnBullet(Owner.handPoint, Owner);
+            
+            Debug.DrawRay(Owner.handPoint.position, VisionComponent.GetTargetDirection(), Color.cyan, 1f);
     
-            bullet.Fire(deviatedDirection, deviatedRotation, Vector3.one);
+            bullet.Fire(deviatedDirection, dir);
         }
     }
 }

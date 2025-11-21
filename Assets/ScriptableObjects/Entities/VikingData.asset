@@ -19,7 +19,7 @@ MonoBehaviour:
   minAttackCooldown: 1.2
   maxAttackCooldown: 1.6
   interpSpeed: 5
-  spread: 2
+  spread: 0
   targetLayer:
     serializedVersion: 2
     m_Bits: 128

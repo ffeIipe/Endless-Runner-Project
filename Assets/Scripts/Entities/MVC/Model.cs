@@ -134,7 +134,7 @@ namespace Entities.MVC
                 var worldOffset = _owner.transform.TransformDirection(offset);
                 var rayOrigin = baseOrigin + worldOffset;
 
-                Debug.DrawRay(rayOrigin, Vector3.down * checkDistance, Color.red, 1f);
+                //Debug.DrawRay(rayOrigin, Vector3.down * checkDistance, Color.red, 1f);
 
                 if (Physics.Raycast(rayOrigin, Vector3.down, out _, checkDistance, _playerData.groundMask))
                 {
@@ -285,7 +285,7 @@ namespace Entities.MVC
             
             _canAttack = false;
             var bullet = BulletFactory.Instance.SpawnBullet(_owner.handPoint, _owner);
-            bullet.Fire(_owner.handPoint.forward, _owner.transform.rotation,_currentVelocity);
+            bullet.Fire(_owner.handPoint.forward, _currentVelocity);
             
             _attackCooldown.Start();
         }

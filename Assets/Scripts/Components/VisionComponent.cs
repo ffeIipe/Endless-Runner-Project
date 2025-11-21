@@ -43,9 +43,9 @@ namespace Components
         public Vector3 GetTargetDirection()
         {
             var target = GetTarget();
-            if (target != null)
+            if (target)
             {
-                return target.transform.position - _owner.transform.position;
+                return target.transform.position - _owner.handPoint.position;
             }
 
             return Vector3.zero;
@@ -100,9 +100,6 @@ namespace Components
                     QueryTriggerInteraction.Ignore 
                 );
                 
-                var startPos = _owner.handPoint != null ? _owner.handPoint.position : _owner.transform.position;
-                Debug.DrawLine(startPos, startPos + _owner.transform.forward * _enemyData.attackDistance, Color.red, 0.5f);
-        
                 _validTargets.Clear();
 
                 foreach (var col in colliders)
