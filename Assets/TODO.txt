@@ -9,8 +9,6 @@
 Efecto Visual: Un escudo redondo de madera (típico vikingo con el umbo de metal en el centro) flota orbitando alrededor
  del personaje o se coloca en su frente. Al recibir el golpe, se escucharía madera rompiéndose.
 
-- medkit (curacion)
-
 - Berserker (se disparan hachas automaticamente)
 La cápsula se pone de color rojo intenso o emite partículas de fuego, y al chocar con un muro, este se rompe en pedazos 
 (usando un sistema de partículas simple o intercambiando el modelo por uno fracturado).
@@ -19,5 +17,9 @@ La cápsula se pone de color rojo intenso o emite partículas de fuego, y al cho
 - Troncos del rio moviendose
 - Piedras saltables
 
-
-
+//Cosas para hacer
+- EffectsManager:
+    *HitStop
+    *FOV
+    *TimeWarp
+- Conectar la final screen con el EffectsManager para hacer una transicion limpia

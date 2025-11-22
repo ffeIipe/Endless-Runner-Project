@@ -8,15 +8,15 @@ namespace Entities.Enemies
         {
             base.Awake();
             
-            GetFSM().CreateState("Idle", new IdleState(GetFSM()));
-            GetFSM().CreateState("Attack", new AttackState(GetFSM()));
+            GetStateMachine().CreateState("Idle", new IdleState(GetStateMachine()));
+            GetStateMachine().CreateState("Attack", new AttackState(GetStateMachine()));
             
-            GetFSM().ChangeState("Idle");
+            GetStateMachine().ChangeState("Idle");
         }
 
         private void Update()
         {
-            GetFSM().Execute();
+            GetStateMachine().Execute();
         }
     }
 }

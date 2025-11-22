@@ -11,11 +11,11 @@ namespace Entities.Enemies
     public abstract class Enemy : Entity, IPoolable
     {
         private EnemyData EnemyData => (EnemyData)entityData;
-        private FSM _fsm;
+        private StateMachine _stateMachine;
         private VisionComponent _visionComponent;
         
         public VisionComponent GetVisionComponent() => _visionComponent;
-        protected FSM GetFSM() => _fsm;
+        protected StateMachine GetStateMachine() => _stateMachine;
         public EntityData GetData() => EnemyData;
         
         protected override void Awake()
@@ -23,7 +23,7 @@ namespace Entities.Enemies
             base.Awake();
             
             _visionComponent = new VisionComponent(this, EnemyData, StartCoroutine, StopCoroutine);
-            _fsm = new FSM(this);
+            _stateMachine = new StateMachine(this);
         }
 
         protected override ViewBase CreateView()
@@ -45,8 +45,8 @@ namespace Entities.Enemies
             
             _visionComponent.EnableVision();
 
-            GetFSM().ChangeState("Idle");
-            GetFSM().Enabled = true;
+            GetStateMachine().ChangeState("Idle");
+            GetStateMachine().Enabled = true;
         }
 
         public virtual void Deactivate()
@@ -64,12 +64,12 @@ namespace Entities.Enemies
             
             if (pause)
             {
-                GetFSM().Enabled = false;
+                GetStateMachine().Enabled = false;
             }
             else
             {
                 if(GetAttributesComponent().IsAlive())
-                    GetFSM().Enabled = true;
+                    GetStateMachine().Enabled = true;
             }
         }
         

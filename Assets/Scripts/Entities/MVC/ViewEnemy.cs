@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
-using Components;
+using Enums;
 using Managers;
 using Scriptables;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Entities.MVC
 {
@@ -30,6 +31,8 @@ namespace Entities.MVC
             base.OnEntityDead();
             
             ApplyDissolveEffect();
+            
+            EventManager.PlayerEvents.OnEnemyKilled.Invoke();
         }
         
         private void OnEntityDeactivated()
@@ -45,6 +48,16 @@ namespace Entities.MVC
             if (!Owner.GetAttributesComponent().IsAlive())
             {
                 _vikingHelmet.ActivateDeathProp(hitPoint * force);
+            }
+        }
+
+        public override void HeadShotEffect()
+        {
+            base.HeadShotEffect();
+            //var chance = Random.Range(0, );
+            if (true)
+            {
+                EffectsManager.Instance.PlayEffect(HitStopType.Fast);
             }
         }
 

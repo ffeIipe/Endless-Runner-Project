@@ -1,4 +1,3 @@
-using Entities.Enemies;
 using Enums;
 using Managers;
 using UnityEngine;
@@ -11,11 +10,10 @@ namespace Obstacles
 
         public void Spawn()
         {
-            FactoryManager.Instance.Spawn<Enemy>(
+            FactoryManager.Instance.SpawnObject(
                 enemyToSpawn,
                 transform.position,
-                transform.rotation,
-                null
+                transform.rotation
             );
         }
 

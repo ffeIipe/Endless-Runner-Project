@@ -61,5 +61,10 @@ namespace Components
         {
             return _shield > 0;
         }
+
+        public void IncreaseShield(float shield)
+        {
+            _shield += shield;
+        }
     }
 }

@@ -91,7 +91,7 @@ namespace Entities
                 return;
             }
 
-            var hitEntity = hitCollider.GetComponentInParent<Entity>();
+            hitCollider.TryGetComponent(out Entity hitEntity);
             if (hitEntity && hitEntity != _owner)
             {
                 if (hitEntity.GetAttributesComponent().IsShielded())

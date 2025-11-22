@@ -4,6 +4,8 @@ namespace Enums
     {
         Bullet,
         Viking,
-        ShieldedViking
+        ShieldedViking,
+        HealthPowerUp,
+        ShieldPowerUp
     }
 }

@@ -75,7 +75,7 @@ namespace Entities.MVC
 
             _lastMovementVector = _currentVelocity.normalized;
             
-            EventManager.UIEvents.OnVelocityChanged?.Invoke(_currentVelocity.magnitude);
+            OnVelocityChanged.Invoke(_currentVelocity.magnitude);
         }
 
         private void CancelJump()
@@ -283,19 +283,23 @@ namespace Entities.MVC
 
         public void ThrowAxe()
         {
-            if(!_canAttack) return;
-            
+            if (!_canAttack) return;
+
             _canAttack = false;
-            
+
             var bullet = FactoryManager.Instance.Spawn<Bullet>(
                 PoolableType.Bullet,
                 _owner.handPoint.position,
                 _owner.handPoint.rotation,
                 _owner
             );
-            
-            bullet.Fire(_owner.handPoint.forward, _currentVelocity);
-            
+
+            var aimDirection = _owner.handPoint.forward;
+            var projectedSpeed = Vector3.Dot(_currentVelocity, aimDirection);
+            var velocityToTransfer = aimDirection * projectedSpeed;
+
+            bullet.Fire(aimDirection, velocityToTransfer);
+
             _attackCooldown.Start();
         }
 

@@ -93,9 +93,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1847463888239247564}
   - component: {fileID: 4202682271539409031}
-  - component: {fileID: 3769189025074134282}
+  - component: {fileID: 6808457596418026232}
   m_Layer: 0
-  m_Name: MedKit
+  m_Name: ShieldPowerUp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -138,7 +138,7 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 2
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3769189025074134282
+--- !u!114 &6808457596418026232
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -147,7 +147,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8337545607525152148}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 670b30e935d141aebb7dff744d2d62fe, type: 3}
+  m_Script: {fileID: 11500000, guid: 60d6aca1353b4af39b677e15f4cd099f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  powerUpData: {fileID: 11400000, guid: be1be4bbf0cac5a43bb52ff88609e030, type: 2}
+  powerUpData: {fileID: 11400000, guid: 9e49c83c35294a7448720005aa433475, type: 2}

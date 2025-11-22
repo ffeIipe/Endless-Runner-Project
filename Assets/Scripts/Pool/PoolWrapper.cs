@@ -16,8 +16,8 @@ namespace Pool
         {
             _pool = new Pool<T>(
                 factoryMethod: () => Object.Instantiate(prefab),
-                turnOnCallback: (item) => item.Activate(),
-                turnOffCallback: (item) => item.Deactivate(),
+                turnOnCallback: item => item.Activate(),
+                turnOffCallback: item => item.Deactivate(),
                 initialAmount: size
             );
         }

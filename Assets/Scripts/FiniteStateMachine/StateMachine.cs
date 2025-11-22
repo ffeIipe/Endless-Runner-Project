@@ -3,7 +3,7 @@ using Entities.Enemies;
 
 namespace FiniteStateMachine
 {
-    public class FSM
+    public class StateMachine
     {
         public bool Enabled = true;
     
@@ -12,7 +12,7 @@ namespace FiniteStateMachine
         private readonly Dictionary<string, BaseState> _states;
         private BaseState _actualState;
 
-        public FSM(Enemy owner)
+        public StateMachine(Enemy owner)
         {
             Owner = owner;
             _states = new Dictionary<string, BaseState>();

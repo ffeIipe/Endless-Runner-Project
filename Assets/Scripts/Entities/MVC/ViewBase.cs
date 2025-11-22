@@ -28,5 +28,10 @@ namespace Entities.MVC
         {
             //vfx dmg particle
         }
+
+        public virtual void HeadShotEffect()
+        {
+            
+        }
     }
 }

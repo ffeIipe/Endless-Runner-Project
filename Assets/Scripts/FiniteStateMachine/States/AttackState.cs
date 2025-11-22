@@ -9,7 +9,7 @@ namespace FiniteStateMachine.States
     {
         private readonly CountdownTimer _countdownTimer;
 
-        public AttackState(FSM fsm) : base(fsm)
+        public AttackState(StateMachine stateMachine) : base(stateMachine)
         {
             _countdownTimer = new CountdownTimer(
                 Random.Range(
@@ -24,7 +24,7 @@ namespace FiniteStateMachine.States
         public override void EnterState()
         {
             if (!VisionComponent.GetTarget()) 
-                FSM.ChangeState("Idle");
+                StateMachine.ChangeState("Idle");
             
             _countdownTimer.Start();
         }
@@ -38,7 +38,7 @@ namespace FiniteStateMachine.States
         public override void UpdateState()
         {
             if (!VisionComponent.GetTarget()) 
-                FSM.ChangeState("Idle");
+                StateMachine.ChangeState("Idle");
             
             FaceTarget();
             _countdownTimer.Tick(Time.deltaTime);

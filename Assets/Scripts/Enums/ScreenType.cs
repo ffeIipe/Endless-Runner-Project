@@ -7,6 +7,7 @@ namespace Enums
         Gameplay,
         Options,
         PauseMenu,
-        DeathMenu
+        DeathMenu,
+        FinalMenu
     }
 }

@@ -6,7 +6,7 @@ namespace FiniteStateMachine.States
 {
     public class ChaseState : BaseState
     {
-        public ChaseState(FSM fsm) : base(fsm) { }
+        public ChaseState(StateMachine stateMachine) : base(stateMachine) { }
 
         public override void EnterState()
         {

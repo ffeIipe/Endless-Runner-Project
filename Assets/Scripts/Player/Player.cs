@@ -11,6 +11,7 @@ namespace Player
         private PlayerData PlayerData => (PlayerData)entityData;
         private Model _model;
         private Controller _controller;
+        private ViewPlayer _viewPlayer;
         private CharacterController _characterController;
 
         public CharacterController GetCharacterController() => _characterController;
@@ -26,6 +27,17 @@ namespace Player
             
             _model = new Model(this, PlayerData);
             _controller = new Controller(_model, StartCoroutine);
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+            
+            GetAttributesComponent().OnReceiveDamage += health =>
+            {
+                EventManager.UIEvents.OnHealthChanged?.Invoke(health);
+                EventManager.PlayerEvents.OnPlayerDamaged.Invoke();
+            };
             
             GetAttributesComponent().OnDead += () =>
             {
@@ -34,26 +46,23 @@ namespace Player
                 
                 _controller.Enabled = false;
             };
-        }
-
-        protected override void Start()
-        {
-            base.Start();
-
-            GameManager.Instance.player = this;
-            
-            GetAttributesComponent().OnReceiveDamage += health =>
-            {
-                EventManager.UIEvents.OnHealthChanged?.Invoke(health);
-            };
             
             EventManager.UIEvents.OnSensitivityChanged += _model.ChangeSensitivity;
             EventManager.UIEvents.OnHealthChanged?.Invoke(PlayerData.health);
+
+            _model.OnVelocityChanged += _viewPlayer.GetVelocity;
         }
+        
+        protected void Start()
+        {
+            GameManager.Instance.player = this;
+        }
+
 
         protected override ViewBase CreateView()
         {
-            return new ViewPlayer(this, _model);
+            _viewPlayer = new ViewPlayer(this, _model);
+            return _viewPlayer;
         }
 
         protected void Update()
@@ -70,14 +79,7 @@ namespace Player
         {
             base.PauseEntity(pause);
 
-            if (pause)
-            {
-                _controller.Enabled = false;
-            }
-            else
-            {
-                _controller.Enabled = true;
-            }
+            _controller.Enabled = !pause;
         }
 
         private void OnDrawGizmos()

@@ -5,7 +5,7 @@ namespace FiniteStateMachine.States
 {
     public class IdleState : BaseState
     {
-        public IdleState(FSM fsm) : base(fsm) { }
+        public IdleState(StateMachine stateMachine) : base(stateMachine) { }
 
         public override void EnterState()
         {
@@ -21,7 +21,7 @@ namespace FiniteStateMachine.States
         {
             if (VisionComponent.GetTarget())
             {
-                FSM.ChangeState("Attack");
+                StateMachine.ChangeState("Attack");
             }
         }
 

@@ -5,6 +5,7 @@ namespace Entities.PowerUps
     public class HealthPowerUp : PowerUp
     {
         private HealthPowerUpData _healthPowerUpData;
+        
         protected override void Awake()
         {
             base.Awake();
@@ -12,9 +13,9 @@ namespace Entities.PowerUps
             _healthPowerUpData = (HealthPowerUpData)powerUpData;
         }
 
-        protected override void ApplyEffect(Entity user)
+        public override void PickUp(Entity user)
         {
-            base.ApplyEffect(user);
+            base.PickUp(user);
             
             user.GetAttributesComponent().IncreaseHealth(_healthPowerUpData.health);
         }

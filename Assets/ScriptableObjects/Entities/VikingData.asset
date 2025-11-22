@@ -15,12 +15,12 @@ MonoBehaviour:
   health: 1
   shield: 0
   teamType: 0
-  poolId: Viking
+  poolableType: 1
   maxPatrolDistance: NaN
-  attackDistance: 30
+  attackDistance: 37
   minAttackCooldown: 1.2
   maxAttackCooldown: 1.6
-  interpSpeed: 5
+  interpSpeed: 4.5
   spread: 3
   targetLayer:
     serializedVersion: 2

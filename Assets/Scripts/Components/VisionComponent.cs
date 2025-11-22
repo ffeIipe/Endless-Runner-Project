@@ -105,9 +105,9 @@ namespace Components
 
                 foreach (var col in colliders)
                 {
-                    if (!col) continue; 
+                    if (!col) continue;
 
-                    var entity = col.GetComponentInParent<Entity>();
+                    col.gameObject.TryGetComponent(out Entity entity);
 
                     if (!entity || !entity.GetAttributesComponent().IsAlive()) continue;
                     

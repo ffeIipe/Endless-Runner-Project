@@ -76,6 +76,26 @@ namespace Managers
 
             return typedItem;
         }
+        
+        public Component SpawnObject(PoolableType poolableType, Vector3 position, Quaternion rotation, Entity owner = null)
+        {
+            if (!_pools.TryGetValue(poolableType, out var handler))
+            {
+                return null;
+            }
+
+            var item = handler.GetInstance();
+
+            if (item is Component componentItem)
+            {
+                componentItem.transform.SetPositionAndRotation(position, rotation);
+                item.SetOwner(owner);
+                return componentItem;
+            }
+
+            handler.ReturnInstance(item);
+            return null;
+        }
 
         public void ReturnObject(PoolableType poolableType, IPoolable obj)
         {

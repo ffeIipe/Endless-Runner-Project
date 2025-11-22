@@ -40,15 +40,15 @@ namespace Entities
             SavedRigidbodyConstraints = _rigidbody.constraints;
             
             _attributesComponent = new AttributesComponent(entityData.health, entityData.shield);
-            _attributesComponent.OnDead += View.OnEntityDead;
-            _attributesComponent.OnShieldDamage += View.OnShieldDamaged;
-            
             _teamComponent = new TeamComponent(entityData.teamType);
         }
 
-        protected virtual void Start()
+        protected virtual void OnEnable()
         {
             EventManager.GameEvents.Pause += PauseEntity;
+            
+            _attributesComponent.OnDead += View.OnEntityDead;
+            _attributesComponent.OnShieldDamage += View.OnShieldDamaged;
         }
 
         protected virtual ViewBase CreateView()
@@ -66,6 +66,17 @@ namespace Entities
             if (!GetAttributesComponent().IsAlive())
             {
                 _rigidbody.AddForce(hitPoint.normalized * force, ForceMode.Impulse);
+            }
+
+            if (!TryGetComponent(out CapsuleCollider coll)) return;
+            
+            var bounds = coll.bounds; 
+            var totalHeight = bounds.size.y;
+            var headThreshold = bounds.min.y + (totalHeight * 0.66f);
+
+            if (hitPoint.y >= headThreshold)
+            {
+                View.HeadShotEffect();
             }
         }
 
