@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39c8c6fcc2874bd486686c3ea5392248, type: 3}
-  m_Name: EnemyPoolData
+  m_Name: VikingPoolData
   m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 7676379184194972918, guid: 5e5fab5a324e3fc4d94cce714bb927de,
-    type: 3}
-  poolSize: 10
+  poolableType: 1
+  prefab: {fileID: 690779489631089750, guid: 5e5fab5a324e3fc4d94cce714bb927de, type: 3}
+  prewarmSize: 10

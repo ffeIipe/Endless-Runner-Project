@@ -11,7 +11,6 @@ namespace Player
         private PlayerData PlayerData => (PlayerData)entityData;
         private Model _model;
         private Controller _controller;
-        private View _view;
         private CharacterController _characterController;
 
         public CharacterController GetCharacterController() => _characterController;
@@ -19,12 +18,6 @@ namespace Player
         protected override void Awake()
         {
             base.Awake();
-
-            GetAttributesComponent().OnDead += () =>
-            {
-                EventManager.PlayerEvents.OnPlayerDead.Invoke();
-                Cursor.lockState = CursorLockMode.None;
-            };
             
             _characterController = GetComponent<CharacterController>();
             _characterController.stepOffset = 0;
@@ -33,7 +26,14 @@ namespace Player
             
             _model = new Model(this, PlayerData);
             _controller = new Controller(_model, StartCoroutine);
-            _view = new View(_model);
+            
+            GetAttributesComponent().OnDead += () =>
+            {
+                EventManager.PlayerEvents.OnPlayerDead.Invoke();
+                Cursor.lockState = CursorLockMode.None;
+                
+                _controller.Enabled = false;
+            };
         }
 
         protected override void Start()
@@ -42,15 +42,18 @@ namespace Player
 
             GameManager.Instance.player = this;
             
-            EventManager.UIEvents.OnSensitivityChanged += _model.ChangeSensitivity;
-            EventManager.UIEvents.OnSoundVolumeChanged += _view.UpdateVolumeSound;
-        }
-        
-        protected override void Dead()
-        {
-            base.Dead();
+            GetAttributesComponent().OnReceiveDamage += health =>
+            {
+                EventManager.UIEvents.OnHealthChanged?.Invoke(health);
+            };
             
-            _controller.Enabled = false;
+            EventManager.UIEvents.OnSensitivityChanged += _model.ChangeSensitivity;
+            EventManager.UIEvents.OnHealthChanged?.Invoke(PlayerData.health);
+        }
+
+        protected override ViewBase CreateView()
+        {
+            return new ViewPlayer(this, _model);
         }
 
         protected void Update()

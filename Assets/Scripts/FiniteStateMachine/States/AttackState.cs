@@ -1,22 +1,30 @@
-﻿using Factories;
+﻿using Entities;
+using Enums;
+using Managers;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace FiniteStateMachine.States
 {
     public class AttackState : BaseState
     {
-        private CountdownTimer _countdownTimer;
+        private readonly CountdownTimer _countdownTimer;
 
         public AttackState(FSM fsm) : base(fsm)
         {
-            _countdownTimer = new CountdownTimer(Random.Range(EnemyData.minAttackCooldown, EnemyData.minAttackCooldown * EnemyData.maxAttackCooldown));
+            _countdownTimer = new CountdownTimer(
+                Random.Range(
+                    EnemyData.minAttackCooldown,
+                    EnemyData.minAttackCooldown * EnemyData.maxAttackCooldown
+                )
+            );
+            
             _countdownTimer.OnTimerStop += TryAttack;
         }
 
         public override void EnterState()
         {
-            if (!VisionComponent.GetTarget()) FSM.ChangeState("Idle");
+            if (!VisionComponent.GetTarget()) 
+                FSM.ChangeState("Idle");
             
             _countdownTimer.Start();
         }
@@ -29,7 +37,8 @@ namespace FiniteStateMachine.States
 
         public override void UpdateState()
         {
-            if (!VisionComponent.GetTarget()) FSM.ChangeState("Idle");
+            if (!VisionComponent.GetTarget()) 
+                FSM.ChangeState("Idle");
             
             FaceTarget();
             _countdownTimer.Tick(Time.deltaTime);
@@ -70,10 +79,13 @@ namespace FiniteStateMachine.States
             var spreadRotation = Quaternion.Euler(randomX, randomY, 0);
             var dir = VisionComponent.GetTargetDirection().normalized;
             var deviatedDirection = spreadRotation * dir;
-            var bullet = BulletFactory.Instance.SpawnBullet(Owner.handPoint, Owner);
+            var bullet = FactoryManager.Instance.Spawn<Bullet>(
+                PoolableType.Bullet,
+                Owner.handPoint.position,
+                Owner.handPoint.rotation,
+                Owner
+            );
             
-            Debug.DrawRay(Owner.handPoint.position, VisionComponent.GetTargetDirection(), Color.cyan, 1f);
-    
             bullet.Fire(deviatedDirection, dir);
         }
     }

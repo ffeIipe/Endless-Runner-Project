@@ -36,7 +36,9 @@ namespace Managers
         
     public class UIEvents
     {
-        public Action<float> OnSensitivityChanged;
-        public Action<float> OnSoundVolumeChanged;
+        public Action<float> OnSensitivityChanged =  delegate { };
+        public Action<float> OnSoundVolumeChanged = delegate { };
+        public Action<float> OnVelocityChanged = delegate { };
+        public Action<float> OnHealthChanged = delegate { };
     }
 }

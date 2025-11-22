@@ -9,7 +9,6 @@ namespace Entities.Enemies
             base.Awake();
             
             GetFSM().CreateState("Idle", new IdleState(GetFSM()));
-            GetFSM().CreateState("Chase", new ChaseState(GetFSM()));
             GetFSM().CreateState("Attack", new AttackState(GetFSM()));
             
             GetFSM().ChangeState("Idle");

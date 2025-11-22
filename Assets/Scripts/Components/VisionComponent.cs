@@ -87,11 +87,12 @@ namespace Components
             return !Physics.Raycast(startLocation, direction, distance, _enemyData.obstacleLayer);
         }
         
+        // ReSharper disable Unity.PerformanceAnalysis
         private IEnumerator SearchTargets()
         {
             while (true)
             {
-                if (_owner == null) yield break;
+                if (!_owner) yield break;
 
                 var colliders = Physics.OverlapSphere(
                     _owner.transform.position, 

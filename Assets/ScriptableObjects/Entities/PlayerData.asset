@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: PlayerData
   m_EditorClassIdentifier: 
   health: 3
+  shield: 1
   teamType: 1
   acceleration: 70
   maxSpeed: 22
@@ -97,6 +98,6 @@ MonoBehaviour:
   scaleSmoothingSpeed: 15
   slideResetDuration: 0.1
   snapDuration: 0.3
-  timeBetweenAttacks: 0.3
-  mouseSensitivity: 500
+  timeBetweenAttacks: 0.1
+  mouseSensitivity: 250
   momentumDecay: 5

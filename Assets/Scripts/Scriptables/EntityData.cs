@@ -7,6 +7,7 @@ namespace Scriptables
     {
         [Header("Attributes Settings")]
         public float health;
+        public float shield;
         
         [Header("Team Settings")]
         public TeamType teamType;

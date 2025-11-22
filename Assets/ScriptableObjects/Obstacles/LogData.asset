@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: LogData
   m_EditorClassIdentifier: 
   damage: 1
-  speed: -15
+  speed: -20
   duration: 5

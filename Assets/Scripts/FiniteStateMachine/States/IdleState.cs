@@ -23,10 +23,6 @@ namespace FiniteStateMachine.States
             {
                 FSM.ChangeState("Attack");
             }
-            else
-            {
-                Debug.Log("Invalid target");
-            }
         }
 
         private Vector3 RandomPosition()

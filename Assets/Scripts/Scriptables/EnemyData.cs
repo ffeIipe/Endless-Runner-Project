@@ -1,3 +1,4 @@
+using Enums;
 using UnityEngine;
 
 namespace Scriptables
@@ -5,6 +6,9 @@ namespace Scriptables
     [CreateAssetMenu(fileName = "EnemyData", menuName = "Scriptables/EnemyData")]
     public class EnemyData : EntityData
     {
+        [Header("Factory Pool ID")]
+        public PoolableType poolableType;
+        
         [Header("Patrol/Idle Settings")]
         public float maxPatrolDistance;
 
