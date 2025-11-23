@@ -1,4 +1,6 @@
+using System;
 using Components;
+using Entities.MVC;
 using Enums;
 using Interfaces;
 using Managers;
@@ -13,6 +15,9 @@ namespace Entities
         public EntityData entityData;
         public Transform handPoint;
         
+        public Action OnDeactivated =  delegate { };
+        
+        protected ViewBase View;
         protected RigidbodyConstraints SavedRigidbodyConstraints;
             
         private Rigidbody _rigidbody;
@@ -28,19 +33,27 @@ namespace Entities
         
         protected virtual void Awake()
         {
+            View = CreateView();
+            
             _rigidbody = GetComponent<Rigidbody>();
             _rigidbody.isKinematic = true;
             SavedRigidbodyConstraints = _rigidbody.constraints;
             
-            _attributesComponent = new AttributesComponent(entityData.health, 0f);
-            _attributesComponent.OnDead += Dead;
-            
+            _attributesComponent = new AttributesComponent(entityData.health, entityData.shield);
             _teamComponent = new TeamComponent(entityData.teamType);
         }
 
-        protected virtual void Start()
+        protected virtual void OnEnable()
         {
             EventManager.GameEvents.Pause += PauseEntity;
+            
+            _attributesComponent.OnDead += View.OnEntityDead;
+            _attributesComponent.OnShieldDamage += View.OnShieldDamaged;
+        }
+
+        protected virtual ViewBase CreateView()
+        {
+            return new ViewBase(this);
         }
         
         public void TakeDamage(float damage)
@@ -48,19 +61,23 @@ namespace Entities
             _attributesComponent.ReceiveDamage(damage);
         }
 
-        public virtual void GetHit(Vector3 hitPoint, float force)
+        public virtual void GetHit(Vector3 hitPoint, Vector3 hitNormal, float force)
         {
             if (!GetAttributesComponent().IsAlive())
             {
                 _rigidbody.AddForce(hitPoint.normalized * force, ForceMode.Impulse);
             }
-        }
 
-        protected virtual void Dead()
-        {
-            _rigidbody.isKinematic = false;
-            SavedRigidbodyConstraints = RigidbodyConstraints.None;
-            _rigidbody.constraints = SavedRigidbodyConstraints;
+            if (!TryGetComponent(out CapsuleCollider coll)) return;
+            
+            var bounds = coll.bounds; 
+            var totalHeight = bounds.size.y;
+            var headThreshold = bounds.min.y + (totalHeight * 0.66f);
+
+            if (hitPoint.y >= headThreshold)
+            {
+                View.HeadShotEffect();
+            }
         }
 
         public virtual void PauseEntity(bool pause)

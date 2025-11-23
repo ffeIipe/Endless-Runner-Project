@@ -27,16 +27,22 @@ namespace Managers
     public class PlayerEvents
     {
         public Action OnPlayerDead;
+        public Action OnPlayerDamaged;
+        public Action OnEnemyKilled;
+        public Action OnPowerUpPickedUp;
+        public Action OnTrapOpened;
     }
     
     public class GameEvents
     {
-        public UnityAction<bool> Pause;
+        public Action<bool> Pause = delegate { };
     }
         
     public class UIEvents
     {
-        public Action<float> OnSensitivityChanged;
-        public Action<float> OnSoundVolumeChanged;
+        public Action<float> OnSensitivityChanged =  delegate { };
+        public Action<float> OnSoundVolumeChanged = delegate { };
+        public Action<float> OnVelocityChanged = delegate { };
+        public Action<float> OnHealthChanged = delegate { };
     }
 }

@@ -13,13 +13,15 @@ MonoBehaviour:
   m_Name: VikingData
   m_EditorClassIdentifier: 
   health: 1
+  shield: 0
   teamType: 0
+  poolableType: 1
   maxPatrolDistance: NaN
-  attackDistance: 30
+  attackDistance: 37
   minAttackCooldown: 1.2
   maxAttackCooldown: 1.6
-  interpSpeed: 5
-  spread: 2
+  interpSpeed: 4.5
+  spread: 3
   targetLayer:
     serializedVersion: 2
     m_Bits: 128

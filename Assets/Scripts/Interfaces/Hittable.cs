@@ -1,4 +1,5 @@
 
+using Entities;
 using UnityEngine;
 
 namespace Interfaces
@@ -7,6 +8,6 @@ namespace Interfaces
     {
         public void TakeDamage(float damage);
         
-        public void GetHit(Vector3 hitPoint, float force);
+        public void GetHit(Vector3 hitPoint, Vector3 hitNormal, float force);
     }
 }

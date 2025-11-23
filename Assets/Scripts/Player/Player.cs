@@ -11,7 +11,7 @@ namespace Player
         private PlayerData PlayerData => (PlayerData)entityData;
         private Model _model;
         private Controller _controller;
-        private View _view;
+        private ViewPlayer _viewPlayer;
         private CharacterController _characterController;
 
         public CharacterController GetCharacterController() => _characterController;
@@ -19,12 +19,6 @@ namespace Player
         protected override void Awake()
         {
             base.Awake();
-
-            GetAttributesComponent().OnDead += () =>
-            {
-                EventManager.PlayerEvents.OnPlayerDead.Invoke();
-                Cursor.lockState = CursorLockMode.None;
-            };
             
             _characterController = GetComponent<CharacterController>();
             _characterController.stepOffset = 0;
@@ -33,24 +27,42 @@ namespace Player
             
             _model = new Model(this, PlayerData);
             _controller = new Controller(_model, StartCoroutine);
-            _view = new View(_model);
         }
 
-        protected override void Start()
+        protected override void OnEnable()
         {
-            base.Start();
-
-            GameManager.Instance.player = this;
+            base.OnEnable();
+            
+            GetAttributesComponent().OnReceiveDamage += health =>
+            {
+                EventManager.UIEvents.OnHealthChanged?.Invoke(health);
+                EventManager.PlayerEvents.OnPlayerDamaged.Invoke();
+            };
+            
+            GetAttributesComponent().OnDead += () =>
+            {
+                EventManager.PlayerEvents.OnPlayerDead.Invoke();
+                Cursor.lockState = CursorLockMode.None;
+                
+                _controller.Enabled = false;
+            };
             
             EventManager.UIEvents.OnSensitivityChanged += _model.ChangeSensitivity;
-            EventManager.UIEvents.OnSoundVolumeChanged += _view.UpdateVolumeSound;
+            EventManager.UIEvents.OnHealthChanged?.Invoke(PlayerData.health);
+
+            _model.OnVelocityChanged += _viewPlayer.GetVelocity;
         }
         
-        protected override void Dead()
+        protected void Start()
         {
-            base.Dead();
-            
-            _controller.Enabled = false;
+            GameManager.Instance.player = this;
+        }
+
+
+        protected override ViewBase CreateView()
+        {
+            _viewPlayer = new ViewPlayer(this, _model);
+            return _viewPlayer;
         }
 
         protected void Update()
@@ -67,14 +79,13 @@ namespace Player
         {
             base.PauseEntity(pause);
 
-            if (pause)
-            {
-                _controller.Enabled = false;
-            }
-            else
-            {
-                _controller.Enabled = true;
-            }
+            _controller.Enabled = !pause;
+        }
+
+        private void OnDrawGizmos()
+        {
+            Gizmos.color = Color.magenta;
+            Gizmos.DrawSphere(transform.position, 0.3f);
         }
     }
 }

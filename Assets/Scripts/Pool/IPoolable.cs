@@ -1,3 +1,5 @@
+using Entities;
+
 namespace Pool
 {
     public interface IPoolable
@@ -5,5 +7,7 @@ namespace Pool
         public void Activate();
         
         public void Deactivate();
+
+        public virtual void SetOwner(Entity owner) {}
     }
 }

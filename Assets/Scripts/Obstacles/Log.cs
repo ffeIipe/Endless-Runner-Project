@@ -57,7 +57,7 @@ namespace Obstacles
 
             if (!entity) return;
             entity.TakeDamage(logData.damage);
-            entity.GetHit(dir, 10f);
+            entity.GetHit(dir, dir, 10f);
         }
     }
 }

@@ -1,5 +1,5 @@
-using System.Collections;
 using Components;
+using Entities.MVC;
 using FiniteStateMachine;
 using Managers;
 using Pool;
@@ -11,43 +11,31 @@ namespace Entities.Enemies
     public abstract class Enemy : Entity, IPoolable
     {
         private EnemyData EnemyData => (EnemyData)entityData;
-        private FSM _fsm;
+        private StateMachine _stateMachine;
         private VisionComponent _visionComponent;
-        private Material _dissolveMaterial;
-        private VikingHelmet _vikingHelmet;
         
         public VisionComponent GetVisionComponent() => _visionComponent;
-        protected FSM GetFSM() => _fsm;
+        protected StateMachine GetStateMachine() => _stateMachine;
         public EntityData GetData() => EnemyData;
         
         protected override void Awake()
         {
             base.Awake();
             
-            GetAttributesComponent().OnDead += ApplyDissolveEffect;
-            
             _visionComponent = new VisionComponent(this, EnemyData, StartCoroutine, StopCoroutine);
-            _fsm = new FSM(this);
-            _dissolveMaterial = GetComponentInChildren<MeshRenderer>().material;
-            
-            _vikingHelmet = GetComponentInChildren<VikingHelmet>();
+            _stateMachine = new StateMachine(this);
         }
 
-        public override void GetHit(Vector3 hitPoint, float force)
+        protected override ViewBase CreateView()
         {
-            base.GetHit(hitPoint, force);
-
-            if (!GetAttributesComponent().IsAlive())
-            {
-                _vikingHelmet.ActivateDeathProp(hitPoint * force);
-            }
+            return new ViewEnemy(this, EnemyData, StartCoroutine);
         }
 
-        protected override void Dead()
+        public override void GetHit(Vector3 hitPoint, Vector3 hitNormal, float force)
         {
-            base.Dead();
-            _visionComponent.DisableVision();
-            GetFSM().Enabled  = false;
+            base.GetHit(hitPoint, hitNormal, force);
+
+            View.ApplyDamageEffect(hitPoint, hitNormal, force);
         }
         
         public virtual void Activate()
@@ -57,8 +45,8 @@ namespace Entities.Enemies
             
             _visionComponent.EnableVision();
 
-            GetFSM().ChangeState("Idle");
-            GetFSM().Enabled = true;
+            GetStateMachine().ChangeState("Idle");
+            GetStateMachine().Enabled = true;
         }
 
         public virtual void Deactivate()
@@ -66,8 +54,8 @@ namespace Entities.Enemies
             _visionComponent.DisableVision();
             gameObject.SetActive(false);
             
-            _vikingHelmet.ResetDeathProp();
-            RemoveDissolveEffect();
+            OnDeactivated?.Invoke();
+            FactoryManager.Instance.ReturnObject(EnemyData.poolableType, this);
         }
         
         public override void PauseEntity(bool pause)
@@ -76,45 +64,14 @@ namespace Entities.Enemies
             
             if (pause)
             {
-                GetFSM().Enabled = false;
+                GetStateMachine().Enabled = false;
             }
             else
             {
                 if(GetAttributesComponent().IsAlive())
-                    GetFSM().Enabled = true;
+                    GetStateMachine().Enabled = true;
             }
         }
-        
-        private IEnumerator DissolveEffect()
-        {
-            var time = 0f;
-    
-            _vikingHelmet.ActivateDeathProp(GetRigidbody().velocity);
-            _dissolveMaterial.SetFloat("_DissolveAmount", 0f);
-
-            while (time < EnemyData.dissolveEffectDuration)
-            {
-                if (!GameManager.IsPaused)
-                {
-                    time += Time.fixedDeltaTime;
-                    
-                    var t = Mathf.Clamp01(time / EnemyData.dissolveEffectDuration);
-                    var value = Mathf.Lerp(0f, 1f, t);
-            
-                    _dissolveMaterial.SetFloat("_DissolveAmount", value);
-                }
-
-                yield return null;
-            }
-
-            _dissolveMaterial.SetFloat("_DissolveAmount", 1f);
-            yield return new WaitForSeconds(EnemyData.timeUntilDeactivation);
-            
-            Deactivate();
-        }
-
-        private void ApplyDissolveEffect() => StartCoroutine(DissolveEffect());
-        private void RemoveDissolveEffect() => _dissolveMaterial.SetFloat("_DissolveAmount", 0f);
         
         private void OnDrawGizmos()
         {

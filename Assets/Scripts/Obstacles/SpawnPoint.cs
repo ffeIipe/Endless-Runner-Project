@@ -1,17 +1,20 @@
-using System;
-using Entities.Enemies;
-using Factories;
+using Enums;
+using Managers;
 using UnityEngine;
 
 namespace Obstacles
 {
     public class SpawnPoint : MonoBehaviour
     {
-        [SerializeField] private Enemy enemyToSpawn;
+        [SerializeField] private PoolableType enemyToSpawn;
 
         public void Spawn()
         {
-            EnemyFactory.Instance.SpawnEnemy(transform);
+            FactoryManager.Instance.SpawnObject(
+                enemyToSpawn,
+                transform.position,
+                transform.rotation
+            );
         }
 
         private void OnDrawGizmos()

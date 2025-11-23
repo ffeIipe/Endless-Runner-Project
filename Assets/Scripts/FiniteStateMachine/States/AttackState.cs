@@ -1,22 +1,30 @@
-﻿using Factories;
+﻿using Entities;
+using Enums;
+using Managers;
 using UnityEngine;
-using UnityEngine.AI;
 
 namespace FiniteStateMachine.States
 {
     public class AttackState : BaseState
     {
-        private CountdownTimer _countdownTimer;
+        private readonly CountdownTimer _countdownTimer;
 
-        public AttackState(FSM fsm) : base(fsm)
+        public AttackState(StateMachine stateMachine) : base(stateMachine)
         {
-            _countdownTimer = new CountdownTimer(Random.Range(EnemyData.minAttackCooldown, EnemyData.minAttackCooldown * EnemyData.maxAttackCooldown));
+            _countdownTimer = new CountdownTimer(
+                Random.Range(
+                    EnemyData.minAttackCooldown,
+                    EnemyData.minAttackCooldown * EnemyData.maxAttackCooldown
+                )
+            );
+            
             _countdownTimer.OnTimerStop += TryAttack;
         }
 
         public override void EnterState()
         {
-            if (!VisionComponent.GetTarget()) FSM.ChangeState("Idle");
+            if (!VisionComponent.GetTarget()) 
+                StateMachine.ChangeState("Idle");
             
             _countdownTimer.Start();
         }
@@ -29,7 +37,8 @@ namespace FiniteStateMachine.States
 
         public override void UpdateState()
         {
-            if (!VisionComponent.GetTarget()) FSM.ChangeState("Idle");
+            if (!VisionComponent.GetTarget()) 
+                StateMachine.ChangeState("Idle");
             
             FaceTarget();
             _countdownTimer.Tick(Time.deltaTime);
@@ -66,16 +75,18 @@ namespace FiniteStateMachine.States
 
             var randomX = Random.Range(-errorAngle, errorAngle);
             var randomY = Random.Range(-errorAngle, errorAngle);
-
+            
             var spreadRotation = Quaternion.Euler(randomX, randomY, 0);
-
-            var deviatedDirection = spreadRotation * Owner.handPoint.forward;
-
-            var deviatedRotation = Quaternion.LookRotation(deviatedDirection);
-
-            var bullet = BulletFactory.Instance.SpawnBullet(Owner.transform, Owner);
-    
-            bullet.Fire(deviatedDirection, deviatedRotation, Vector3.one);
+            var dir = VisionComponent.GetTargetDirection().normalized;
+            var deviatedDirection = spreadRotation * dir;
+            var bullet = FactoryManager.Instance.Spawn<Bullet>(
+                PoolableType.Bullet,
+                Owner.handPoint.position,
+                Owner.handPoint.rotation,
+                Owner
+            );
+            
+            bullet.Fire(deviatedDirection, dir);
         }
     }
 }

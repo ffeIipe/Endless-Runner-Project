@@ -15,7 +15,7 @@ namespace Obstacles
             {
                 entity.TakeDamage(_damage);
                 var dir = other.transform.position - transform.position;
-                entity.GetHit(dir, 10f);
+                entity.GetHit(dir, dir, 10f);
             }
         }
     }

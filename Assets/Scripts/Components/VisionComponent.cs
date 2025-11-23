@@ -43,9 +43,9 @@ namespace Components
         public Vector3 GetTargetDirection()
         {
             var target = GetTarget();
-            if (target != null)
+            if (target)
             {
-                return target.transform.position - _owner.transform.position;
+                return target.transform.position - _owner.handPoint.position;
             }
 
             return Vector3.zero;
@@ -87,11 +87,12 @@ namespace Components
             return !Physics.Raycast(startLocation, direction, distance, _enemyData.obstacleLayer);
         }
         
+        // ReSharper disable Unity.PerformanceAnalysis
         private IEnumerator SearchTargets()
         {
             while (true)
             {
-                if (_owner == null) yield break;
+                if (!_owner) yield break;
 
                 var colliders = Physics.OverlapSphere(
                     _owner.transform.position, 
@@ -100,16 +101,13 @@ namespace Components
                     QueryTriggerInteraction.Ignore 
                 );
                 
-                var startPos = _owner.handPoint != null ? _owner.handPoint.position : _owner.transform.position;
-                Debug.DrawLine(startPos, startPos + _owner.transform.forward * _enemyData.attackDistance, Color.red, 0.5f);
-        
                 _validTargets.Clear();
 
                 foreach (var col in colliders)
                 {
-                    if (!col) continue; 
+                    if (!col) continue;
 
-                    var entity = col.GetComponentInParent<Entity>();
+                    col.gameObject.TryGetComponent(out Entity entity);
 
                     if (!entity || !entity.GetAttributesComponent().IsAlive()) continue;
                     

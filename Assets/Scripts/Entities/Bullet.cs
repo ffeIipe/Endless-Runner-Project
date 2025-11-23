@@ -1,4 +1,3 @@
-using System;
 using Enums;
 using Interfaces;
 using Managers;
@@ -40,10 +39,7 @@ namespace Entities
 
         public void Activate()
         {
-            _rigidbody.isKinematic = false;
-            _collider.enabled = true;
-            _isMovementStopped = false;
-            
+            EnableBullet(true);
             gameObject.SetActive(true);
         }
 
@@ -53,15 +49,30 @@ namespace Entities
             
             transform.parent = null;
             
-            _rigidbody.isKinematic = true;
+            EnableBullet(false);
+            
+            FactoryManager.Instance.ReturnObject(bulletData.poolableType, this);
         }
 
-        public void Fire(Vector3 direction, Quaternion rotation, Vector3 velocity)
+        public void Fire(Vector3 direction, Vector3 velocity)
         {
             _rigidbody.velocity += velocity;
-            transform.rotation = rotation;
             
             _direction = direction * bulletData.bulletForce;
+            _rigidbody.AddTorque(transform.right, ForceMode.Impulse);
+        }
+
+        private void Bounce(Vector3 direction, float force)
+        {
+            const int errorAngle = 2; 
+
+            var randomX = Random.Range(-errorAngle, errorAngle);
+            var randomY = Random.Range(-errorAngle, errorAngle);
+            
+            var spreadRotation = Quaternion.Euler(randomX, randomY, 0);
+            var deviatedDirection = spreadRotation * direction * force;
+            
+            _direction = deviatedDirection;
             _rigidbody.AddTorque(transform.right, ForceMode.Impulse);
         }
 
@@ -73,37 +84,57 @@ namespace Entities
 
         private void OnCollisionEnter(Collision collision)
         {
-            var entity = collision.collider.GetComponentInParent<Entity>();
-            if (entity == _owner) return;
-            
-            _isMovementStopped = true;
-            _rigidbody.isKinematic = !collision.collider.GetComponent<Bullet>(); //Event OnAxeCollided = play sound
-            _collider.enabled = false;
-            
-            if (entity == null) return;
-
-            if (entity.GetTeam() != _ownerTeamType)
-            {
-                transform.SetParent(entity.transform);
-                entity.TakeDamage(bulletData.damage);
-                entity.GetHit(_direction.normalized, bulletData.bulletForce);
-            }
-        }
-
-        public void PauseEntity(bool pause)
-        {
-            if (pause)
-            {
-                _rigidbody.isKinematic = true;
-                _isMovementStopped = true;
-            }
-            else
+            var hitCollider = collision.collider;
+            if (hitCollider.TryGetComponent(out Bullet _))
             {
                 _rigidbody.isKinematic = false;
-                _isMovementStopped = false;
+                return;
             }
+
+            hitCollider.TryGetComponent(out Entity hitEntity);
+            if (hitEntity && hitEntity != _owner)
+            {
+                if (hitEntity.GetAttributesComponent().IsShielded())
+                {
+                    SetOwner(hitEntity);
+                    Bounce(-_direction.normalized, bulletData.bulletForce / 2f);
+                    ApplyHit(collision, hitEntity);
+
+                    return;
+                }
+
+                if (hitEntity.GetTeam() != _ownerTeamType)
+                    transform.SetParent(hitEntity.transform);
+
+                ApplyHit(collision, hitEntity);
+            }
+
+            if (hitEntity == _owner) return;
+
+            EnableBullet(false);
+
         }
 
+        private void ApplyHit(Collision collision, Entity hitEntity)
+        {
+            hitEntity.TakeDamage(bulletData.damage);
+
+            hitEntity.GetHit(
+                _direction.normalized,
+                collision.GetContact(0).normal,
+                bulletData.bulletForce
+            );
+        }
+
+        private void EnableBullet(bool enable)
+        {
+            _rigidbody.isKinematic = !enable;
+            _isMovementStopped = !enable;
+            _collider.enabled = enable;
+        }
+
+        public void PauseEntity(bool pause) => EnableBullet(!pause);
+        
         private void OnDestroy()
         {
             EventManager.GameEvents.Pause -= PauseEntity;
