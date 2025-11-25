@@ -6,6 +6,7 @@ using Entities;
 using Entities.Enemies;
 using Enums;
 using Scriptables;
+using Scriptables.Entities;
 using UnityEngine;
 
 namespace Components

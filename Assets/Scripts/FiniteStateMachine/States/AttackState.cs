@@ -7,18 +7,18 @@ namespace FiniteStateMachine.States
 {
     public class AttackState : BaseState
     {
-        private readonly CountdownTimer _countdownTimer;
+        protected readonly CountdownTimer CountdownTimer;
 
         public AttackState(StateMachine stateMachine) : base(stateMachine)
         {
-            _countdownTimer = new CountdownTimer(
+            CountdownTimer = new CountdownTimer(
                 Random.Range(
                     EnemyData.minAttackCooldown,
-                    EnemyData.minAttackCooldown * EnemyData.maxAttackCooldown
+                    EnemyData.maxAttackCooldown
                 )
             );
             
-            _countdownTimer.OnTimerStop += TryAttack;
+            CountdownTimer.OnTimerStop += TryAttack;
         }
 
         public override void EnterState()
@@ -26,13 +26,12 @@ namespace FiniteStateMachine.States
             if (!VisionComponent.GetTarget()) 
                 StateMachine.ChangeState("Idle");
             
-            _countdownTimer.Start();
+            CountdownTimer.Start();
         }
-
-
+        
         public override void ExitState()
         {
-            _countdownTimer.Stop();
+            CountdownTimer.Stop();
         }
 
         public override void UpdateState()
@@ -41,7 +40,7 @@ namespace FiniteStateMachine.States
                 StateMachine.ChangeState("Idle");
             
             FaceTarget();
-            _countdownTimer.Tick(Time.deltaTime);
+            CountdownTimer.Tick(Time.deltaTime);
         }
 
         private void FaceTarget()
@@ -60,16 +59,13 @@ namespace FiniteStateMachine.States
                 Time.deltaTime * EnemyData.interpSpeed); 
         }
         
-        private void TryAttack()
+        protected virtual void TryAttack()
         {
-            if (!VisionComponent.GetTarget()) return;
-            
             ThrowAxe();
-            
-            _countdownTimer.Start();
+            CountdownTimer.Start();
         }
 
-        private void ThrowAxe()
+        protected void ThrowAxe()
         {
             var errorAngle = EnemyData.spread; 
 

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using Entities;
 using Enums;
@@ -101,8 +102,26 @@ namespace Managers
         {
             if (_pools.TryGetValue(poolableType, out var handler))
             {
+                //Debug.Log(obj + " returned to pool of type: " + poolableType);
                 handler.ReturnInstance(obj);
             }
+            
+        }
+        
+        public IEnumerator ReturnObjectWithLifeTime(PoolableType poolableType, IPoolable obj, float time)
+        {
+            float elapsedTime = 0;
+            while (elapsedTime < time)
+            {
+                if (!GameManager.IsPaused)
+                {
+                    elapsedTime += Time.deltaTime;
+                }
+                
+                yield return null;
+            }
+
+            ReturnObject(poolableType, obj);
         }
     }
 }

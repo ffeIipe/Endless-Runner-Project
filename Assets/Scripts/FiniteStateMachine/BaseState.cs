@@ -2,6 +2,7 @@ using Components;
 using Entities;
 using Entities.Enemies;
 using Scriptables;
+using Scriptables.Entities;
 using UnityEngine.AI;
 
 namespace FiniteStateMachine

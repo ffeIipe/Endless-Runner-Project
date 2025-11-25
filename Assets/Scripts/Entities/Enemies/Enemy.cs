@@ -4,6 +4,7 @@ using FiniteStateMachine;
 using Managers;
 using Pool;
 using Scriptables;
+using Scriptables.Entities;
 using UnityEngine;
 
 namespace Entities.Enemies
@@ -14,6 +15,7 @@ namespace Entities.Enemies
         private StateMachine _stateMachine;
         private VisionComponent _visionComponent;
         
+        public Entity Owner { get; set; }
         public VisionComponent GetVisionComponent() => _visionComponent;
         protected StateMachine GetStateMachine() => _stateMachine;
         public EntityData GetData() => EnemyData;
@@ -26,9 +28,18 @@ namespace Entities.Enemies
             _stateMachine = new StateMachine(this);
         }
 
-        protected override ViewBase CreateView()
+        protected override ViewBase InitializeView()
         {
-            return new ViewEnemy(this, EnemyData, StartCoroutine);
+            var newView = new ViewEnemy(this, EnemyData, StartCoroutine);
+            newView.OnReadyToBeDeactivated += () =>
+            {
+                FactoryManager.Instance.ReturnObject(
+                    EnemyData.poolableType,
+                    this
+                );
+            };
+            
+            return newView;
         }
 
         public override void GetHit(Vector3 hitPoint, Vector3 hitNormal, float force)
@@ -37,7 +48,7 @@ namespace Entities.Enemies
 
             View.ApplyDamageEffect(hitPoint, hitNormal, force);
         }
-        
+
         public virtual void Activate()
         {
             GetRigidbody().constraints = SavedRigidbodyConstraints;
@@ -55,7 +66,6 @@ namespace Entities.Enemies
             gameObject.SetActive(false);
             
             OnDeactivated?.Invoke();
-            FactoryManager.Instance.ReturnObject(EnemyData.poolableType, this);
         }
         
         public override void PauseEntity(bool pause)
@@ -68,7 +78,7 @@ namespace Entities.Enemies
             }
             else
             {
-                if(GetAttributesComponent().IsAlive())
+                if (GetAttributesComponent().IsAlive())
                     GetStateMachine().Enabled = true;
             }
         }

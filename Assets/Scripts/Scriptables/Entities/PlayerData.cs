@@ -1,14 +1,17 @@
+using Scriptables.Abilities;
 using UnityEngine;
 
-namespace Scriptables
+namespace Scriptables.Entities
 {
     [CreateAssetMenu(fileName = "PlayerData", menuName = "Scriptables/PlayerData")]
     public class PlayerData : EntityData
     {
+        [Header("Attributes Settings")]
+        public float bufferDamage;
+        
         [Header("Movement Settings")]
         public float acceleration;
         public float maxSpeed;
-        public float speedDecayRate;
         
         [Header("Jump Settings")]
         public float jumpHeight;
@@ -33,7 +36,9 @@ namespace Scriptables
         
         [Header("Controller Settings")] 
         public float mouseSensitivity;
+        
+        [Header("Ability Settings")]
+        public AbilityData abilityData;
 
-        public float momentumDecay = 5f;
     }
 }

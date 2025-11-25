@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39c8c6fcc2874bd486686c3ea5392248, type: 3}
-  m_Name: HealthPowerUpPoolData
+  m_Name: ShieldedVikingPoolData
   m_EditorClassIdentifier: 
-  poolableType: 3
-  prefab: {fileID: 8337545607525152148, guid: a5271e9a8d868024ead5feec0dc93848, type: 3}
-  prewarmSize: 3
+  poolableType: 2
+  prefab: {fileID: 690779489631089750, guid: 6705c4263ba6c5445a1f169c20848d32, type: 3}
+  prewarmSize: 2

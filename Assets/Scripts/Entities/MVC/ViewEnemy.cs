@@ -2,14 +2,15 @@ using System;
 using System.Collections;
 using Enums;
 using Managers;
-using Scriptables;
+using Scriptables.Entities;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 namespace Entities.MVC
 {
     public class ViewEnemy : ViewBase
     {
+        public Action OnReadyToBeDeactivated =  delegate { };
+        
         private readonly Func<IEnumerator, Coroutine> _startCoroutine;
         private readonly Material _dissolveMaterial;
         private readonly VikingHelmet _vikingHelmet;
@@ -92,8 +93,8 @@ namespace Entities.MVC
 
             _dissolveMaterial.SetFloat("_DissolveAmount", 1f);
             yield return new WaitForSeconds(_enemyData.timeUntilDeactivation);
-            
-            OnEntityDeactivated();
+
+            OnReadyToBeDeactivated?.Invoke();
         }
 
         private void ApplyDissolveEffect() => _startCoroutine(DissolveEffect());

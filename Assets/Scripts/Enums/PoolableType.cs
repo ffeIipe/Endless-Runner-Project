@@ -5,7 +5,10 @@ namespace Enums
         Bullet,
         Viking,
         ShieldedViking,
+        JumperViking,
         HealthPowerUp,
-        ShieldPowerUp
+        ShieldPowerUp,
+        ParryAbility,
+        DrinkBeerAbility
     }
 }

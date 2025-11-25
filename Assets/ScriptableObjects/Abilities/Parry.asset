@@ -9,9 +9,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 39c8c6fcc2874bd486686c3ea5392248, type: 3}
-  m_Name: ShieldedVikingPoolData
+  m_Script: {fileID: 11500000, guid: 4a7831a2cfee44c1add47d5aeb8c3ec0, type: 3}
+  m_Name: Parry
   m_EditorClassIdentifier: 
-  poolableType: 2
-  prefab: {fileID: 690779489631089750, guid: 6705c4263ba6c5445a1f169c20848d32, type: 3}
-  prewarmSize: 10
+  cooldown: 1.2
+  poolableType: 6
+  duration: 0.25
+  radiusRange: 2
+  parryForce: 160

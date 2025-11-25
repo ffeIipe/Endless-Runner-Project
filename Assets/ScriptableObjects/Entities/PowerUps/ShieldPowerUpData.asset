@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ShieldPowerUpData
   m_EditorClassIdentifier: 
   duration: 0
-  powerUpType: 2
+  powerUpType: 5
   shield: 1

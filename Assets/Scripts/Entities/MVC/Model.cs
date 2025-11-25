@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using Enums;
 using Managers;
-using Scriptables;
+using Scriptables.Entities;
 using UnityEngine;
 
 namespace Entities.MVC
@@ -32,6 +32,9 @@ namespace Entities.MVC
         
         private readonly CountdownTimer _attackCooldown;
         private bool _canAttack;
+        
+        private readonly CountdownTimer _abilityCooldown;
+        private bool _canAbilty;
 
         public Model(Entity owner, PlayerData playerData)
         {
@@ -45,6 +48,10 @@ namespace Entities.MVC
             _canAttack = true;
             _attackCooldown = new CountdownTimer(playerData.timeBetweenAttacks);
             _attackCooldown.OnTimerStop += () => _canAttack = true;
+
+            _canAbilty = true;
+            _abilityCooldown = new CountdownTimer(_playerData.abilityData.cooldown);
+            _abilityCooldown.OnTimerStop += () => _canAbilty = true;
         }
         
         public void ApplyGravity()
@@ -235,12 +242,12 @@ namespace Entities.MVC
 
         private IEnumerator DoSnapToGround()
         {
-            if (Physics.Raycast(_owner.transform.position, Vector3.down, out RaycastHit hit, _playerData.groundSnapDistance, _playerData.groundMask))
+            if (Physics.Raycast(_owner.transform.position, Vector3.down, out var hit, _playerData.groundSnapDistance, _playerData.groundMask))
             {
                 var timer = 0f;
                 var duration = _playerData.snapDuration; 
                 
-                var startDistance = 0f;
+                const float startDistance = 0f;
                 var targetDistance = hit.distance;
                 var lastDistanceMoved = 0f;
 
@@ -267,8 +274,7 @@ namespace Entities.MVC
                 }
             }
         }
-
-
+        
         public void Look()
         {
             var mouseX = Input.GetAxisRaw("Mouse X") * _mouseSensitivity * Time.deltaTime;
@@ -306,11 +312,28 @@ namespace Entities.MVC
         public void ExecuteCooldowns()
         {
             _attackCooldown.Tick(Time.deltaTime);
+            _abilityCooldown.Tick(Time.deltaTime);
         }
         
         public void ChangeSensitivity(float newSens)
         {
-            _mouseSensitivity = Mathf.Lerp(100f, 1000f, newSens);
+            _mouseSensitivity = Mathf.Lerp(10f, 1000f, newSens);
+        }
+
+        public void UseAbility()
+        {
+            if (!_canAbilty) return;
+                
+            _canAbilty = false;
+            
+            FactoryManager.Instance.SpawnObject(
+                PoolableType.ParryAbility,
+                _owner.transform.position,
+                Quaternion.identity,
+                _owner
+            );
+            
+            _abilityCooldown.Start();
         }
     }
 }

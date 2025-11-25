@@ -1,5 +1,6 @@
 using System.Collections;
 using Entities;
+using Managers;
 using Scriptables;
 using UnityEngine;
 
@@ -36,18 +37,22 @@ namespace Obstacles
     
             while (timer < logData.duration)
             {
-                timer += Time.deltaTime;
-        
-                transform.Translate(Vector3.forward * (logData.speed * Time.deltaTime));
-        
-                if (logModel)
+                if (!GameManager.IsPaused)
                 {
-                    logModel.transform.Rotate(Vector3.up, logData.speed * -20 * Time.deltaTime, Space.Self);
+                    timer += Time.deltaTime;
+                    
+                    transform.Translate(Vector3.forward * (logData.speed * Time.deltaTime));
+        
+                    if (logModel)
+                    {
+                        logModel.transform.Rotate(Vector3.up, logData.speed * -20 * Time.deltaTime, Space.Self);
+                    }   
                 }
 
                 yield return null;
             }
     
+            //Effect
             // Destroy(gameObject); 
         }
 

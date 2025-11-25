@@ -8,6 +8,8 @@ namespace Enums
         Options,
         PauseMenu,
         DeathMenu,
-        FinalMenu
+        FinalMenu,
+        FadeScreen,
+        LevelSelectionScreen
     }
 }

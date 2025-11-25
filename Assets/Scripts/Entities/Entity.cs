@@ -15,7 +15,7 @@ namespace Entities
         public EntityData entityData;
         public Transform handPoint;
         
-        public Action OnDeactivated =  delegate { };
+        public Action OnDeactivated = delegate { };
         
         protected ViewBase View;
         protected RigidbodyConstraints SavedRigidbodyConstraints;
@@ -33,7 +33,7 @@ namespace Entities
         
         protected virtual void Awake()
         {
-            View = CreateView();
+            View = InitializeView();
             
             _rigidbody = GetComponent<Rigidbody>();
             _rigidbody.isKinematic = true;
@@ -51,12 +51,12 @@ namespace Entities
             _attributesComponent.OnShieldDamage += View.OnShieldDamaged;
         }
 
-        protected virtual ViewBase CreateView()
+        protected virtual ViewBase InitializeView()
         {
             return new ViewBase(this);
         }
         
-        public void TakeDamage(float damage)
+        public virtual void TakeDamage(float damage)
         {
             _attributesComponent.ReceiveDamage(damage);
         }
@@ -91,13 +91,13 @@ namespace Entities
             {
                 _currentAngularVelocity = _rigidbody.angularVelocity;
                 _currentVelocity =  _rigidbody.velocity;
-                
                 _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
             }
             else
             {
-                _rigidbody.constraints = SavedRigidbodyConstraints;
+                if(_rigidbody.isKinematic) return;
                 
+                _rigidbody.constraints = SavedRigidbodyConstraints;
                 _rigidbody.angularVelocity = _currentAngularVelocity;
                 _rigidbody.velocity = _currentVelocity;
             }

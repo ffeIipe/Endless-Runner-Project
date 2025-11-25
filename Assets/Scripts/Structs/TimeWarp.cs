@@ -7,14 +7,14 @@ namespace Structs
     [Serializable]
     public struct TimeWarp
     {
-        public float min;
-        public float max;
+        public float duration;
+        public float targetScale;
         public AnimationCurve curve;
 
-        public TimeWarp(float min, float max, AnimationCurve curve) 
+        public TimeWarp(float targetScale, float duration, AnimationCurve curve) 
         { 
-            this.min = min; 
-            this.max = max;
+            this.duration = duration;
+            this.targetScale = targetScale; 
             this.curve = curve;
         }
     }

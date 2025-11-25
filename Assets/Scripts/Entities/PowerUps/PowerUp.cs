@@ -1,5 +1,6 @@
 using System;
 using Interfaces;
+using Managers;
 using Pool;
 using Scriptables;
 using UnityEngine;
@@ -11,11 +12,11 @@ namespace Entities.PowerUps
     public abstract class PowerUp : MonoBehaviour, IPickable, IPoolable
     {
         [SerializeField] protected PowerUpData powerUpData;
+        public Entity Owner { get; set; }
         
         protected Action OnPicked = delegate { };
         
         private float _duration;
-        private Entity _user;
         private SphereCollider _collider;
         private CountdownTimer _timer;
 
@@ -42,6 +43,8 @@ namespace Entities.PowerUps
             OnPicked.Invoke();
             
             ApplyEffect(user);
+            
+            FactoryManager.Instance.ReturnObject(powerUpData.powerUpType, this);
         }
 
         public void Drop()
@@ -50,17 +53,17 @@ namespace Entities.PowerUps
 
         protected virtual void ApplyEffect(Entity user)
         {
-            _user = user;
+            Owner = user;
         }
         
         protected virtual void RemoveEffect() { }
 
         private void OnTriggerEnter(Collider other)
         {
-            if (!other.TryGetComponent(out Entity entity)) return;
+            if (other.TryGetComponent(out Entity entity) || entity != GameManager.Instance.player) return;
             
             PickUp(entity);
-            Deactivate();
+            
         }
 
         public void Activate()

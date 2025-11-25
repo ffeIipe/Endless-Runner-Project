@@ -26,6 +26,8 @@ namespace Managers
 
         private void Start()
         {
+            Time.timeScale = 1;
+            
             if (!IsPaused)
             {
                 Cursor.lockState = CursorLockMode.Locked;

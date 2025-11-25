@@ -3,6 +3,7 @@ using Interfaces;
 using Managers;
 using Pool;
 using Scriptables;
+using Scriptables.Entities;
 using UnityEngine;
 
 namespace Entities
@@ -11,17 +12,25 @@ namespace Entities
     public sealed class Bullet : MonoBehaviour, IPoolable, IPausable
     {
         [SerializeField] private BulletData bulletData;
+        
+        public Entity Owner { get; set; }
+     
         private Rigidbody _rigidbody;
         private Collider _collider;
-        private Entity _owner;
+        
         private TeamType _ownerTeamType;
         private Vector3 _direction;
+        private Vector3 _currentAngularVelocity;
+        
         private bool _isMovementStopped;
+        private bool _isFinallyStopped;
             
         private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody>();
             _collider = GetComponent<Collider>();
+            
+            EnableBullet(false);
         }
 
         private void Start()
@@ -48,10 +57,6 @@ namespace Entities
             gameObject.SetActive(false);
             
             transform.parent = null;
-            
-            EnableBullet(false);
-            
-            FactoryManager.Instance.ReturnObject(bulletData.poolableType, this);
         }
 
         public void Fire(Vector3 direction, Vector3 velocity)
@@ -62,15 +67,17 @@ namespace Entities
             _rigidbody.AddTorque(transform.right, ForceMode.Impulse);
         }
 
-        private void Bounce(Vector3 direction, float force)
+        public void Bounce(float force, Entity newOwner)
         {
+            SetOwner(newOwner);
+            
             const int errorAngle = 2; 
 
             var randomX = Random.Range(-errorAngle, errorAngle);
             var randomY = Random.Range(-errorAngle, errorAngle);
             
             var spreadRotation = Quaternion.Euler(randomX, randomY, 0);
-            var deviatedDirection = spreadRotation * direction * force;
+            var deviatedDirection = spreadRotation * -_direction.normalized * force;
             
             _direction = deviatedDirection;
             _rigidbody.AddTorque(transform.right, ForceMode.Impulse);
@@ -78,7 +85,7 @@ namespace Entities
 
         public void SetOwner(Entity owner)
         {
-            _owner = owner;
+            Owner = owner;
             _ownerTeamType = owner.GetTeam();
         }
 
@@ -92,12 +99,11 @@ namespace Entities
             }
 
             hitCollider.TryGetComponent(out Entity hitEntity);
-            if (hitEntity && hitEntity != _owner)
+            if (hitEntity && hitEntity != Owner)
             {
                 if (hitEntity.GetAttributesComponent().IsShielded())
                 {
-                    SetOwner(hitEntity);
-                    Bounce(-_direction.normalized, bulletData.bulletForce / 2f);
+                    Bounce(bulletData.bulletForce / 2f, hitEntity);
                     ApplyHit(collision, hitEntity);
 
                     return;
@@ -109,10 +115,12 @@ namespace Entities
                 ApplyHit(collision, hitEntity);
             }
 
-            if (hitEntity == _owner) return;
-
+            if (hitEntity == Owner) return;
+            
             EnableBullet(false);
-
+            _isFinallyStopped = true;
+            
+            ReturnToPool();
         }
 
         private void ApplyHit(Collision collision, Entity hitEntity)
@@ -128,12 +136,38 @@ namespace Entities
 
         private void EnableBullet(bool enable)
         {
-            _rigidbody.isKinematic = !enable;
+            if (enable)
+            {
+                _rigidbody.isKinematic = false;
+                _rigidbody.angularVelocity = _currentAngularVelocity;  
+            }
+            else
+            {
+                _currentAngularVelocity = _rigidbody.angularVelocity;
+                _rigidbody.isKinematic = true;
+            }
+            
             _isMovementStopped = !enable;
             _collider.enabled = enable;
         }
 
-        public void PauseEntity(bool pause) => EnableBullet(!pause);
+        private void ReturnToPool()
+        {
+            var corr = FactoryManager.Instance.ReturnObjectWithLifeTime(
+                bulletData.poolableType,
+                this,
+                bulletData.timeBeforeDeactivate
+            );
+
+            StartCoroutine(corr);
+        }
+
+        public void PauseEntity(bool pause)
+        {
+            if (_isFinallyStopped) return;
+            
+            EnableBullet(!pause);
+        }
         
         private void OnDestroy()
         {

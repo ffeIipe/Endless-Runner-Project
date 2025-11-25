@@ -17,6 +17,7 @@ namespace Entities.MVC
             Owner.GetRigidbody().isKinematic = false;
             _savedRigidbodyConstraints = RigidbodyConstraints.None;
             Owner.GetRigidbody().constraints = _savedRigidbodyConstraints;
+            
         }
 
         public virtual void OnShieldDamaged()

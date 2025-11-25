@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CountdownTimer : Timer
+public class CountdownTimer : Timer.Timer
 {
     public CountdownTimer(float value) : base(value) { }
 
@@ -21,11 +21,11 @@ public class CountdownTimer : Timer
 
     public bool IsFinished => Time <= 0;
 
-    public void Reset() => Time = initialTime;
+    public void Reset() => Time = InitialTime;
 
     public void Reset(float newTime)
     {
-        initialTime = newTime;
+        InitialTime = newTime;
         Reset();
     }
 }

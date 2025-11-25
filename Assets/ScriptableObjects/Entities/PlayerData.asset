@@ -15,9 +15,9 @@ MonoBehaviour:
   health: 3
   shield: 1
   teamType: 1
+  bufferDamage: 0.8
   acceleration: 70
   maxSpeed: 22
-  speedDecayRate: 0.5
   jumpHeight: 10
   jumpDuration: 1
   jumpCurve:
@@ -98,6 +98,6 @@ MonoBehaviour:
   scaleSmoothingSpeed: 15
   slideResetDuration: 0.1
   snapDuration: 0.3
-  timeBetweenAttacks: 0.1
+  timeBetweenAttacks: 0.15
   mouseSensitivity: 250
-  momentumDecay: 5
+  abilityData: {fileID: 11400000, guid: d3d311802d492924fb4fb3208dcdb4f2, type: 2}

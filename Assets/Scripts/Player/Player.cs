@@ -2,6 +2,7 @@ using Entities;
 using Entities.MVC;
 using Managers;
 using Scriptables;
+using Scriptables.Entities;
 using UnityEngine;
 
 namespace Player
@@ -13,7 +14,8 @@ namespace Player
         private Controller _controller;
         private ViewPlayer _viewPlayer;
         private CharacterController _characterController;
-
+        private CountdownTimer _bufferDamage;
+        private bool _canReceiveDamage = true;
         public CharacterController GetCharacterController() => _characterController;
         
         protected override void Awake()
@@ -27,6 +29,7 @@ namespace Player
             
             _model = new Model(this, PlayerData);
             _controller = new Controller(_model, StartCoroutine);
+            _bufferDamage = new CountdownTimer(PlayerData.bufferDamage);
         }
 
         protected override void OnEnable()
@@ -50,6 +53,16 @@ namespace Player
             EventManager.UIEvents.OnSensitivityChanged += _model.ChangeSensitivity;
             EventManager.UIEvents.OnHealthChanged?.Invoke(PlayerData.health);
 
+            EventManager.GameEvents.IsLevelFinished += isLevelFinished =>
+            {
+                _bufferDamage.OnTimerStop = null;
+                
+                _canReceiveDamage = !isLevelFinished;
+                _controller.Enabled = !isLevelFinished;
+            };
+
+            _bufferDamage.OnTimerStop += () => _canReceiveDamage = true;
+            
             _model.OnVelocityChanged += _viewPlayer.GetVelocity;
         }
         
@@ -59,7 +72,7 @@ namespace Player
         }
 
 
-        protected override ViewBase CreateView()
+        protected override ViewBase InitializeView()
         {
             _viewPlayer = new ViewPlayer(this, _model);
             return _viewPlayer;
@@ -68,11 +81,24 @@ namespace Player
         protected void Update()
         {
             _controller.Execute();
+            
+            _bufferDamage.Tick(Time.deltaTime);
         }
 
         protected void FixedUpdate()
         {
             _controller.FixedExecute();
+        }
+
+        public override void TakeDamage(float damage)
+        {
+            if (_canReceiveDamage)
+            {
+                base.TakeDamage(damage);
+                
+                _canReceiveDamage = false;
+                _bufferDamage.Start();
+            }
         }
 
         public override void PauseEntity(bool pause)

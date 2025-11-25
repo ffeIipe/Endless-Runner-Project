@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39c8c6fcc2874bd486686c3ea5392248, type: 3}
-  m_Name: ShieldPowerUpPoolData
+  m_Name: BulletPoolData
   m_EditorClassIdentifier: 
-  poolableType: 4
-  prefab: {fileID: 8337545607525152148, guid: e309d3c7f7cbd3a49b5341b3781953d2, type: 3}
-  prewarmSize: 3
+  poolableType: 0
+  prefab: {fileID: 4950481612879304608, guid: 3c35357aab2548144b08caefafb24c5b, type: 3}
+  prewarmSize: 10

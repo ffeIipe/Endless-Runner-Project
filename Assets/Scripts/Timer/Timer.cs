@@ -1,46 +1,46 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
 using System;
 
-public abstract class Timer
+namespace Timer
 {
-    protected float initialTime;
-    public float Time { get; set; }
-    public bool IsRunning { get; protected set; }
-
-    public float Progress => Time / initialTime;
-
-    public Action OnTimerStart = delegate { };
-    public Action OnTimerStop = delegate { };
-
-    protected Timer(float value)
+    public abstract class Timer
     {
-        initialTime = value;
-        IsRunning = false;
-    }
+        protected float InitialTime;
+        public float Time { get; set; }
+        public bool IsRunning { get; protected set; }
 
-    public void Start()
-    {
-        Time = initialTime;
-        if (!IsRunning)
+        public float Progress => Time / InitialTime;
+
+        public Action OnTimerStart = delegate { };
+        public Action OnTimerStop = delegate { };
+
+        protected Timer(float value)
         {
-            IsRunning = true;
-            OnTimerStart.Invoke();
-        }
-    }
-
-    public void Stop()
-    {
-        if (IsRunning)
-        {
+            InitialTime = value;
             IsRunning = false;
-            OnTimerStop.Invoke();
         }
+
+        public void Start()
+        {
+            Time = InitialTime;
+            if (!IsRunning)
+            {
+                IsRunning = true;
+                OnTimerStart.Invoke();
+            }
+        }
+
+        public void Stop()
+        {
+            if (IsRunning)
+            {
+                IsRunning = false;
+                OnTimerStop.Invoke();
+            }
+        }
+
+        public void Resume() => IsRunning = true;
+        public void Pause() => IsRunning = false;
+
+        public abstract void Tick(float deltaTime);
     }
-
-    public void Resume() => IsRunning = true;
-    public void Pause() => IsRunning = false;
-
-    public abstract void Tick(float deltaTime);
 }

@@ -1,7 +1,7 @@
 using Enums;
 using UnityEngine;
 
-namespace Scriptables
+namespace Scriptables.Entities
 {
     [CreateAssetMenu(fileName = "EnemyData", menuName = "Scriptables/EnemyData")]
     public class EnemyData : EntityData
@@ -23,6 +23,11 @@ namespace Scriptables
         public LayerMask targetLayer;
         public LayerMask obstacleLayer;
         public float scanInterval;
+        
+        [Header("Attack Settings")]
+        public float jumpDuration;
+        public AnimationCurve jumpCurve;
+        public float jumpHeight;
         
         [Header("Effects Settings")]
         public float dissolveEffectDuration;

@@ -1,6 +1,8 @@
 //Fixes
 - Botones no trigger
 - Buffer de no recibir da;o por un segundo
+- fix tronco movable pausa
+- fix win -> no poder morir
 
 //Nuevas trampas
 

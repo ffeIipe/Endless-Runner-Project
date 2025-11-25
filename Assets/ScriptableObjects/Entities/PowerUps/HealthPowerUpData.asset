@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: HealthPowerUpData
   m_EditorClassIdentifier: 
   duration: 0
-  powerUpType: 3
+  powerUpType: 4
   health: 3

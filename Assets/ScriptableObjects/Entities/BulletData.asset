@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f7383068b5b4e14bd57e344ad40bd1d, type: 3}
   m_Name: BulletData
   m_EditorClassIdentifier: 
+  poolableType: 0
+  timeBeforeDeactivate: 4
   bulletForce: 70
   damage: 1

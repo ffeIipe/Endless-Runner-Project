@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Enums;
+using ScreenManagerFolder;
 using Scriptables;
 using Structs;
 using UnityEngine;
@@ -36,10 +37,11 @@ namespace Managers
                 _hitStopMaps.Add(hitStopMap.hitStopType, hitStopMap);
             }
 
-            /*foreach (var timeWarpMap in effectsManagerData.timeWarpMap)
+            _timeWarpMaps =  new Dictionary<TimeWarpType, TimeWarpMap>();
+            foreach (var timeWarpMap in effectsManagerData.timeWarpMap)
             {
                 _timeWarpMaps.Add(timeWarpMap.timeWarpType, timeWarpMap);
-            }*/
+            }
 
             _fieldOfViewMaps = new Dictionary<FieldOfViewWarpType, FieldOfViewMap>();
             foreach (var fieldOfViewMap in effectsManagerData.fieldOfViewMap)
@@ -54,7 +56,12 @@ namespace Managers
         }
 
         public void PlayEffect(HitStopType hitStopType) => StartCoroutine(DoHitStop(hitStopType));
-
+        public void PlayEffect(TimeWarpType timeWarpType, Action onFinishedTimeWarp) => StartCoroutine(DoTimeWarp(timeWarpType, onFinishedTimeWarp));
+        public void PlayFadeScreen(bool isFadeIn)
+        {
+            StartCoroutine(isFadeIn ? FadeInScreen() : FadeOutScreen());
+        }
+        
         public void UpdateFOV(float vel)
         {
             var t = Mathf.Clamp01(vel / 22f);
@@ -65,7 +72,57 @@ namespace Managers
 
             _camera.fieldOfView = finalFieldOfView;
         }
+
+        private IEnumerator FadeOutScreen()
+        {
+            var duration = effectsManagerData.fadeDuration; 
+            var curve = effectsManagerData.fadeCurve; 
+    
+            var fadeScreen = (FadeScreen)ScreenManager.Instance.GetScreen(ScreenType.FadeScreen);
+            ScreenManager.Instance.PushScreen(ScreenType.FadeScreen, false);
+    
+            var color = new Color(0, 0, 0, 0);
+            fadeScreen.fadeImage.color = color;
+    
+            var time = 0f; 
+    
+            while (time < duration)
+            {
+                time += Time.deltaTime; 
         
+                var normalizedTime = time / duration; 
+                var curveValue = curve.Evaluate(normalizedTime); 
+        
+                color.a = curveValue;
+                fadeScreen.fadeImage.color = color;
+        
+                yield return null;
+            }
+
+            color.a = 1f;
+            fadeScreen.fadeImage.color = color;
+        }
+
+        private IEnumerator FadeInScreen()
+        {
+            var timer = 0f;
+            var curve = effectsManagerData.fadeCurve;
+            var fadeScreen = (FadeScreen)ScreenManager.Instance.GetScreen(ScreenType.FadeScreen);
+            
+            while (timer < effectsManagerData.fadeDuration)
+            {
+                timer += Time.deltaTime;
+                
+                var curveValue = curve.Evaluate(timer);
+                var color = fadeScreen.fadeImage.color;
+                color.a = curveValue;
+                
+                fadeScreen.fadeImage.color = color;
+                
+                yield return null;
+            }
+        }
+
         private IEnumerator DoHitStop(HitStopType hitStopType)
         {
             if (!_hitStopMaps.TryGetValue(hitStopType, out var hitStopMap)) 
@@ -91,7 +148,38 @@ namespace Managers
             }
 
             Time.timeScale = 1f; 
-            //_currentHitStopCoroutine = null;
+        }
+
+        private IEnumerator DoTimeWarp(TimeWarpType timeWarpType, Action onFinishedTimeWarp)
+        {
+            if (!_timeWarpMaps.TryGetValue(timeWarpType, out var timeWarpMap))
+            {
+                yield break;
+            }
+            
+            var attr = timeWarpMap.timeWarpAttributes;
+            
+            var curve = attr.curve;
+            var duration = attr.duration;
+            var timer = 0f;
+
+            while (timer < duration)
+            {
+                var normalizedTime = timer / duration;
+                var curveValue = curve.Evaluate(normalizedTime);
+                
+                Time.timeScale = curveValue;
+                timer += Time.unscaledDeltaTime;
+                
+                yield return null;
+            }
+
+            onFinishedTimeWarp?.Invoke();
+            
+            /*if (pauseGameOnFinish)
+            {
+                GameManager.Instance.HandlePauseInput();
+            }*/
         }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using Enums;
+using Managers;
 using ScreenManagerFolder;
 using UnityEngine;
 
@@ -21,7 +22,15 @@ namespace Obstacles
 
         private void ShowFinalScreen()
         {
-            ScreenManager.Instance.PushScreen(ScreenType.FinalMenu, true);
+            EffectsManager.Instance.PlayEffect(TimeWarpType.Slow, OnFinishedTimeWarp);
+            EffectsManager.Instance.PlayFadeScreen(false);
+        }
+
+        private void OnFinishedTimeWarp()
+        {
+            ScreenManager.Instance.PushScreen(ScreenType.FinalMenu, false);
+            EventManager.GameEvents.IsLevelFinished.Invoke(true);
+            Cursor.lockState = CursorLockMode.None;
         }
     }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class StopwatchTimer : Timer
+public class StopwatchTimer : Timer.Timer
 {
     public StopwatchTimer() : base(0) { }
 
