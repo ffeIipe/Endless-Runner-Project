@@ -51,9 +51,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
+    - _Displacement: 3
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _WaveSpeed: 0.1
+    - _WaveSpeed: 0.93
     m_Colors:
     - _RippleColor: {r: 0.30936277, g: 0.63221073, b: 0.8301887, a: 0}
     - _WaterColor: {r: 0.67301536, g: 0.7045673, b: 0.7169812, a: 0}
