@@ -1,10 +1,5 @@
 //Fixes
 - Botones no trigger
-- Buffer de no recibir da;o por un segundo
-- fix tronco movable pausa
-- fix win -> no poder morir
-
-//Nuevas trampas
 
 //PowerUps
 - Escudo del Jarl (proteccion de golpes / invulnerabilidad)
@@ -18,10 +13,3 @@ La cápsula se pone de color rojo intenso o emite partículas de fuego, y al cho
 //Ideas
 - Troncos del rio moviendose
 - Piedras saltables
-
-//Cosas para hacer
-- EffectsManager:
-    *HitStop
-    *FOV
-    *TimeWarp
-- Conectar la final screen con el EffectsManager para hacer una transicion limpia
