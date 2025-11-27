@@ -56,8 +56,8 @@ Material:
     - _QueueOffset: 0
     - _WaveSpeed: 0.93
     m_Colors:
-    - _RippleColor: {r: 0.30936277, g: 0.63221073, b: 0.8301887, a: 0}
+    - _RippleColor: {r: 0.38892844, g: 0.68424934, b: 0.8679245, a: 0}
     - _WaterColor: {r: 0.67301536, g: 0.7045673, b: 0.7169812, a: 0}
-    - _WaterColorBase: {r: 0, g: 0.7176471, b: 1, a: 0}
+    - _WaterColorBase: {r: 0.057849795, g: 0.6933596, b: 0.9433962, a: 0}
     - _WaterColor_1: {r: 0, g: 0.7176471, b: 1, a: 0}
   m_BuildTextureStacks: []
