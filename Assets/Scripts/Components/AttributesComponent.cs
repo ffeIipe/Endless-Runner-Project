@@ -11,13 +11,16 @@ namespace Components
         public event Action OnShieldDestroyed = delegate { };
         
         private float _health;
-        private float _maxHealth;
+        private readonly float _maxHealth;
         private float _shield;
-        
+        private readonly float _maxShield;
+
         public AttributesComponent(float health, float shield)
         {
             _health = health;
+            _maxHealth = health;
             _shield = shield;
+            _maxShield = shield;
         }
 
         public bool IsAlive()
@@ -28,6 +31,11 @@ namespace Components
         public float GetHealthPercentage()
         {
             return _health / _maxHealth;
+        }
+        
+        public float GetHealth()
+        {
+            return _health;
         }
 
         public void ReceiveDamage(float damage)
@@ -65,6 +73,12 @@ namespace Components
         public void IncreaseShield(float shield)
         {
             _shield += shield;
+        }
+
+        public void Reset()
+        {
+            _health = _maxHealth;
+            _shield = _maxShield;
         }
     }
 }

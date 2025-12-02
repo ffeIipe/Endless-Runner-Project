@@ -31,16 +31,19 @@ namespace Pool
         {
             T result;
 
-            if (_currentStock.Count == 0)
-            {
-                result = _factoryMethod();
-            }
-            else
+            while (_currentStock.Count > 0)
             {
                 result = _currentStock[0];
                 _currentStock.RemoveAt(0);
+
+                if (result != null && !result.Equals(null))
+                {
+                    _turnOnCallback(result);
+                    return result;
+                }
             }
 
+            result = _factoryMethod();
             _turnOnCallback(result);
     
             return result;
@@ -48,6 +51,8 @@ namespace Pool
 
         public void ReturnObjectToPool(T obj)
         {
+            if (obj == null || obj.Equals(null)) return;
+
             _turnOffCallback(obj);
             _currentStock.Add(obj);
         }

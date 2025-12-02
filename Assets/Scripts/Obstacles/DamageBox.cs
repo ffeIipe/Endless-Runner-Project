@@ -1,39 +1,42 @@
 using Interfaces;
 using UnityEngine;
 
-public class DamageBox : MonoBehaviour
+namespace Obstacles
 {
-    private float _damage;
+    public class DamageBox : MonoBehaviour
+    {
+        private float _damage;
     
-    public void SetDamage(float damage)
-    {
-        _damage = damage;
-    }
-    
-    protected void Awake()
-    {
-        GetComponent<BoxCollider>().isTrigger = true;
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
-        var hittable = other.gameObject.GetComponentInParent<IHittable>();
-
-        if (_damage == 0f)
+        public void SetDamage(float damage)
         {
-            Debug.Log("Damage equals zero");
+            _damage = damage;
         }
-        hittable?.TakeDamage(_damage);
-    }
     
-    private void OnTriggerEnter(Collider other)
-    {
-        var hittable = other.gameObject.GetComponentInParent<IHittable>();
-
-        if (_damage == 0f)
+        protected void Awake()
         {
-            Debug.Log("Damage equals zero");
+            GetComponent<BoxCollider>().isTrigger = true;
         }
-        hittable?.TakeDamage(_damage);
+
+        private void OnCollisionEnter(Collision other)
+        {
+            var hittable = other.gameObject.GetComponentInParent<IHittable>();
+
+            if (_damage == 0f)
+            {
+                Debug.Log("Damage equals zero");
+            }
+            hittable?.TakeDamage(_damage, null);
+        }
+    
+        private void OnTriggerEnter(Collider other)
+        {
+            var hittable = other.gameObject.GetComponentInParent<IHittable>();
+
+            if (_damage == 0f)
+            {
+                Debug.Log("Damage equals zero");
+            }
+            hittable?.TakeDamage(_damage, null);
+        }
     }
 }

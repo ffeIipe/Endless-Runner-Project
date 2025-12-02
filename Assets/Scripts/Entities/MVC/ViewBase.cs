@@ -1,3 +1,5 @@
+using Enums;
+using Managers;
 using UnityEngine;
 
 namespace Entities.MVC
@@ -17,22 +19,22 @@ namespace Entities.MVC
             Owner.GetRigidbody().isKinematic = false;
             _savedRigidbodyConstraints = RigidbodyConstraints.None;
             Owner.GetRigidbody().constraints = _savedRigidbodyConstraints;
-            
         }
 
-        public virtual void OnShieldDamaged()
+        public virtual void ApplyDamageEffect(Vector3 direction, Vector3 hitPoint, Vector3 hitNormal, float force)
         {
+            var bloodFx = FactoryManager.Instance.SpawnObject(
+                PoolableType.BloodEffect,
+                hitPoint,
+                Quaternion.Euler(hitNormal)
+            );
             
+            bloodFx.transform.position = hitPoint;
+            bloodFx.transform.SetParent(Owner.transform);
         }
 
-        public virtual void ApplyDamageEffect(Vector3 hitPoint, Vector3 hitNormal, float force)
-        {
-            //vfx dmg particle
-        }
+        public virtual void HeadShotEffect() { }
 
-        public virtual void HeadShotEffect()
-        {
-            
-        }
+        public virtual void RestartEntityView() { }
     }
 }

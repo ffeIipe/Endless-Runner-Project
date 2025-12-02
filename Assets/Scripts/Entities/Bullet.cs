@@ -2,7 +2,6 @@ using Enums;
 using Interfaces;
 using Managers;
 using Pool;
-using Scriptables;
 using Scriptables.Entities;
 using UnityEngine;
 
@@ -24,6 +23,9 @@ namespace Entities
         
         private bool _isMovementStopped;
         private bool _isFinallyStopped;
+        
+        private bool _hitApplied;
+        
             
         private void Awake()
         {
@@ -33,13 +35,28 @@ namespace Entities
             EnableBullet(false);
         }
 
-        private void Start()
+        private void OnEnable()
         {
             EventManager.GameEvents.Pause += PauseEntity;
+            EventManager.GameEvents.OnLevelRestarted += OnLevelRestarted;
+        }
+
+        private void OnDisable()
+        {
+            EventManager.GameEvents.Pause -= PauseEntity;
+            EventManager.GameEvents.OnLevelRestarted -= OnLevelRestarted;
+        }
+        
+        private void OnLevelRestarted()
+        {
+            if (!this || !gameObject) return;
+            FactoryManager.Instance.ReturnObject(bulletData.poolableType, this);
         }
 
         private void FixedUpdate()
         {
+            if (!this) return;
+            
             if (gameObject.activeInHierarchy && !_isMovementStopped)
             {
                 transform.position += _direction * Time.fixedDeltaTime;
@@ -50,13 +67,16 @@ namespace Entities
         {
             EnableBullet(true);
             gameObject.SetActive(true);
+            _hitApplied = false;
         }
 
         public void Deactivate()
         {
-            gameObject.SetActive(false);
+            if (!gameObject) return;
             
+            gameObject.SetActive(false);
             transform.parent = null;
+            ResetRigidBody();
         }
 
         public void Fire(Vector3 direction, Vector3 velocity)
@@ -125,10 +145,15 @@ namespace Entities
 
         private void ApplyHit(Collision collision, Entity hitEntity)
         {
-            hitEntity.TakeDamage(bulletData.damage);
+            if (_hitApplied) return;
+
+            _hitApplied = true;
+            
+            hitEntity.TakeDamage(bulletData.damage, Owner);
 
             hitEntity.GetHit(
                 _direction.normalized,
+                collision.GetContact(0).point,
                 collision.GetContact(0).normal,
                 bulletData.bulletForce
             );
@@ -136,6 +161,8 @@ namespace Entities
 
         private void EnableBullet(bool enable)
         {
+            if (!_rigidbody) return;
+            
             if (enable)
             {
                 _rigidbody.isKinematic = false;
@@ -148,7 +175,20 @@ namespace Entities
             }
             
             _isMovementStopped = !enable;
+            
+            if (!_collider) return;
             _collider.enabled = enable;
+        }
+        
+        private void ResetRigidBody()
+        {
+            _rigidbody.isKinematic = false;
+            transform.rotation = Quaternion.identity;
+            _rigidbody.velocity = Vector3.zero;
+            _rigidbody.angularVelocity = Vector3.zero;
+            _direction = Vector3.zero;
+            _currentAngularVelocity = Vector3.zero;
+            _rigidbody.isKinematic = true;
         }
 
         private void ReturnToPool()
@@ -167,11 +207,6 @@ namespace Entities
             if (_isFinallyStopped) return;
             
             EnableBullet(!pause);
-        }
-        
-        private void OnDestroy()
-        {
-            EventManager.GameEvents.Pause -= PauseEntity;
         }
     }
 }

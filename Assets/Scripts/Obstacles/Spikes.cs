@@ -13,9 +13,9 @@ namespace Obstacles
             var entity = other.GetComponent<Entity>();
             if (entity)
             {
-                entity.TakeDamage(_damage);
+                entity.TakeDamage(_damage, null);
                 var dir = other.transform.position - transform.position;
-                entity.GetHit(dir, dir, 10f);
+                entity.GetHit(dir, dir, -dir, 10f);
             }
         }
     }

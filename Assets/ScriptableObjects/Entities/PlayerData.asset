@@ -16,7 +16,7 @@ MonoBehaviour:
   shield: 1
   teamType: 1
   bufferDamage: 0.8
-  acceleration: 70
+  acceleration: 140
   maxSpeed: 22
   jumpHeight: 10
   jumpDuration: 1

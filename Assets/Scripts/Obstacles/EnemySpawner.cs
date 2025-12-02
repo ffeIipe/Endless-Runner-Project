@@ -11,7 +11,6 @@ namespace Obstacles
         private void Awake()
         {
             _trigger = GetComponentInChildren<Trigger>();
-            _trigger.OnTriggered += SpawnEnemies;
             
             _spawnPoints = new List<SpawnPoint>();
             
@@ -20,6 +19,11 @@ namespace Obstacles
             {
                 _spawnPoints.Add(spawnPoint);
             }
+        }
+
+        private void OnEnable()
+        {
+            _trigger.OnTriggered += SpawnEnemies;
         }
 
         private void SpawnEnemies()

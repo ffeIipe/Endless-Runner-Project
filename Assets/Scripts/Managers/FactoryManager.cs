@@ -102,10 +102,8 @@ namespace Managers
         {
             if (_pools.TryGetValue(poolableType, out var handler))
             {
-                //Debug.Log(obj + " returned to pool of type: " + poolableType);
                 handler.ReturnInstance(obj);
             }
-            
         }
         
         public IEnumerator ReturnObjectWithLifeTime(PoolableType poolableType, IPoolable obj, float time)

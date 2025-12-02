@@ -34,7 +34,7 @@ namespace Entities.MVC
         private bool _canAttack;
         
         private readonly CountdownTimer _abilityCooldown;
-        private bool _canAbilty;
+        private bool _canAbility;
 
         public Model(Entity owner, PlayerData playerData)
         {
@@ -49,9 +49,9 @@ namespace Entities.MVC
             _attackCooldown = new CountdownTimer(playerData.timeBetweenAttacks);
             _attackCooldown.OnTimerStop += () => _canAttack = true;
 
-            _canAbilty = true;
+            _canAbility = true;
             _abilityCooldown = new CountdownTimer(_playerData.abilityData.cooldown);
-            _abilityCooldown.OnTimerStop += () => _canAbilty = true;
+            _abilityCooldown.OnTimerStop += () => _canAbility = true;
         }
         
         public void ApplyGravity()
@@ -70,7 +70,7 @@ namespace Entities.MVC
 
             var targetVelocity = forwardVec * (verticalInput * _playerData.maxSpeed) + rightVec * (horizontalInput * _playerData.maxSpeed);
 
-            _currentVelocity = Vector3.MoveTowards(_currentVelocity, targetVelocity, Time.deltaTime * _playerData.acceleration);
+            _currentVelocity = Vector3.MoveTowards(_currentVelocity, targetVelocity, Time.fixedDeltaTime * _playerData.acceleration);
 
             var finalForce = new Vector3(
                 _currentVelocity.x,
@@ -277,8 +277,8 @@ namespace Entities.MVC
         
         public void Look()
         {
-            var mouseX = Input.GetAxisRaw("Mouse X") * _mouseSensitivity * Time.deltaTime;
-            var mouseY = Input.GetAxisRaw("Mouse Y") * _mouseSensitivity * Time.deltaTime;
+            var mouseX = Input.GetAxisRaw("Mouse X") * _mouseSensitivity * Time.unscaledDeltaTime;
+            var mouseY = Input.GetAxisRaw("Mouse Y") * _mouseSensitivity * Time.unscaledDeltaTime;
 
             _xRotation -= mouseY;
             _xRotation = Mathf.Clamp(_xRotation, -90f, 90f);
@@ -306,6 +306,8 @@ namespace Entities.MVC
 
             bullet.Fire(aimDirection, velocityToTransfer);
 
+            EventManager.PlayerEvents.OnAxeThrown.Invoke();
+            
             _attackCooldown.Start();
         }
 
@@ -322,9 +324,9 @@ namespace Entities.MVC
 
         public void UseAbility()
         {
-            if (!_canAbilty) return;
+            if (!_canAbility) return;
                 
-            _canAbilty = false;
+            _canAbility = false;
             
             FactoryManager.Instance.SpawnObject(
                 PoolableType.ParryAbility,

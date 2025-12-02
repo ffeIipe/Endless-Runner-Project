@@ -28,7 +28,7 @@ namespace Obstacles
             {
                 OnTriggered?.Invoke();
                 
-                var dir =  other.transform.position - transform.position;
+                var dir =  (other.transform.position - transform.position).normalized;
                 OnTriggeredCollider?.Invoke(other, dir);
                 
                 _bWasTriggered = true;

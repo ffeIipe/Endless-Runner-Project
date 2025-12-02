@@ -1,4 +1,3 @@
-using System;
 using Enums;
 using Managers;
 using ScreenManagerFolder;
@@ -22,6 +21,8 @@ namespace Obstacles
 
         private void ShowFinalScreen()
         {
+            EventManager.GameEvents.OnLevelFinished.Invoke();
+            
             EffectsManager.Instance.PlayEffect(TimeWarpType.Slow, OnFinishedTimeWarp);
             EffectsManager.Instance.PlayFadeScreen(false);
         }
@@ -29,7 +30,6 @@ namespace Obstacles
         private void OnFinishedTimeWarp()
         {
             ScreenManager.Instance.PushScreen(ScreenType.FinalMenu, false);
-            EventManager.GameEvents.IsLevelFinished.Invoke(true);
             Cursor.lockState = CursorLockMode.None;
         }
     }

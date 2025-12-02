@@ -9,6 +9,7 @@ namespace Enums
         HealthPowerUp,
         ShieldPowerUp,
         ParryAbility,
-        DrinkBeerAbility
+        DrinkBeerAbility,
+        BloodEffect
     }
 }

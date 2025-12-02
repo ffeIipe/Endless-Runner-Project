@@ -6,6 +6,7 @@ using ScreenManagerFolder;
 using Scriptables;
 using Structs;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 namespace Managers
 {
@@ -19,6 +20,9 @@ namespace Managers
         private Dictionary<HitStopType, HitStopMap> _hitStopMaps;
         private Dictionary<TimeWarpType, TimeWarpMap> _timeWarpMaps;
         private Dictionary<FieldOfViewWarpType, FieldOfViewMap> _fieldOfViewMaps;
+        
+        private float _targetFieldOfView;
+        private float _targetVignetteIntensity;
         
         private void Awake()
         {
@@ -50,7 +54,7 @@ namespace Managers
             }
         }
 
-        private void OnEnable()
+        private void Start()
         {
             _camera = Camera.main;
         }
@@ -61,16 +65,25 @@ namespace Managers
         {
             StartCoroutine(isFadeIn ? FadeInScreen() : FadeOutScreen());
         }
-        
-        public void UpdateFOV(float vel)
+
+        public void UpdateVelocityEffect(float vel)
         {
-            var t = Mathf.Clamp01(vel / 22f);
-
-            var max = _fieldOfViewMaps[FieldOfViewWarpType.Type1].fieldOfViewWarpAttributes.maxFOV;
+            if(!_camera) _camera = Camera.main; //TODO: fixear race conditionnn
             
-            var finalFieldOfView = Mathf.Lerp(60, max, t);
+            var t = Mathf.Clamp01(vel / 22f); // 22 es la vel max del player
 
-            _camera.fieldOfView = finalFieldOfView;
+            var minFOV = _fieldOfViewMaps[FieldOfViewWarpType.Type1].fieldOfViewWarpAttributes.minFOV;
+            var maxFOV = _fieldOfViewMaps[FieldOfViewWarpType.Type1].fieldOfViewWarpAttributes.maxFOV;
+            _targetFieldOfView = Mathf.Lerp(minFOV, maxFOV, t);
+
+            var vignetteT = t < 0.1 ? 0f : t;
+            _targetVignetteIntensity = vignetteT * 1.5f; // multiplier hardcodeado tmb jeje
+
+            _camera.fieldOfView = Mathf.Lerp(_camera.fieldOfView, _targetFieldOfView, Time.deltaTime * effectsManagerData.lerpSpeed);
+
+            var currentVignette = effectsManagerData.windRenderMaterial.GetFloat(effectsManagerData.vignetteIntensity);
+            var finalVignette = Mathf.Lerp(currentVignette, _targetVignetteIntensity, Time.deltaTime * effectsManagerData.lerpSpeed);
+            effectsManagerData.windRenderMaterial.SetFloat(effectsManagerData.vignetteIntensity, finalVignette); 
         }
 
         private IEnumerator FadeOutScreen()
@@ -105,22 +118,31 @@ namespace Managers
 
         private IEnumerator FadeInScreen()
         {
-            var timer = 0f;
+            var duration  = effectsManagerData.fadeDuration;
             var curve = effectsManagerData.fadeCurve;
-            var fadeScreen = (FadeScreen)ScreenManager.Instance.GetScreen(ScreenType.FadeScreen);
             
-            while (timer < effectsManagerData.fadeDuration)
+            var fadeScreen = (FadeScreen)ScreenManager.Instance.GetScreen(ScreenType.FadeScreen);
+            ScreenManager.Instance.PushScreen(ScreenType.FadeScreen, true);
+            
+            var currentColor = fadeScreen.fadeImage.color;
+            
+            var time = 0f;
+            
+            while (time < duration)
             {
-                timer += Time.deltaTime;
+                time += Time.deltaTime;
                 
-                var curveValue = curve.Evaluate(timer);
-                var color = fadeScreen.fadeImage.color;
-                color.a = curveValue;
+                var normalizedTime = time / duration;
+                var curveValue = curve.Evaluate(normalizedTime);
                 
-                fadeScreen.fadeImage.color = color;
+                currentColor.a = -curveValue;
+                fadeScreen.fadeImage.color = currentColor;
                 
                 yield return null;
             }
+            
+            currentColor.a = 0f;
+            fadeScreen.fadeImage.color = currentColor;
         }
 
         private IEnumerator DoHitStop(HitStopType hitStopType)
@@ -140,7 +162,9 @@ namespace Managers
 
             while (timer < duration)
             {
-                var curveValue = curve.Evaluate(timer);
+                var normalizedTime = timer / duration;
+                
+                var curveValue = curve.Evaluate(normalizedTime);
                 Time.timeScale = curveValue * attr.minScale;
                 timer += Time.unscaledDeltaTime;
                 
@@ -175,11 +199,6 @@ namespace Managers
             }
 
             onFinishedTimeWarp?.Invoke();
-            
-            /*if (pauseGameOnFinish)
-            {
-                GameManager.Instance.HandlePauseInput();
-            }*/
         }
     }
 }

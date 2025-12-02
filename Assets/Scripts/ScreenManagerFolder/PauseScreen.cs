@@ -18,11 +18,12 @@ namespace ScreenManagerFolder
 
         public void Restart()
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+            GameManager.Instance.RestartCurrentLevel(() => ScreenManager.Instance.PushScreen(ScreenType.Gameplay, true));
         }
         
         public void MainMenu()
         {
+            SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
             ScreenManager.Instance.PushScreen(ScreenType.MainMenu, true);
         }
     }

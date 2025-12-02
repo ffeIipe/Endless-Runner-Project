@@ -11,18 +11,21 @@ namespace Managers
 
     public class PlayerEvents
     {
-        public Action OnPlayerDead;
-        public Action OnPlayerDamaged;
-        public Action OnEnemyKilled;
-        public Action OnPowerUpPickedUp;
-        public Action OnTrapOpened;
-        public Action AxesThrown;
+        public Action OnPlayerDead = delegate { };
+        public Action OnPlayerDamaged = delegate { };
+        public Action OnEnemyKilled = delegate { };
+        public Action OnPowerUpPickedUp = delegate { };
+        public Action OnTrapOpened = delegate { };
+        public Action OnAxeThrown = delegate { };
+        public Action OnNewAttempt = delegate { };
     }
     
     public class GameEvents
     {
         public Action<bool> Pause = delegate { };
-        public Action<bool> IsLevelFinished = delegate { };
+        public Action OnLevelFinished = delegate { };
+        public Action OnLevelRestarted = delegate { };
+        public Action OnLevelStarted = delegate { };
     }
         
     public class UIEvents
@@ -30,6 +33,6 @@ namespace Managers
         public Action<float> OnSensitivityChanged =  delegate { };
         public Action<float> OnSoundVolumeChanged = delegate { };
         public Action<float> OnVelocityChanged = delegate { };
-        public Action<float> OnHealthChanged = delegate { };
+        public Action<float> OnHealthPercentageChanged = delegate { };
     }
 }

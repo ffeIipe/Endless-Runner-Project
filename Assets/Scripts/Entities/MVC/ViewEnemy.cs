@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using Enums;
 using Managers;
 using Scriptables.Entities;
@@ -9,12 +10,11 @@ namespace Entities.MVC
 {
     public class ViewEnemy : ViewBase
     {
-        public Action OnReadyToBeDeactivated =  delegate { };
-        
         private readonly Func<IEnumerator, Coroutine> _startCoroutine;
         private readonly Material _dissolveMaterial;
-        private readonly VikingHelmet _vikingHelmet;
+        private readonly int _dissolveAmount = Shader.PropertyToID("_DissolveAmount");
         private readonly EnemyData _enemyData;
+        private readonly Dictionary<string, DetachableProp> _detachableProps;
         
         public ViewEnemy(Entity owner, EnemyData enemyData, Func<IEnumerator, Coroutine> startCoroutine) : base(owner)
         {
@@ -22,9 +22,12 @@ namespace Entities.MVC
             _enemyData = enemyData;
             
             _dissolveMaterial = owner.GetComponentInChildren<MeshRenderer>().material;
-            _vikingHelmet = owner.GetComponentInChildren<VikingHelmet>();
-            
-            owner.OnDeactivated += OnEntityDeactivated;
+
+            _detachableProps = new Dictionary<string, DetachableProp>();
+            foreach (var prop in owner.GetComponentsInChildren<DetachableProp>())
+            {
+                _detachableProps.Add(prop.propName, prop);
+            }
         }
 
         public override void OnEntityDead()
@@ -32,49 +35,46 @@ namespace Entities.MVC
             base.OnEntityDead();
             
             ApplyDissolveEffect();
-            
-            EventManager.PlayerEvents.OnEnemyKilled.Invoke();
-        }
-        
-        private void OnEntityDeactivated()
-        {
-            _vikingHelmet.ResetDeathProp();
-            RemoveDissolveEffect();
         }
 
-        public override void ApplyDamageEffect(Vector3 hitPoint, Vector3 hitNormal, float force)
+        public override void ApplyDamageEffect(Vector3 direction, Vector3 hitPoint, Vector3 hitNormal, float force)
         {
-            base.ApplyDamageEffect(hitPoint, hitNormal, force);
+            base.ApplyDamageEffect(direction, hitPoint, hitNormal, force);
             
             if (!Owner.GetAttributesComponent().IsAlive())
             {
-                _vikingHelmet.ActivateDeathProp(hitPoint * force);
+                if (_detachableProps.TryGetValue("Helmet", out var helmet))
+                    helmet.ActivatePhysicsProp(direction * force);
+            }
+
+            if (!Owner.GetAttributesComponent().IsShielded())
+            {
+                if(_detachableProps.TryGetValue("Shield", out var shield))
+                    shield.ActivatePhysicsProp(direction * force);
             }
         }
 
         public override void HeadShotEffect()
         {
             base.HeadShotEffect();
-            //var chance = Random.Range(0, );
-            if (true)
-            {
-                EffectsManager.Instance.PlayEffect(HitStopType.Fast);
-            }
+            
+            EffectsManager.Instance.PlayEffect(HitStopType.Fast);
         }
 
-        public override void OnShieldDamaged()
+        public override void RestartEntityView()
         {
-            base.OnShieldDamaged();
-            
-            
+           foreach (var prop in _detachableProps)
+           {
+               prop.Value.ResetPhysicsProp();
+           }
+           RemoveDissolveEffect();
         }
 
         private IEnumerator DissolveEffect()
         {
             var time = 0f;
     
-            _vikingHelmet.ActivateDeathProp(Owner.GetRigidbody().velocity);
-            _dissolveMaterial.SetFloat("_DissolveAmount", 0f);
+            _dissolveMaterial.SetFloat(_dissolveAmount, 0f);
 
             while (time < _enemyData.dissolveEffectDuration)
             {
@@ -85,20 +85,20 @@ namespace Entities.MVC
                     var t = Mathf.Clamp01(time / _enemyData.dissolveEffectDuration);
                     var value = Mathf.Lerp(0f, 1f, t);
             
-                    _dissolveMaterial.SetFloat("_DissolveAmount", value);
+                    _dissolveMaterial.SetFloat(_dissolveAmount, value);
                 }
 
                 yield return null;
             }
 
-            _dissolveMaterial.SetFloat("_DissolveAmount", 1f);
+            _dissolveMaterial.SetFloat(_dissolveAmount, 1f);
             yield return new WaitForSeconds(_enemyData.timeUntilDeactivation);
 
-            OnReadyToBeDeactivated?.Invoke();
+            RestartEntityView();
         }
 
         private void ApplyDissolveEffect() => _startCoroutine(DissolveEffect());
         
-        private void RemoveDissolveEffect() => _dissolveMaterial.SetFloat("_DissolveAmount", 0f);
+        private void RemoveDissolveEffect() => _dissolveMaterial.SetFloat(_dissolveAmount, 0f);
     }
 }

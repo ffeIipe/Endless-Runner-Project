@@ -1,30 +1,29 @@
 using Managers;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ScreenManagerFolder
 {
     public class HUDScreen : BaseScreen
     {
-        [SerializeReference] private TextMeshProUGUI healthText;
-        [SerializeReference] private TextMeshProUGUI killsText;
-        [SerializeReference] private TextMeshProUGUI timesDamagedText;
         [SerializeReference] private TextMeshProUGUI velocityText;
+        [SerializeReference] private Slider healthBar;
 
         private void Start()
         {
             EventManager.UIEvents.OnVelocityChanged += SetVelocityText;
-            EventManager.UIEvents.OnHealthChanged += SetHealthText;
+            EventManager.UIEvents.OnHealthPercentageChanged += SetHealthBar;
         }
 
-        private void SetHealthText(float health)
+        private void SetHealthBar(float health)
         {
-            healthText.SetText(health.ToString());
+            healthBar.SetValueWithoutNotify(health);
         }
         
         private void SetVelocityText(float velocity)
         {
-            velocityText.SetText(velocity.ToString()); 
+            velocityText.SetText(velocity.ToString("0")); 
             
             var t = Mathf.Clamp01(velocity / 22f);
 
@@ -35,10 +34,10 @@ namespace ScreenManagerFolder
             velocityText.color = finalColor;
         }
 
-        private void OnDestroy()
+        private void OnDisable()
         {
             EventManager.UIEvents.OnVelocityChanged -= SetVelocityText;
-            EventManager.UIEvents.OnHealthChanged -= SetHealthText;
+            EventManager.UIEvents.OnHealthPercentageChanged -= SetHealthBar;
         }
     }
 }

@@ -19,5 +19,11 @@ namespace Scriptables
         [Header("Fade Effect Settings")]
         public float fadeDuration;
         public AnimationCurve fadeCurve;
+        
+        [Header("Render Features Materials")]
+        public Material bloodRenderMaterial;
+        public Material windRenderMaterial;
+        public string vignetteIntensity = "_VignetteIntensity";
+        public float lerpSpeed = 10f;
     }
 }

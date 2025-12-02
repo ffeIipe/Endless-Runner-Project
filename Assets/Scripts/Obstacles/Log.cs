@@ -61,8 +61,8 @@ namespace Obstacles
             var entity = other.GetComponent<Entity>();
 
             if (!entity) return;
-            entity.TakeDamage(logData.damage);
-            entity.GetHit(dir, dir, 10f);
+            entity.TakeDamage(logData.damage, null);
+            entity.GetHit(dir, dir, -dir, 10f);
         }
     }
 }

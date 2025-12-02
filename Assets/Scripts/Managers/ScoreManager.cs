@@ -5,13 +5,13 @@ namespace Managers
 {
     public class ScoreManager : MonoBehaviour
     {
-        public ScoreManager Instance {get; private set;}
+        public static ScoreManager Instance { get; private set; }
 
-        [SerializeField] private Score _score;
+        public Score Score;
         
         private void Awake()
         {
-            if (Instance ==null)
+            if (!Instance)
             {
                 Instance = this;
             }
@@ -23,41 +23,47 @@ namespace Managers
 
         private void OnEnable()
         {
-            EventManager.PlayerEvents.OnPlayerDead += IncreaseAttempts;
-            EventManager.PlayerEvents.OnPlayerDamaged += IncreaseTimesDamaged;
+            EventManager.PlayerEvents.OnNewAttempt += IncreaseAttempts;
+            EventManager.PlayerEvents.OnPlayerDamaged += IncreaseDamageTaken;
             EventManager.PlayerEvents.OnEnemyKilled += IncreaseEnemiesKilled;
+            EventManager.PlayerEvents.OnAxeThrown += IncreaseAxesThrown;
             EventManager.PlayerEvents.OnPowerUpPickedUp += IncreasePowerUpsPickedUp;
             EventManager.PlayerEvents.OnTrapOpened += IncreaseTrapsOpened;
         }
 
         public void ClearScore()
         {
-            _score.Clear();
+            Score.Clear();
         }
 
         private void IncreaseAttempts()
         {
-            _score.Attempts++;
+            Score.Attempts++;
         }
 
-        private void IncreaseTimesDamaged()
+        private void IncreaseDamageTaken()
         {
-            _score.TimesDamaged++;
+            Score.DamageTaken++;
+        }
+        
+        private void IncreaseAxesThrown()
+        {
+            Score.AxesThrown++;
         }
         
         private void IncreaseEnemiesKilled()
         {
-            _score.EnemiesKilled++;
+            Score.EnemiesKilled++;
         }
         
         private void IncreasePowerUpsPickedUp()
         {
-            _score.PowerUpsPickedUp++;
+            Score.PowerUpsPickedUp++;
         }
         
         private void IncreaseTrapsOpened()
         {
-            _score.TrapsOpened++;
+            Score.TrapsOpened++;
         }
     }
 }

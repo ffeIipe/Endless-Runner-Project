@@ -329,9 +329,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8069092296441071664}
-        m_TargetAssemblyTypeName: ScreenManagerFolder.PauseScreen, Assembly-CSharp
-        m_MethodName: 
+      - m_Target: {fileID: 5825656534961063084}
+        m_TargetAssemblyTypeName: ScreenManagerFolder.MainMenuScreen, Assembly-CSharp
+        m_MethodName: Exit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1117,9 +1117,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 8069092296441071664}
-        m_TargetAssemblyTypeName: ScreenManagerFolder.PauseScreen, Assembly-CSharp
-        m_MethodName: 
+      - m_Target: {fileID: 5825656534961063084}
+        m_TargetAssemblyTypeName: ScreenManagerFolder.MainMenuScreen, Assembly-CSharp
+        m_MethodName: Options
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

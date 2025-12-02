@@ -15,11 +15,11 @@ namespace Entities
         public EntityData entityData;
         public Transform handPoint;
         
-        public Action OnDeactivated = delegate { };
-        
+        protected Entity LastDamageCauser;
         protected ViewBase View;
         protected RigidbodyConstraints SavedRigidbodyConstraints;
-            
+        [SerializeField]protected bool CanTakeDamage = true;
+        
         private Rigidbody _rigidbody;
         private Vector3 _currentVelocity;
         private Vector3 _currentAngularVelocity;
@@ -30,6 +30,7 @@ namespace Entities
         public AttributesComponent GetAttributesComponent() => _attributesComponent;
         public TeamType GetTeam() => _teamComponent.GetCurrentTeam();
         public Rigidbody GetRigidbody() => _rigidbody;
+        public Entity GetLastDamageCauser() => LastDamageCauser;
         
         protected virtual void Awake()
         {
@@ -46,9 +47,30 @@ namespace Entities
         protected virtual void OnEnable()
         {
             EventManager.GameEvents.Pause += PauseEntity;
+            EventManager.GameEvents.OnLevelRestarted += OnLevelRestarted;
             
-            _attributesComponent.OnDead += View.OnEntityDead;
-            _attributesComponent.OnShieldDamage += View.OnShieldDamaged;
+            _attributesComponent.OnDead += Die;
+        }
+
+        protected virtual void OnDisable()
+        {
+            EventManager.GameEvents.Pause -= PauseEntity;
+            EventManager.GameEvents.OnLevelRestarted -= OnLevelRestarted;
+            
+            _attributesComponent.OnDead -= Die;
+        }
+
+        protected virtual void Die()
+        {
+            View.OnEntityDead();
+            CanTakeDamage = false;
+        }
+
+        protected virtual void OnLevelRestarted()
+        {
+            View.RestartEntityView();
+            CanTakeDamage = true;
+            _attributesComponent.Reset();
         }
 
         protected virtual ViewBase InitializeView()
@@ -56,16 +78,19 @@ namespace Entities
             return new ViewBase(this);
         }
         
-        public virtual void TakeDamage(float damage)
+        public virtual void TakeDamage(float damage, Entity damageCauser)
         {
+            if(!CanTakeDamage) return;
+                
             _attributesComponent.ReceiveDamage(damage);
+            LastDamageCauser = damageCauser;
         }
 
-        public virtual void GetHit(Vector3 hitPoint, Vector3 hitNormal, float force)
+        public virtual void GetHit(Vector3 direction, Vector3 hitPoint, Vector3 hitNormal, float force)
         {
-            if (!GetAttributesComponent().IsAlive())
+            if (!_attributesComponent.IsAlive())
             {
-                _rigidbody.AddForce(hitPoint.normalized * force, ForceMode.Impulse);
+                _rigidbody.AddForce(direction.normalized * force, ForceMode.Impulse);
             }
 
             if (!TryGetComponent(out CapsuleCollider coll)) return;
@@ -82,15 +107,10 @@ namespace Entities
 
         public virtual void PauseEntity(bool pause)
         {
-            if(!_rigidbody)
-            {
-                return;
-            }
-            
             if (pause)
             {
                 _currentAngularVelocity = _rigidbody.angularVelocity;
-                _currentVelocity =  _rigidbody.velocity;
+                _currentVelocity = _rigidbody.velocity;
                 _rigidbody.constraints = RigidbodyConstraints.FreezeAll;
             }
             else
@@ -101,11 +121,6 @@ namespace Entities
                 _rigidbody.angularVelocity = _currentAngularVelocity;
                 _rigidbody.velocity = _currentVelocity;
             }
-        }
-        
-        protected virtual void OnDestroy()
-        {
-            EventManager.GameEvents.Pause -= PauseEntity;
         }
     }
 }

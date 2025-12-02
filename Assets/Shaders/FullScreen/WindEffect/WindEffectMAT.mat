@@ -42,9 +42,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Alpha: 1
-    - _VignetteIntensity: 1.51
-    - _VignettePower: 4.33
+    - _Alpha: 0.5
+    - _Velocity: 0.652
+    - _VignetteIntensity: 0.05583921
+    - _VignettePower: 4.16
     m_Colors:
     - _Color: {r: 2, g: 2, b: 2, a: 0}
   m_BuildTextureStacks: []

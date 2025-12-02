@@ -7,13 +7,13 @@ namespace Structs
     [Serializable]
     public struct FieldOfViewWarp
     {
+        public float minFOV;
         public float maxFOV;
-        public AnimationCurve curve;
 
-        public FieldOfViewWarp(float maxFOV, AnimationCurve curve) 
+        public FieldOfViewWarp(float minFOV,float maxFOV) 
         { 
+            this.minFOV =  minFOV;
             this.maxFOV = maxFOV;
-            this.curve = curve;
         }
         
         public void UpdateEffect(float t)

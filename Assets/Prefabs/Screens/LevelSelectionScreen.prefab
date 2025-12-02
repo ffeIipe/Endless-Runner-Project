@@ -330,9 +330,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: ScreenManagerFolder.PauseScreen, Assembly-CSharp
-        m_MethodName: MainMenu
+      - m_Target: {fileID: 2951723833649390070}
+        m_TargetAssemblyTypeName: ScreenManagerFolder.LevelSelectionScreen, Assembly-CSharp
+        m_MethodName: Back
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -466,13 +466,13 @@ MonoBehaviour:
       - m_Target: {fileID: 2951723833649390070}
         m_TargetAssemblyTypeName: ScreenManagerFolder.LevelSelectionScreen, Assembly-CSharp
         m_MethodName: LoadSelectedScene
-        m_Mode: 3
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 2
+          m_IntArgument: 3
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Level 2
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &2156990511921902427
@@ -770,13 +770,13 @@ MonoBehaviour:
       - m_Target: {fileID: 2951723833649390070}
         m_TargetAssemblyTypeName: ScreenManagerFolder.LevelSelectionScreen, Assembly-CSharp
         m_MethodName: LoadSelectedScene
-        m_Mode: 3
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Level 1
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &3577454664576251940
@@ -903,13 +903,13 @@ MonoBehaviour:
       - m_Target: {fileID: 2951723833649390070}
         m_TargetAssemblyTypeName: ScreenManagerFolder.LevelSelectionScreen, Assembly-CSharp
         m_MethodName: LoadSelectedScene
-        m_Mode: 3
+        m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: Tutorial
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!1 &5599650916454460746
@@ -1199,7 +1199,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6377684521583216673
 RectTransform:
   m_ObjectHideFlags: 0

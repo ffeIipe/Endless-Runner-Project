@@ -29,6 +29,8 @@ namespace Pool
 
         public void ReturnInstance(IPoolable instance)
         {
+            if (instance as Object == null) return;
+
             if (instance is T typedInstance)
             {
                 _pool.ReturnObjectToPool(typedInstance);
