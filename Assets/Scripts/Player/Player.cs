@@ -45,11 +45,6 @@ namespace Player
             UnsubscribeToEvents();
         }
 
-        private void Start()
-        {
-            Debug.Log("Start");
-        }
-
         private void OnBufferDamageStop()
         {
             CanTakeDamage = true;
@@ -98,6 +93,7 @@ namespace Player
 
             EventManager.PlayerEvents.OnPlayerDamaged.Invoke();
             EventManager.UIEvents.OnHealthPercentageChanged?.Invoke(GetAttributesComponent().GetHealthPercentage());
+            EffectsManager.Instance.BloodEffect(GetAttributesComponent().GetHealth());
         }
 
         public override void PauseEntity(bool pause)
@@ -110,20 +106,20 @@ namespace Player
 
         protected override void OnLevelRestarted()
         {
-            base.OnLevelRestarted();
-            
             GetRigidbody().isKinematic = true;
             
             GetCharacterController().enabled = false;
             transform.rotation = Quaternion.identity;
             GetCharacterController().enabled = true;
-
-            GetAttributesComponent().Reset();
-            EventManager.UIEvents.OnHealthPercentageChanged?.Invoke(GetAttributesComponent().GetHealthPercentage());
             
             _controller.Enabled = true;
             
-            _bufferDamage =  new CountdownTimer(PlayerData.bufferDamage);
+            _bufferDamage = new CountdownTimer(PlayerData.bufferDamage);
+            _bufferDamage.OnTimerStop += OnBufferDamageStop;
+            
+            base.OnLevelRestarted();
+            
+            EventManager.UIEvents.OnHealthPercentageChanged?.Invoke(GetAttributesComponent().GetHealthPercentage());
         }
         
         private void SubscribeToEvents()

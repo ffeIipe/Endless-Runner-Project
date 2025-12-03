@@ -38,11 +38,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _VignetteIntensity: 0.87
-    - _VignettePower: 1.12
-    - _VoronoiIntensity: 0.13
-    - _VoronoiPower: 3.03
-    - _VoronoiSpeed: 0.45
+    - _VignetteIntensity: 0
+    - _VignettePower: 0.59
+    - _VoronoiIntensity: 0.37
+    - _VoronoiPower: 0.92
+    - _VoronoiSpeed: 0.33
     m_Colors:
     - _VignetteColor: {r: 0.4433962, g: 0.02300641, b: 0.02300641, a: 0}
   m_BuildTextureStacks: []

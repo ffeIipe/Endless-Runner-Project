@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   poolableType: 2
   prefab: {fileID: 690779489631089750, guid: 6705c4263ba6c5445a1f169c20848d32, type: 3}
-  prewarmSize: 2
+  prewarmSize: 1

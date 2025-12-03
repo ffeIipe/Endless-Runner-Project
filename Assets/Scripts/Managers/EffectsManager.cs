@@ -52,6 +52,24 @@ namespace Managers
             {
                 _fieldOfViewMaps.Add(fieldOfViewMap.fieldOfViewWarpType, fieldOfViewMap);
             }
+
+            ResetEffects();
+        }
+
+        private void OnEnable()
+        {
+            EventManager.GameEvents.OnLevelRestarted += ResetEffects;
+        }
+
+        private void OnDisable()
+        {
+            EventManager.GameEvents.OnLevelRestarted -= ResetEffects;
+        }
+
+        private void ResetEffects()
+        {
+            effectsManagerData.bloodRenderMaterial.SetFloat(effectsManagerData.vignetteIntensity, 0f);
+            effectsManagerData.windRenderMaterial.SetFloat(effectsManagerData.vignetteIntensity, 0f);
         }
 
         private void Start()
@@ -68,7 +86,7 @@ namespace Managers
 
         public void UpdateVelocityEffect(float vel)
         {
-            if(!_camera) _camera = Camera.main; //TODO: fixear race conditionnn
+            if(!_camera) _camera = Camera.main; //TODO: fixear race condition!
             
             var t = Mathf.Clamp01(vel / 22f); // 22 es la vel max del player
 
@@ -79,13 +97,43 @@ namespace Managers
             var vignetteT = t < 0.1 ? 0f : t;
             _targetVignetteIntensity = vignetteT * 1.5f; // multiplier hardcodeado tmb jeje
 
-            _camera.fieldOfView = Mathf.Lerp(_camera.fieldOfView, _targetFieldOfView, Time.deltaTime * effectsManagerData.lerpSpeed);
+            _camera.fieldOfView = Mathf.Lerp(_camera.fieldOfView, _targetFieldOfView, Time.deltaTime * effectsManagerData.windLerpSpeed);
 
             var currentVignette = effectsManagerData.windRenderMaterial.GetFloat(effectsManagerData.vignetteIntensity);
-            var finalVignette = Mathf.Lerp(currentVignette, _targetVignetteIntensity, Time.deltaTime * effectsManagerData.lerpSpeed);
+            var finalVignette = Mathf.Lerp(currentVignette, _targetVignetteIntensity, Time.deltaTime * effectsManagerData.windLerpSpeed);
             effectsManagerData.windRenderMaterial.SetFloat(effectsManagerData.vignetteIntensity, finalVignette); 
         }
 
+        public void BloodEffect(float currentHealth)
+        {
+            var healthPercent = Mathf.Clamp01(currentHealth / 3f); //max life
+            var damagePercent = 1f - healthPercent;
+            var targetIntensity = damagePercent * 2f; //max vignette intensity
+
+            StartCoroutine(UpdateBloodEffect(targetIntensity));
+        }
+
+        private IEnumerator UpdateBloodEffect(float target)
+        {
+            var bloodMat = effectsManagerData.bloodRenderMaterial;
+            var start = bloodMat.GetFloat(effectsManagerData.vignetteIntensity);
+            var time = 0f;
+            var duration = effectsManagerData.bloodLerpSpeed;
+
+            while (time < duration)
+            {
+                time += Time.unscaledDeltaTime;
+                var t = time / duration;
+        
+                var currentVal = Mathf.Lerp(start, target, t);
+        
+                bloodMat.SetFloat(effectsManagerData.vignetteIntensity, currentVal);
+                yield return null;
+            }
+
+            bloodMat.SetFloat(effectsManagerData.vignetteIntensity, target);
+        }
+        
         private IEnumerator FadeOutScreen()
         {
             var duration = effectsManagerData.fadeDuration; 

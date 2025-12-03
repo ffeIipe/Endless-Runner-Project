@@ -29,7 +29,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   scanInterval: 0.8
-  jumpDuration: 1.2
+  jumpDuration: 2
   jumpCurve:
     serializedVersion: 2
     m_Curve:
@@ -63,6 +63,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  jumpHeight: 5
+  jumpHeight: 7
   dissolveEffectDuration: 1.5
   timeUntilDeactivation: 1
