@@ -39,12 +39,14 @@ namespace Entities
         {
             EventManager.GameEvents.Pause += PauseEntity;
             EventManager.GameEvents.OnLevelRestarted += OnLevelRestarted;
+            EventManager.GameEvents.OnLevelChanged += OnLevelRestarted;
         }
 
         private void OnDisable()
         {
             EventManager.GameEvents.Pause -= PauseEntity;
             EventManager.GameEvents.OnLevelRestarted -= OnLevelRestarted;
+            EventManager.GameEvents.OnLevelChanged -= OnLevelRestarted;
         }
         
         private void OnLevelRestarted()

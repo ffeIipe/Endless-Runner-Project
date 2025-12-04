@@ -9,7 +9,6 @@ using UnityEngine;
 
 namespace Entities.Enemies
 {
-    //TODO: fix no muerte
     public abstract class Enemy : Entity, IPoolable
     {
         public Entity Owner { get; set; }
@@ -33,6 +32,25 @@ namespace Entities.Enemies
         protected override ViewBase InitializeView()
         {
             return new ViewEnemy(this, EnemyData, StartCoroutine);
+        }
+
+        protected override void OnEnable()
+        {
+            base.OnEnable();
+
+            EventManager.GameEvents.OnLevelFinished += OnLevelFinished;
+        }
+
+        protected override void OnDisable()
+        {
+            base.OnDisable();
+            
+            EventManager.GameEvents.OnLevelFinished -= OnLevelFinished;
+        }
+
+        private void OnLevelFinished()
+        {
+            GetStateMachine().Enabled = false;
         }
 
         public override void GetHit(Vector3 direction, Vector3 hitPoint, Vector3 hitNormal, float force)

@@ -1,17 +1,25 @@
 using Enums;
 using Managers;
-using UnityEngine.SceneManagement;
 
 namespace ScreenManagerFolder
 {
     public class LevelSelectionScreen : BaseScreen
     {
-        public void LoadSelectedScene(string level)
+        public void LoadSelectedScene(int sceneIndex)
         {
-            GameManager.Instance.LoadLevel(level);
-            GameManager.Instance.ResumeGame(ScreenType.Gameplay);
-        }
+            GameManager.Instance.LoadLevel(sceneIndex, OnLoadComplete, OnLoadFailed); return;
 
+            void OnLoadComplete()
+            {
+                GameManager.Instance.ResumeGame(ScreenType.Gameplay);
+            }
+            
+            void OnLoadFailed()
+            {
+                ScreenManager.Instance.PushScreen(ScreenType.MainMenu, true);
+            }
+        }
+        
         public void Back()
         {
             GameManager.Instance.HandlePauseInput();

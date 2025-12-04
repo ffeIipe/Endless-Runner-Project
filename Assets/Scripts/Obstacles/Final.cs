@@ -1,3 +1,4 @@
+using System;
 using Enums;
 using Managers;
 using ScreenManagerFolder;
@@ -19,9 +20,16 @@ namespace Obstacles
             _trigger.OnTriggered += ShowFinalScreen;
         }
 
+        private void OnDisable()
+        {
+            _trigger.OnTriggered -= ShowFinalScreen;
+        }
+
         private void ShowFinalScreen()
         {
             EventManager.GameEvents.OnLevelFinished.Invoke();
+
+            GameManager.Instance.isLevelFinished = true;
             
             EffectsManager.Instance.PlayEffect(TimeWarpType.Slow, OnFinishedTimeWarp);
             EffectsManager.Instance.PlayFadeScreen(false);

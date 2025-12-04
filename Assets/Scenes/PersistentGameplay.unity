@@ -1282,6 +1282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   effectsManagerData: {fileID: 11400000, guid: 5c06a38d4e43dd34a8992dd1748b1591, type: 2}
+  playerCamera: {fileID: 0}
 --- !u!1 &1617504271
 GameObject:
   m_ObjectHideFlags: 0

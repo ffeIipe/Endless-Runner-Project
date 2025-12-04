@@ -48,6 +48,7 @@ namespace Entities
         {
             EventManager.GameEvents.Pause += PauseEntity;
             EventManager.GameEvents.OnLevelRestarted += OnLevelRestarted;
+            EventManager.GameEvents.OnLevelChanged += OnLevelRestarted;
             
             _attributesComponent.OnDead += Die;
         }
@@ -56,6 +57,7 @@ namespace Entities
         {
             EventManager.GameEvents.Pause -= PauseEntity;
             EventManager.GameEvents.OnLevelRestarted -= OnLevelRestarted;
+            EventManager.GameEvents.OnLevelChanged -= OnLevelRestarted;
             
             _attributesComponent.OnDead -= Die;
         }

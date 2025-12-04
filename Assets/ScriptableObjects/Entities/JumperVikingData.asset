@@ -44,7 +44,7 @@ MonoBehaviour:
       outWeight: 0.15273155
     - serializedVersion: 3
       time: 0.51
-      value: 0.80138063
+      value: 1.0013776
       inSlope: 0.0045571737
       outSlope: 0.0045571737
       tangentMode: 0
@@ -63,6 +63,6 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  jumpHeight: 7
+  jumpHeight: 10
   dissolveEffectDuration: 1.5
   timeUntilDeactivation: 1

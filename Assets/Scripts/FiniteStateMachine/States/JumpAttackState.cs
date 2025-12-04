@@ -12,7 +12,7 @@ namespace FiniteStateMachine.States
         protected override void TryAttack()
         {
             Owner.StartCoroutine(JumpAttack());
-            CountdownTimer.Start();
+            AttackTimer.Start();
         }
 
         private IEnumerator JumpAttack()

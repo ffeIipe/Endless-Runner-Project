@@ -6,7 +6,6 @@ using ScreenManagerFolder;
 using Scriptables;
 using Structs;
 using UnityEngine;
-using UnityEngine.Rendering.Universal;
 
 namespace Managers
 {
@@ -15,7 +14,7 @@ namespace Managers
         public static EffectsManager Instance { get; private set; }
         [SerializeField] private EffectsManagerData effectsManagerData;    
         
-        private Camera _camera;
+        public Camera playerCamera;
         
         private Dictionary<HitStopType, HitStopMap> _hitStopMaps;
         private Dictionary<TimeWarpType, TimeWarpMap> _timeWarpMaps;
@@ -23,6 +22,9 @@ namespace Managers
         
         private float _targetFieldOfView;
         private float _targetVignetteIntensity;
+		
+		private float _maxPlayerHealth;
+		
         
         private void Awake()
         {
@@ -66,15 +68,17 @@ namespace Managers
             EventManager.GameEvents.OnLevelRestarted -= ResetEffects;
         }
 
-        private void ResetEffects()
+        public void ResetEffects()
         {
             effectsManagerData.bloodRenderMaterial.SetFloat(effectsManagerData.vignetteIntensity, 0f);
             effectsManagerData.windRenderMaterial.SetFloat(effectsManagerData.vignetteIntensity, 0f);
+            
+            //Time.timeScale = 1f;
         }
 
         private void Start()
         {
-            _camera = Camera.main;
+            playerCamera = Camera.main;
         }
 
         public void PlayEffect(HitStopType hitStopType) => StartCoroutine(DoHitStop(hitStopType));
@@ -86,8 +90,6 @@ namespace Managers
 
         public void UpdateVelocityEffect(float vel)
         {
-            if(!_camera) _camera = Camera.main; //TODO: fixear race condition!
-            
             var t = Mathf.Clamp01(vel / 22f); // 22 es la vel max del player
 
             var minFOV = _fieldOfViewMaps[FieldOfViewWarpType.Type1].fieldOfViewWarpAttributes.minFOV;
@@ -97,7 +99,7 @@ namespace Managers
             var vignetteT = t < 0.1 ? 0f : t;
             _targetVignetteIntensity = vignetteT * 1.5f; // multiplier hardcodeado tmb jeje
 
-            _camera.fieldOfView = Mathf.Lerp(_camera.fieldOfView, _targetFieldOfView, Time.deltaTime * effectsManagerData.windLerpSpeed);
+            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, _targetFieldOfView, Time.deltaTime * effectsManagerData.windLerpSpeed);
 
             var currentVignette = effectsManagerData.windRenderMaterial.GetFloat(effectsManagerData.vignetteIntensity);
             var finalVignette = Mathf.Lerp(currentVignette, _targetVignetteIntensity, Time.deltaTime * effectsManagerData.windLerpSpeed);

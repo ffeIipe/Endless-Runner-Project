@@ -60,10 +60,9 @@ namespace Entities.PowerUps
 
         private void OnTriggerEnter(Collider other)
         {
-            if (other.TryGetComponent(out Entity entity) || entity != GameManager.Instance.player) return;
+            if (!other.TryGetComponent(out Player.Player entity)) return;
             
             PickUp(entity);
-            
         }
 
         public void Activate()

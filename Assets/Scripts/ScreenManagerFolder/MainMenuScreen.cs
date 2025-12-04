@@ -5,6 +5,13 @@ namespace ScreenManagerFolder
 {
     public class MainMenuScreen : BaseScreen
     {
+        public override void Show()
+        {
+            base.Show();
+            
+            Cursor.lockState = CursorLockMode.None;
+        }
+
         public void Play()
         {
             ScreenManager.Instance.PushScreen(ScreenType.LevelSelectionScreen, true);

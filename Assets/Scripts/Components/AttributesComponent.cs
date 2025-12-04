@@ -6,7 +6,8 @@ namespace Components
     public class AttributesComponent
     {
         public event Action OnDead = delegate { };
-        public event Action<float> OnReceiveDamage = delegate { };
+        public event Action<float> OnHealthDamaged = delegate { };
+        public event Action<float> OnHealthIncreased = delegate { };
         public event Action OnShieldDamage = delegate { };
         public event Action OnShieldDestroyed = delegate { };
         
@@ -51,7 +52,7 @@ namespace Components
             else
             {
                 _health -= damage;
-                OnReceiveDamage?.Invoke(_health);
+                OnHealthDamaged?.Invoke(_health);
                 
                 if (_health <= 0)
                     OnDead?.Invoke();
@@ -63,6 +64,8 @@ namespace Components
             _health += health;
             if (_health > _maxHealth)
                 _health = _maxHealth;
+            
+            OnHealthIncreased?.Invoke(_health);
         }
 
         public bool IsShielded()

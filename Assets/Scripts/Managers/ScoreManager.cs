@@ -1,3 +1,4 @@
+using System;
 using Structs;
 using UnityEngine;
 
@@ -29,6 +30,16 @@ namespace Managers
             EventManager.PlayerEvents.OnAxeThrown += IncreaseAxesThrown;
             EventManager.PlayerEvents.OnPowerUpPickedUp += IncreasePowerUpsPickedUp;
             EventManager.PlayerEvents.OnTrapOpened += IncreaseTrapsOpened;
+        }
+
+        private void OnDisable()
+        {
+            EventManager.PlayerEvents.OnNewAttempt -= IncreaseAttempts;
+            EventManager.PlayerEvents.OnPlayerDamaged -= IncreaseDamageTaken;
+            EventManager.PlayerEvents.OnEnemyKilled -= IncreaseEnemiesKilled;
+            EventManager.PlayerEvents.OnAxeThrown -= IncreaseAxesThrown;
+            EventManager.PlayerEvents.OnPowerUpPickedUp -= IncreasePowerUpsPickedUp;
+            EventManager.PlayerEvents.OnTrapOpened -= IncreaseTrapsOpened;
         }
 
         public void ClearScore()

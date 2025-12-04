@@ -7,18 +7,18 @@ namespace FiniteStateMachine.States
 {
     public class AttackState : BaseState
     {
-        protected readonly CountdownTimer CountdownTimer;
+        protected readonly CountdownTimer AttackTimer;
 
         public AttackState(StateMachine stateMachine) : base(stateMachine)
         {
-            CountdownTimer = new CountdownTimer(
+            AttackTimer = new CountdownTimer(
                 Random.Range(
                     EnemyData.minAttackCooldown,
                     EnemyData.maxAttackCooldown
                 )
             );
             
-            CountdownTimer.OnTimerStop += TryAttack;
+            AttackTimer.OnTimerStop += TryAttack;
         }
 
         public override void EnterState()
@@ -26,12 +26,12 @@ namespace FiniteStateMachine.States
             if (!VisionComponent.GetTarget()) 
                 StateMachine.ChangeState("Idle");
             
-            CountdownTimer.Start();
+            AttackTimer.Start();
         }
         
         public override void ExitState()
         {
-            CountdownTimer.Stop();
+            AttackTimer.Stop();
         }
 
         public override void UpdateState()
@@ -40,7 +40,7 @@ namespace FiniteStateMachine.States
                 StateMachine.ChangeState("Idle");
             
             FaceTarget();
-            CountdownTimer.Tick(Time.deltaTime);
+            AttackTimer.Tick(Time.deltaTime);
         }
 
         private void FaceTarget()
@@ -62,7 +62,7 @@ namespace FiniteStateMachine.States
         protected virtual void TryAttack()
         {
             ThrowAxe();
-            CountdownTimer.Start();
+            AttackTimer.Start();
         }
 
         protected void ThrowAxe()

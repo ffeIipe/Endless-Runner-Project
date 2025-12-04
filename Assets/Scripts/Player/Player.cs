@@ -24,7 +24,7 @@ namespace Player
             _characterController = GetComponent<CharacterController>();
             _characterController.stepOffset = 0.01f;
             _characterController.skinWidth = 0.01f;
-            _characterController.center = new Vector3 (0f, GetComponentInChildren<CapsuleCollider>().height * 0.5f, 0f);
+            _characterController.center = new Vector3 (0f, GetComponent<CapsuleCollider>().height * 0.5f, 0f);
             
             _model = new Model(this, PlayerData);
             _controller = new Controller(_model, StartCoroutine);
@@ -36,6 +36,8 @@ namespace Player
             base.OnEnable();
 
             SubscribeToEvents();
+            
+            EffectsManager.Instance.playerCamera = GetComponentInChildren<Camera>();
         }
         
         protected override void OnDisable() 
@@ -128,12 +130,22 @@ namespace Player
             
             EventManager.UIEvents.OnSensitivityChanged += _model.ChangeSensitivity;
             EventManager.GameEvents.OnLevelFinished += OnLevelFinished;
+            GetAttributesComponent().OnHealthIncreased += OnHealthIncreased;
             
             _bufferDamage.OnTimerStop += OnBufferDamageStop;
             
             _model.OnVelocityChanged += _viewPlayer.GetVelocity;
+
+            var newSens = Mathf.Lerp(10f, 1000f, PlayerData.mouseSensitivity / 1000f);
+            EventManager.UIEvents.OnSensitivityChanged.Invoke(newSens);
         }
-        
+
+        private void OnHealthIncreased(float val)
+        {
+            EffectsManager.Instance.BloodEffect(GetAttributesComponent().GetHealth());
+            Debug.Log("Health Increased");
+        }
+
         private void UnsubscribeToEvents()
         {
             if(GameManager.Instance && GameManager.Instance.player == this) 

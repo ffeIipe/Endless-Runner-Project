@@ -29,11 +29,16 @@ namespace ScreenManagerFolder
             totalTime.SetText("Total time: " + formattedTime);
         }
 
-        public void Restart()
+        public void NextLevel()
         {
-            GameManager.Instance.RestartCurrentLevel(() => ScreenManager.Instance.PushScreen(ScreenType.Gameplay, true));
+            GameManager.Instance.LoadNextLevel(OnLevelLoaded);
         }
-        
+
+        private void OnLevelLoaded()
+        {
+            ScreenManager.Instance.PushScreen(ScreenType.Gameplay, true);
+        }
+
         public void MainMenu()
         {
             SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());

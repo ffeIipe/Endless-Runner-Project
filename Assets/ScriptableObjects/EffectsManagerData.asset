@@ -100,7 +100,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  bloodRenderMaterial: {fileID: 0}
+  bloodRenderMaterial: {fileID: 2100000, guid: 2689ad61d9a939f41951acb93370d31d, type: 2}
+  bloodLerpSpeed: 0.5
   windRenderMaterial: {fileID: 2100000, guid: b1474a118dd122740877808e09c62b90, type: 2}
+  windLerpSpeed: 2
   vignetteIntensity: _VignetteIntensity
-  lerpSpeed: 2

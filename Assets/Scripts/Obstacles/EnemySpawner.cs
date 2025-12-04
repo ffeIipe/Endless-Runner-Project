@@ -23,7 +23,16 @@ namespace Obstacles
 
         private void OnEnable()
         {
-            _trigger.OnTriggered += SpawnEnemies;
+            if (_trigger != null) _trigger.OnTriggered += SpawnEnemies;
+
+            else Debug.LogError("No trigger found");
+        }
+
+        private void OnDisable()
+        {
+            if (_trigger != null) _trigger.OnTriggered -= SpawnEnemies;
+            
+            else Debug.LogError("No trigger found");
         }
 
         private void SpawnEnemies()
