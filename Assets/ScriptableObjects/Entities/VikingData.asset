@@ -18,8 +18,7 @@ MonoBehaviour:
   poolableType: 1
   maxPatrolDistance: NaN
   attackDistance: 37
-  minAttackCooldown: 1.2
-  maxAttackCooldown: 1.6
+  attackCooldown: 1
   interpSpeed: 4.5
   spread: 3
   targetLayer:
@@ -29,5 +28,13 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 64
   scanInterval: 0.8
+  jumpDuration: 0
+  jumpCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  jumpHeight: 0
   dissolveEffectDuration: 1.5
   timeUntilDeactivation: 1

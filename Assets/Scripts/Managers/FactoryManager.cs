@@ -32,6 +32,19 @@ namespace Managers
             InitializePools();
         }
 
+        private void OnEnable()
+        { 
+            //EventManager.GameEvents.OnLevelUpdated += TurnOffPools;
+        }
+
+        private void TurnOffPools()
+        {
+            /*foreach (var pool in _pools)
+            {
+                pool.Value.ReturnInstance();
+            }*/
+        }
+
         private void InitializePools()
         {
             foreach (var config in poolsToRegister)

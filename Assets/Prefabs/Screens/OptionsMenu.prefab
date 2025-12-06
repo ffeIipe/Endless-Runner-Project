@@ -1730,6 +1730,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc1c748aaf5749609b18c0feb7732e40, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  soundSlider: {fileID: 5954442648245153767}
+  sensitivitySlider: {fileID: 2179461725903764166}
 --- !u!1 &8418032951586101790
 GameObject:
   m_ObjectHideFlags: 0

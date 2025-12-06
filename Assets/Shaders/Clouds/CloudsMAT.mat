@@ -51,13 +51,13 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _CloudsPower: 1.01
+    - _CloudsPower: 0.33
     - _CloudsScale: 130
     - _CouldsAlpha: 2.38
     - _DistortScale: 60
     - _QueueControl: 0
     - _QueueOffset: 0
-    - _VertexOffset: 0.0004
+    - _VertexOffset: 0.001
     m_Colors:
     - _CloudsColor: {r: 0.18976468, g: 0.26295054, b: 0.4147434, a: 0}
     - _CloudsSpeed: {r: 0.002, g: 0.005, b: 0, a: 0}

@@ -43,7 +43,7 @@ namespace Managers
         {
             EventManager.GameEvents.OnLevelStarted -= StartLevelTimer;
         }
-        
+
         private void Start()
         {
             Time.timeScale = 1;
@@ -55,12 +55,6 @@ namespace Managers
 
         public void LoadLevel(int levelIndex, Action onComplete = null, Action onFailed = null)
         {
-            onComplete += () =>
-            {
-                player.gameObject.SetActive(true);
-                mainMenuCamera.gameObject.SetActive(false);
-            };
-            
             StartCoroutine(LoadLevelRoutine(levelIndex, onComplete, onFailed));
         }
 
@@ -74,25 +68,21 @@ namespace Managers
             
             _currentLevelBuildIndex = levelIndex;
             
-            var asyncLoad = SceneManager.LoadSceneAsync(levelIndex, LoadSceneMode.Additive);
-
-            while (asyncLoad != null && !asyncLoad.isDone) yield return null;
+            yield return SceneManager.LoadSceneAsync(levelIndex, LoadSceneMode.Additive);
             
             var currentScene = SceneManager.GetSceneByBuildIndex(levelIndex);
             SceneManager.SetActiveScene(currentScene);
+            
+            player.gameObject.SetActive(true);
+            mainMenuCamera.gameObject.SetActive(false);
             onComplete?.Invoke();
             
             isLevelFinished = false;
+            EventManager.GameEvents.OnLevelUpdated.Invoke();
         }
 
         public void RestartCurrentLevel(Action onRestarted = null)
         {
-            onRestarted += () =>
-            {
-                Time.timeScale = 1;
-                EventManager.PlayerEvents.OnNewAttempt.Invoke();
-            };
-            
             StartCoroutine(RestartLevelRoutine(onRestarted));
         }
 
@@ -102,19 +92,20 @@ namespace Managers
             
             if(Cursor.lockState != CursorLockMode.Locked) Cursor.lockState = CursorLockMode.Locked;
             
-            var unload = SceneManager.UnloadSceneAsync(_currentLevelBuildIndex);
-        
-            while (unload != null && !unload.isDone) yield return null;
+            yield return SceneManager.UnloadSceneAsync(_currentLevelBuildIndex);
 
-            var load = SceneManager.LoadSceneAsync(_currentLevelBuildIndex, LoadSceneMode.Additive);
-        
-            while (load != null && !load.isDone) yield return null;
+            yield return SceneManager.LoadSceneAsync(_currentLevelBuildIndex, LoadSceneMode.Additive);
 
             EffectsManager.Instance.PlayFadeScreen(true);
             SceneManager.SetActiveScene(SceneManager.GetSceneByBuildIndex(_currentLevelBuildIndex));
 
+            Time.timeScale = 1;
+            EventManager.PlayerEvents.OnNewAttempt.Invoke();
+            ScreenManager.Instance.PushScreen(ScreenType.Gameplay, true);
             onRestarted?.Invoke();
+            
             EventManager.GameEvents.OnLevelRestarted?.Invoke();
+            EventManager.GameEvents.OnLevelUpdated.Invoke();
             isLevelFinished = false;
         }
 
@@ -133,9 +124,8 @@ namespace Managers
         {
             if (IsPaused) IsPaused = false;
             if (Cursor.lockState != CursorLockMode.Locked) Cursor.lockState = CursorLockMode.Locked;
-    
-            var unload = SceneManager.UnloadSceneAsync(_currentLevelBuildIndex);
-            while (unload != null && !unload.isDone) yield return null;
+
+            yield return SceneManager.UnloadSceneAsync(_currentLevelBuildIndex);
 
             var nextSceneIndex = _currentLevelBuildIndex + 1;
 
@@ -147,8 +137,7 @@ namespace Managers
                 yield break; 
             }
     
-            var load = SceneManager.LoadSceneAsync(nextSceneIndex, LoadSceneMode.Additive);
-            while (load != null && !load.isDone) yield return null;
+            yield return SceneManager.LoadSceneAsync(nextSceneIndex, LoadSceneMode.Additive);
 
             EffectsManager.Instance.PlayFadeScreen(true);
     
@@ -161,6 +150,8 @@ namespace Managers
 
             onFinishLoading?.Invoke();
             EventManager.GameEvents.OnLevelChanged?.Invoke();
+            EventManager.GameEvents.OnLevelUpdated.Invoke();
+            
             isLevelFinished = false;
         }
         

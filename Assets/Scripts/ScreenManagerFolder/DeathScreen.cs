@@ -8,7 +8,7 @@ namespace ScreenManagerFolder
     {
         public void Restart()
         {
-            GameManager.Instance.RestartCurrentLevel(() => ScreenManager.Instance.PushScreen(ScreenType.Gameplay, true));
+            GameManager.Instance.RestartCurrentLevel();
         }
         
         public void MainMenu()

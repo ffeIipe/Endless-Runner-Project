@@ -46,5 +46,5 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxSpikesDistance: -10
+  maxSpikesDistance: -8
   damage: 1

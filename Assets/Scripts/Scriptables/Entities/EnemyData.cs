@@ -14,8 +14,7 @@ namespace Scriptables.Entities
 
         [Header("Attack Settings")]
         public float attackDistance;
-        public float minAttackCooldown;
-        public float maxAttackCooldown;
+        public float attackCooldown;
         public float interpSpeed;
         public int spread;
         

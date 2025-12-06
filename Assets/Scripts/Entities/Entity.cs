@@ -18,7 +18,7 @@ namespace Entities
         protected Entity LastDamageCauser;
         protected ViewBase View;
         protected RigidbodyConstraints SavedRigidbodyConstraints;
-        [SerializeField]protected bool CanTakeDamage = true;
+        protected bool CanTakeDamage = true;
         
         private Rigidbody _rigidbody;
         private Vector3 _currentVelocity;
@@ -47,8 +47,10 @@ namespace Entities
         protected virtual void OnEnable()
         {
             EventManager.GameEvents.Pause += PauseEntity;
-            EventManager.GameEvents.OnLevelRestarted += OnLevelRestarted;
-            EventManager.GameEvents.OnLevelChanged += OnLevelRestarted;
+            //EventManager.GameEvents.OnLevelRestarted += OnLevelRestarted;
+            //EventManager.GameEvents.OnLevelChanged += OnLevelRestarted;
+
+            EventManager.GameEvents.OnLevelUpdated += OnLevelRestarted;
             
             _attributesComponent.OnDead += Die;
         }
@@ -56,8 +58,10 @@ namespace Entities
         protected virtual void OnDisable()
         {
             EventManager.GameEvents.Pause -= PauseEntity;
-            EventManager.GameEvents.OnLevelRestarted -= OnLevelRestarted;
-            EventManager.GameEvents.OnLevelChanged -= OnLevelRestarted;
+            //EventManager.GameEvents.OnLevelRestarted -= OnLevelRestarted;
+            //EventManager.GameEvents.OnLevelChanged -= OnLevelRestarted;
+            
+            EventManager.GameEvents.OnLevelUpdated += OnLevelRestarted;
             
             _attributesComponent.OnDead -= Die;
         }
@@ -82,10 +86,11 @@ namespace Entities
         
         public virtual void TakeDamage(float damage, Entity damageCauser)
         {
+            LastDamageCauser = damageCauser;
+            
             if(!CanTakeDamage) return;
                 
             _attributesComponent.ReceiveDamage(damage);
-            LastDamageCauser = damageCauser;
         }
 
         public virtual void GetHit(Vector3 direction, Vector3 hitPoint, Vector3 hitNormal, float force)

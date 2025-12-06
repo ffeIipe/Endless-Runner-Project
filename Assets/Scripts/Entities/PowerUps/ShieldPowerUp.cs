@@ -1,4 +1,5 @@
 using Scriptables;
+using Scriptables.PowerUps;
 
 namespace Entities.PowerUps
 {

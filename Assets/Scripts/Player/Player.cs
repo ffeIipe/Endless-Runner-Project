@@ -16,6 +16,7 @@ namespace Player
         private CharacterController _characterController;
         private CountdownTimer _bufferDamage;
         public CharacterController GetCharacterController() => _characterController;
+        public Model GetModel() => _model;
         
         protected override void Awake()
         {
@@ -79,6 +80,8 @@ namespace Player
             _controller.Execute();
             
             _bufferDamage.Tick(Time.deltaTime);
+            
+            Debug.Log("Can take damage equals to: " + CanTakeDamage);
         }
 
         protected void FixedUpdate()
@@ -130,6 +133,7 @@ namespace Player
             
             EventManager.UIEvents.OnSensitivityChanged += _model.ChangeSensitivity;
             EventManager.GameEvents.OnLevelFinished += OnLevelFinished;
+            
             GetAttributesComponent().OnHealthIncreased += OnHealthIncreased;
             
             _bufferDamage.OnTimerStop += OnBufferDamageStop;

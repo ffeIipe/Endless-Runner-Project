@@ -1,3 +1,4 @@
+using System;
 using Managers;
 using TMPro;
 using UnityEngine;
@@ -8,12 +9,25 @@ namespace ScreenManagerFolder
     public class HUDScreen : BaseScreen
     {
         [SerializeReference] private TextMeshProUGUI velocityText;
+        [SerializeReference] private TextMeshProUGUI timeText;
         [SerializeReference] private Slider healthBar;
 
-        private void Start()
+        private void OnEnable()
         {
             EventManager.UIEvents.OnVelocityChanged += SetVelocityText;
             EventManager.UIEvents.OnHealthPercentageChanged += SetHealthBar;
+        }
+        
+        private void Update()
+        {
+            SetTimeText(GameManager.Instance.GetLevelTime());
+        }
+
+        private void SetTimeText(float time)
+        {
+            var timeSpan = TimeSpan.FromSeconds(time);
+            var formattedTime = timeSpan.ToString(@"mm\:ss\.ff");
+            timeText.SetText(formattedTime);
         }
 
         private void SetHealthBar(float health)

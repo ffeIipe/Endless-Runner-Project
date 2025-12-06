@@ -3,6 +3,7 @@ using Interfaces;
 using Managers;
 using Pool;
 using Scriptables;
+using Scriptables.PowerUps;
 using UnityEngine;
 
 namespace Entities.PowerUps
@@ -14,37 +15,55 @@ namespace Entities.PowerUps
         [SerializeField] protected PowerUpData powerUpData;
         public Entity Owner { get; set; }
         
-        protected Action OnPicked = delegate { };
-        
         private float _duration;
         private SphereCollider _collider;
         private CountdownTimer _timer;
+        private MeshRenderer _meshRenderer;
+
+        private bool _wasPickedUp;
 
         protected virtual void Awake()
         {
             _duration = powerUpData.duration;
             _collider = GetComponent<SphereCollider>();
             _collider.isTrigger = true;
+            
+            _meshRenderer = GetComponentInChildren<MeshRenderer>();
         }
         
         protected virtual void OnEnable()
         {
             _timer = new CountdownTimer(_duration);
-        }
-        
-        protected virtual void Start()
-        {
-            OnPicked += () => _timer.Start();
             _timer.OnTimerStop += RemoveEffect;
+            
+            EventManager.GameEvents.OnLevelUpdated += OnLevelUpdated;
+        }
+
+        protected virtual void OnDisable()
+        {
+            _timer.OnTimerStop -= RemoveEffect;
+            
+            EventManager.GameEvents.OnLevelUpdated -= OnLevelUpdated;
+        }
+
+        private void OnLevelUpdated()
+        {
+            FactoryManager.Instance.ReturnObject(powerUpData.powerUpType, this);
         }
 
         public virtual void PickUp(Entity user)
         {
-            OnPicked.Invoke();
+            if(!_wasPickedUp) return;
+            _wasPickedUp = true;
             
+            _timer.Start();
             ApplyEffect(user);
             
-            FactoryManager.Instance.ReturnObject(powerUpData.powerUpType, this);
+            _meshRenderer.enabled = false;   
+            
+            if (_duration == 0) FactoryManager.Instance.ReturnObject(powerUpData.powerUpType, this);
+            
+            else StartCoroutine(FactoryManager.Instance.ReturnObjectWithLifeTime(powerUpData.powerUpType, this, _duration + 0.1f));
         }
 
         public void Drop()

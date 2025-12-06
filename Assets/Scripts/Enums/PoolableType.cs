@@ -10,6 +10,7 @@ namespace Enums
         ShieldPowerUp,
         ParryAbility,
         DrinkBeerAbility,
-        BloodEffect
+        BloodEffect,
+        BerserkerPowerUp
     }
 }

@@ -50,8 +50,9 @@ Material:
     - _Cull: 2
     - _DissolveAmount: 0
     - _DissolveScale: 50
-    - _DissolveThreshold: 0.044
+    - _DissolveThreshold: 0.023
     - _DstBlend: 0
+    - _FresnelPower: 0
     - _QueueControl: 0
     - _QueueOffset: 0
     - _ReceiveShadows: 1
@@ -62,8 +63,9 @@ Material:
     - _ZWrite: 1
     - _ZWriteControl: 0
     m_Colors:
-    - _BaseColor: {r: 0.4433962, g: 0.4433962, b: 0.4433962, a: 0}
+    - _BaseColor: {r: 0.23584908, g: 0.23584908, b: 0.23584908, a: 0}
     - _DissolveColor: {r: 3.6377196, g: 0, b: 0, a: 0}
+    - _FresnelColor: {r: 2.670157, g: 2.670157, b: 2.670157, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &287579399872719567
 MonoBehaviour:

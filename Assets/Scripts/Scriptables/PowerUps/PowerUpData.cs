@@ -1,7 +1,7 @@
 using Enums;
 using UnityEngine;
 
-namespace Scriptables
+namespace Scriptables.PowerUps
 {
     public abstract class PowerUpData : ScriptableObject
     {

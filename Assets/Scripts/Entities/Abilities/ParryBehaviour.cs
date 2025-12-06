@@ -56,7 +56,7 @@ namespace Entities.Abilities
             {
                 bullet.Bounce(ParryData.parryForce, Owner);
                 
-                EffectsManager.Instance.PlayEffect(HitStopType.Fast);
+                EffectsManager.Instance.PlayEffect(TimeWarpType.Fast);
                 
                 Deactivate();
             }

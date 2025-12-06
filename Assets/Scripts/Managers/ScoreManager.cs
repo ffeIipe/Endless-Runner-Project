@@ -30,6 +30,7 @@ namespace Managers
             EventManager.PlayerEvents.OnAxeThrown += IncreaseAxesThrown;
             EventManager.PlayerEvents.OnPowerUpPickedUp += IncreasePowerUpsPickedUp;
             EventManager.PlayerEvents.OnTrapOpened += IncreaseTrapsOpened;
+            EventManager.GameEvents.OnLevelUpdated += ClearScore;
         }
 
         private void OnDisable()
@@ -40,6 +41,7 @@ namespace Managers
             EventManager.PlayerEvents.OnAxeThrown -= IncreaseAxesThrown;
             EventManager.PlayerEvents.OnPowerUpPickedUp -= IncreasePowerUpsPickedUp;
             EventManager.PlayerEvents.OnTrapOpened -= IncreaseTrapsOpened;
+            EventManager.GameEvents.OnLevelUpdated -= ClearScore;
         }
 
         public void ClearScore()
@@ -55,6 +57,7 @@ namespace Managers
         private void IncreaseDamageTaken()
         {
             Score.DamageTaken++;
+            Debug.Log(Score.DamageTaken);
         }
         
         private void IncreaseAxesThrown()

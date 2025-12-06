@@ -1,5 +1,6 @@
 using Managers;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Player
 {
@@ -7,7 +8,7 @@ namespace Player
     {
         [SerializeField] private Player playerPrefab;
         
-        private void Start()
+        private void Awake()
         {
             var tempPlayer = GameManager.Instance.player;
 
@@ -15,6 +16,8 @@ namespace Player
             {
                 tempPlayer = Instantiate(playerPrefab, transform.position, Quaternion.identity);
             }
+            
+            SceneManager.MoveGameObjectToScene(tempPlayer.gameObject, SceneManager.GetSceneByName("PersistentGameplay"));
             
             tempPlayer.GetCharacterController().enabled = false;
             tempPlayer.transform.position = transform.position;

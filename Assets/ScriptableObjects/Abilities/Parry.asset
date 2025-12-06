@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a7831a2cfee44c1add47d5aeb8c3ec0, type: 3}
   m_Name: Parry
   m_EditorClassIdentifier: 
-  cooldown: 1.2
+  cooldown: 0.5
   poolableType: 6
   duration: 0.25
   radiusRange: 2

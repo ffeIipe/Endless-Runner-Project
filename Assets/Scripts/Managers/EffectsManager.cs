@@ -82,7 +82,7 @@ namespace Managers
         }
 
         public void PlayEffect(HitStopType hitStopType) => StartCoroutine(DoHitStop(hitStopType));
-        public void PlayEffect(TimeWarpType timeWarpType, Action onFinishedTimeWarp) => StartCoroutine(DoTimeWarp(timeWarpType, onFinishedTimeWarp));
+        public void PlayEffect(TimeWarpType timeWarpType, Action onFinishedTimeWarp = null) => StartCoroutine(DoTimeWarp(timeWarpType, onFinishedTimeWarp));
         public void PlayFadeScreen(bool isFadeIn)
         {
             StartCoroutine(isFadeIn ? FadeInScreen() : FadeOutScreen());
@@ -248,6 +248,7 @@ namespace Managers
                 yield return null;
             }
 
+            Time.timeScale = 1;
             onFinishedTimeWarp?.Invoke();
         }
     }

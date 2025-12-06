@@ -13,6 +13,10 @@ namespace Entities.MVC
         private readonly Func<IEnumerator, Coroutine> _startCoroutine;
         private readonly Material _dissolveMaterial;
         private readonly int _dissolveAmount = Shader.PropertyToID("_DissolveAmount");
+        private readonly int _fresnelColor = Shader.PropertyToID("_FresnelColor");
+        private readonly int _fresnelPower = Shader.PropertyToID("_FresnelPower");
+        private const float MaxFresnel = 4.5f;
+        private const float TargetFresnel = 1f;
         private readonly EnemyData _enemyData;
         private readonly Dictionary<string, DetachableProp> _detachableProps;
         
@@ -100,5 +104,36 @@ namespace Entities.MVC
         private void ApplyDissolveEffect() => _startCoroutine(DissolveEffect());
         
         private void RemoveDissolveEffect() => _dissolveMaterial.SetFloat(_dissolveAmount, 0f);
+
+        public void AttackEffect()
+        {
+            _startCoroutine(AttackEffectCoroutine(_enemyData.attackCooldown, Color.red));
+        }
+        
+        public void NotAttackEffect()
+        {
+            _startCoroutine(AttackEffectCoroutine(_enemyData.attackCooldown / 2, Color.white));
+        }
+
+        private IEnumerator AttackEffectCoroutine(float dur, Color colorTarget)
+        {
+            var time = 0f;
+
+            while (time < dur)
+            {
+                time += Time.deltaTime;
+
+                var t = time / dur;
+                
+                _dissolveMaterial.SetFloat(_fresnelPower, Mathf.Lerp(0, 1f, t));
+                
+                var newColor = Color.Lerp(_dissolveMaterial.GetColor(_fresnelColor), colorTarget, t);
+                _dissolveMaterial.SetColor(_fresnelColor, newColor);
+                
+                yield return null;
+            }
+            
+            _dissolveMaterial.SetColor(_fresnelColor, colorTarget);
+        }
     }
 }

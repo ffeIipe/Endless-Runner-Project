@@ -27,8 +27,6 @@ namespace Obstacles
 
         private void ShowFinalScreen()
         {
-            EventManager.GameEvents.OnLevelFinished.Invoke();
-
             GameManager.Instance.isLevelFinished = true;
             
             EffectsManager.Instance.PlayEffect(TimeWarpType.Slow, OnFinishedTimeWarp);

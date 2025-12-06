@@ -68,16 +68,17 @@ namespace Entities.Enemies
 
             GetStateMachine().Enabled = false;
             
+            if (LastDamageCauser && LastDamageCauser.CompareTag("Player"))
+            {
+                Debug.Log("Killed by Player");
+                EventManager.PlayerEvents.OnEnemyKilled.Invoke();   
+            }
+            
             StartCoroutine(FactoryManager.Instance.ReturnObjectWithLifeTime(
                 EnemyData.poolableType,
                 this,
                 5f
             ));
-            
-            if (LastDamageCauser && LastDamageCauser.TryGetComponent(out Player.Player player))
-            {
-                EventManager.PlayerEvents.OnEnemyKilled.Invoke();   
-            }
         }
 
         protected override void OnLevelRestarted()
@@ -141,6 +142,11 @@ namespace Entities.Enemies
             Gizmos.color = Color.red;
             if(entityData != null) 
                 Gizmos.DrawWireSphere(transform.position, EnemyData.attackDistance);
+        }
+
+        public ViewEnemy GetView()
+        {
+            return (ViewEnemy)View;
         }
     }
 }

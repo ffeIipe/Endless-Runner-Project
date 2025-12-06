@@ -1,36 +1,42 @@
-﻿using Entities;
+﻿using System;
+using Entities;
 using Enums;
 using Managers;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace FiniteStateMachine.States
 {
     public class AttackState : BaseState
     {
         protected readonly CountdownTimer AttackTimer;
+        private Action _onAxeThrown = delegate { };
 
         public AttackState(StateMachine stateMachine) : base(stateMachine)
         {
-            AttackTimer = new CountdownTimer(
-                Random.Range(
-                    EnemyData.minAttackCooldown,
-                    EnemyData.maxAttackCooldown
-                )
-            );
-            
-            AttackTimer.OnTimerStop += TryAttack;
+            AttackTimer = new CountdownTimer(EnemyData.attackCooldown);
         }
 
         public override void EnterState()
         {
             if (!VisionComponent.GetTarget()) 
                 StateMachine.ChangeState("Idle");
+
+            _onAxeThrown += Owner.GetView().NotAttackEffect;
+            
+            AttackTimer.OnTimerStart += Owner.GetView().AttackEffect;
+            AttackTimer.OnTimerStop += TryAttack;
             
             AttackTimer.Start();
         }
         
         public override void ExitState()
         {
+            _onAxeThrown -= Owner.GetView().NotAttackEffect;
+            
+            AttackTimer.OnTimerStart -= Owner.GetView().AttackEffect;
+            AttackTimer.OnTimerStop -= TryAttack;
+            
             AttackTimer.Stop();
         }
 
@@ -82,6 +88,7 @@ namespace FiniteStateMachine.States
                 Owner
             );
             
+            _onAxeThrown?.Invoke();
             bullet.Fire(deviatedDirection, dir);
         }
     }

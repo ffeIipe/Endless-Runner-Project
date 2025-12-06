@@ -27,6 +27,7 @@ namespace Managers
         public Action OnLevelRestarted = delegate { };
         public Action OnLevelStarted = delegate { };
         public Action OnLevelChanged = delegate { };
+        public Action OnLevelUpdated = delegate { };
     }
         
     public class UIEvents

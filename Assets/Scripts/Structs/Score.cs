@@ -1,16 +1,16 @@
 namespace Structs
 {
-    //[System.Serializable]
     public struct Score
     {
         public int Attempts;
+        
         public int DamageTaken;
         public int EnemiesKilled;
         public int AxesThrown;
         public int PowerUpsPickedUp;
         public int TrapsOpened;
+        
         public int TotalScore;
-        public float TotalTime;
 
         public void Clear()
         {
@@ -19,8 +19,8 @@ namespace Structs
             AxesThrown = 0;
             PowerUpsPickedUp = 0;
             TrapsOpened = 0;
+            
             TotalScore = 0;
-            TotalTime = 0;
         }
     }
 }

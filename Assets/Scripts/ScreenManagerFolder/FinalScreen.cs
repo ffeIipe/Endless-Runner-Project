@@ -27,6 +27,8 @@ namespace ScreenManagerFolder
             var timeSpan = TimeSpan.FromSeconds(GameManager.Instance.GetLevelTime());
             var formattedTime = timeSpan.ToString(@"mm\:ss\.ff");
             totalTime.SetText("Total time: " + formattedTime);
+            
+            EventManager.GameEvents.OnLevelFinished.Invoke();
         }
 
         public void NextLevel()

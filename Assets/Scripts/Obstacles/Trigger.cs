@@ -31,6 +31,8 @@ namespace Obstacles
                 var dir =  (other.transform.position - transform.position).normalized;
                 OnTriggeredCollider?.Invoke(other, dir);
                 
+                Debug.Log(other.gameObject.name + " collided with " + triggerName);
+                
                 _bWasTriggered = true;
             }
         }

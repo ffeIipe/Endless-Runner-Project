@@ -18,8 +18,7 @@ MonoBehaviour:
   poolableType: 3
   maxPatrolDistance: NaN
   attackDistance: 40
-  minAttackCooldown: 1.2
-  maxAttackCooldown: 1.2
+  attackCooldown: 1
   interpSpeed: 4.5
   spread: 2
   targetLayer:

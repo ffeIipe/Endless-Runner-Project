@@ -35,6 +35,8 @@ namespace Entities.MVC
         
         private readonly CountdownTimer _abilityCooldown;
         private bool _canAbility;
+        
+        public float MaxSpeed;
 
         public Model(Entity owner, PlayerData playerData)
         {
@@ -52,6 +54,10 @@ namespace Entities.MVC
             _canAbility = true;
             _abilityCooldown = new CountdownTimer(_playerData.abilityData.cooldown);
             _abilityCooldown.OnTimerStop += () => _canAbility = true;
+            
+            MaxSpeed = playerData.maxSpeed;
+            
+            EventManager.GameEvents.OnLevelUpdated += () => MaxSpeed = playerData.maxSpeed;
         }
         
         public void ApplyGravity()
@@ -68,7 +74,7 @@ namespace Entities.MVC
             var forwardVec = _owner.transform.forward;
             var rightVec = _owner.transform.right;
 
-            var targetVelocity = forwardVec * (verticalInput * _playerData.maxSpeed) + rightVec * (horizontalInput * _playerData.maxSpeed);
+            var targetVelocity = forwardVec * (verticalInput * MaxSpeed) + rightVec * (horizontalInput * MaxSpeed);
 
             _currentVelocity = Vector3.MoveTowards(_currentVelocity, targetVelocity, Time.fixedDeltaTime * _playerData.acceleration);
 

@@ -1,8 +1,8 @@
 using UnityEngine;
 
-namespace Scriptables
+namespace Scriptables.PowerUps
 {
-    [CreateAssetMenu(fileName = "HealthPowerUpData", menuName = "HealthPowerUpData", order = 0)]
+    [CreateAssetMenu(fileName = "HealthPowerUpData", menuName = "PowerUps/HealthPowerUpData", order = 0)]
     public class HealthPowerUpData : PowerUpData
     {
         public float health;

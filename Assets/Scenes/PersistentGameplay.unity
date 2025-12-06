@@ -1011,6 +1011,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 6fb45c96cd6d3914fba89775a4fe75a7, type: 2}
   - {fileID: 11400000, guid: ff62e9fa7cb6d814ab6335fc9aaf338f, type: 2}
   - {fileID: 11400000, guid: 352d4cb1de1a8bd478700103feecca69, type: 2}
+  - {fileID: 11400000, guid: e4af88d570b3b22468b775503ff42086, type: 2}
 --- !u!1 &1404986402
 GameObject:
   m_ObjectHideFlags: 0
@@ -1101,6 +1102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mainMenuCamera: {fileID: 863013084}
   player: {fileID: 0}
+  isLevelFinished: 0
 --- !u!1001 &1522982583
 PrefabInstance:
   m_ObjectHideFlags: 0

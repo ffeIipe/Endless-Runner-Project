@@ -38,18 +38,16 @@ namespace Entities
         private void OnEnable()
         {
             EventManager.GameEvents.Pause += PauseEntity;
-            EventManager.GameEvents.OnLevelRestarted += OnLevelRestarted;
-            EventManager.GameEvents.OnLevelChanged += OnLevelRestarted;
+            EventManager.GameEvents.OnLevelUpdated += OnLevelUpdated;
         }
 
         private void OnDisable()
         {
             EventManager.GameEvents.Pause -= PauseEntity;
-            EventManager.GameEvents.OnLevelRestarted -= OnLevelRestarted;
-            EventManager.GameEvents.OnLevelChanged -= OnLevelRestarted;
+            EventManager.GameEvents.OnLevelUpdated -= OnLevelUpdated;
         }
         
-        private void OnLevelRestarted()
+        private void OnLevelUpdated()
         {
             if (!this || !gameObject) return;
             FactoryManager.Instance.ReturnObject(bulletData.poolableType, this);
