@@ -237,12 +237,12 @@ PrefabInstance:
     - target: {fileID: 4386106313456252819, guid: f8a64f11ec0b38648a8b2d167b3e286d,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.484
+      value: -0.483
       objectReference: {fileID: 0}
     - target: {fileID: 4386106313456252819, guid: f8a64f11ec0b38648a8b2d167b3e286d,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0.011
+      value: -0.014
       objectReference: {fileID: 0}
     - target: {fileID: 4386106313456252819, guid: f8a64f11ec0b38648a8b2d167b3e286d,
         type: 3}
@@ -278,6 +278,36 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754969769306366787, guid: f8a64f11ec0b38648a8b2d167b3e286d,
+        type: 3}
+      propertyPath: looping
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754969769306366787, guid: f8a64f11ec0b38648a8b2d167b3e286d,
+        type: 3}
+      propertyPath: ShapeModule.type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754969769306366787, guid: f8a64f11ec0b38648a8b2d167b3e286d,
+        type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 0.0001
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754969769306366787, guid: f8a64f11ec0b38648a8b2d167b3e286d,
+        type: 3}
+      propertyPath: ShapeModule.radiusThickness
+      value: 0.03
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754969769306366787, guid: f8a64f11ec0b38648a8b2d167b3e286d,
+        type: 3}
+      propertyPath: InitialModule.startSpeed.scalar
+      value: 0.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7754969769306366787, guid: f8a64f11ec0b38648a8b2d167b3e286d,
+        type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 0.15
       objectReference: {fileID: 0}
     - target: {fileID: 8640606126014207798, guid: f8a64f11ec0b38648a8b2d167b3e286d,
         type: 3}
