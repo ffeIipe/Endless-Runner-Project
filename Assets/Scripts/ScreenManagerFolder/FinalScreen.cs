@@ -29,6 +29,7 @@ namespace ScreenManagerFolder
             totalTime.SetText("Total time: " + formattedTime);
             
             EventManager.GameEvents.OnLevelFinished.Invoke();
+            EventManager.GameEvents.OnLevelUpdated.Invoke();
         }
 
         public void NextLevel()

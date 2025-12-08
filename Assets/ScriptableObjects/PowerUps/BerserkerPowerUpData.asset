@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44f341e78c9149d19418cbbd1882b130, type: 3}
   m_Name: BerserkerPowerUpData
   m_EditorClassIdentifier: 
-  duration: 5
+  duration: 3
   powerUpType: 9
   speedMultiplier: 1.2

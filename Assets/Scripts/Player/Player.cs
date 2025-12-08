@@ -109,7 +109,7 @@ namespace Player
             _viewPlayer.PauseEffects(pause);
         }
 
-        protected override void OnLevelRestarted()
+        protected override void OnLevelUpdated()
         {
             GetRigidbody().isKinematic = true;
             
@@ -122,9 +122,9 @@ namespace Player
             _bufferDamage = new CountdownTimer(PlayerData.bufferDamage);
             _bufferDamage.OnTimerStop += OnBufferDamageStop;
             
-            base.OnLevelRestarted();
+            base.OnLevelUpdated();
             
-            EventManager.UIEvents.OnHealthPercentageChanged?.Invoke(GetAttributesComponent().GetHealthPercentage());
+            CanTakeDamage = true;
         }
         
         private void SubscribeToEvents()

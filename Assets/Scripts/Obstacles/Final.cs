@@ -1,4 +1,3 @@
-using System;
 using Enums;
 using Managers;
 using ScreenManagerFolder;

@@ -18,7 +18,7 @@ namespace Managers
         
         private const int PersistentLevelBuildIndex = 0;
         private int _currentLevelBuildIndex;
-        private float _startingLevelTime;
+        private float _currentLevelTime;
 
         private void Awake()
         {
@@ -111,12 +111,6 @@ namespace Managers
 
         public void LoadNextLevel(Action onFinishLoading = null)
         {
-            onFinishLoading += () =>
-            {
-                Time.timeScale = 1;
-                EffectsManager.Instance.ResetEffects();
-            };
-            
             StartCoroutine(LoadNextLevelRoutine(onFinishLoading));
         }
         
@@ -149,8 +143,12 @@ namespace Managers
             }
 
             onFinishLoading?.Invoke();
-            EventManager.GameEvents.OnLevelChanged?.Invoke();
+            
+            //EventManager.GameEvents.OnLevelChanged?.Invoke();
             EventManager.GameEvents.OnLevelUpdated.Invoke();
+            
+            Time.timeScale = 1;
+            EffectsManager.Instance.ResetEffects();
             
             isLevelFinished = false;
         }
@@ -202,11 +200,9 @@ namespace Managers
         public void ResumeGame(ScreenType screen = ScreenType.None)
         {
             IsPaused = false;
-            if (screen == ScreenType.None)
-                ScreenManager.Instance.PopScreen();
+            if (screen == ScreenType.None) ScreenManager.Instance.PopScreen();
 
-            else
-                ScreenManager.Instance.PushScreen(screen, true);
+            else ScreenManager.Instance.PushScreen(screen, true);
             
             EventManager.GameEvents.Pause.Invoke(false);
             Cursor.lockState = CursorLockMode.Locked;
@@ -214,12 +210,15 @@ namespace Managers
 
         private void StartLevelTimer()
         {
-            _startingLevelTime = Time.time;
+            _currentLevelTime = 0f;
         }
 
         public float GetLevelTime()
         {
-             return Time.time - _startingLevelTime;
+            if (IsPaused) return _currentLevelTime - 0f;
+            
+            _currentLevelTime -= Time.deltaTime;
+            return _currentLevelTime;
         }
     }
 }

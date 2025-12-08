@@ -81,9 +81,9 @@ namespace Entities.Enemies
             ));
         }
 
-        protected override void OnLevelRestarted()
+        protected override void OnLevelUpdated()
         {
-            base.OnLevelRestarted();
+            base.OnLevelUpdated();
             
             FactoryManager.Instance.ReturnObject(EnemyData.poolableType, this);
         }

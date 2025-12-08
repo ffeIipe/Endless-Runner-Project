@@ -2,7 +2,6 @@ using System;
 using Interfaces;
 using Managers;
 using Pool;
-using Scriptables;
 using Scriptables.PowerUps;
 using UnityEngine;
 
@@ -46,6 +45,11 @@ namespace Entities.PowerUps
             EventManager.GameEvents.OnLevelUpdated -= OnLevelUpdated;
         }
 
+        private void Update()
+        {
+            _timer.Tick(Time.deltaTime);
+        }
+
         private void OnLevelUpdated()
         {
             FactoryManager.Instance.ReturnObject(powerUpData.powerUpType, this);
@@ -53,7 +57,7 @@ namespace Entities.PowerUps
 
         public virtual void PickUp(Entity user)
         {
-            if(!_wasPickedUp) return;
+            if(_wasPickedUp) return;
             _wasPickedUp = true;
             
             _timer.Start();

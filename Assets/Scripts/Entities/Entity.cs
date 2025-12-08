@@ -1,4 +1,3 @@
-using System;
 using Components;
 using Entities.MVC;
 using Enums;
@@ -18,7 +17,7 @@ namespace Entities
         protected Entity LastDamageCauser;
         protected ViewBase View;
         protected RigidbodyConstraints SavedRigidbodyConstraints;
-        protected bool CanTakeDamage = true;
+        public bool CanTakeDamage = true;
         
         private Rigidbody _rigidbody;
         private Vector3 _currentVelocity;
@@ -47,10 +46,7 @@ namespace Entities
         protected virtual void OnEnable()
         {
             EventManager.GameEvents.Pause += PauseEntity;
-            //EventManager.GameEvents.OnLevelRestarted += OnLevelRestarted;
-            //EventManager.GameEvents.OnLevelChanged += OnLevelRestarted;
-
-            EventManager.GameEvents.OnLevelUpdated += OnLevelRestarted;
+            EventManager.GameEvents.OnLevelUpdated += OnLevelUpdated;
             
             _attributesComponent.OnDead += Die;
         }
@@ -58,10 +54,7 @@ namespace Entities
         protected virtual void OnDisable()
         {
             EventManager.GameEvents.Pause -= PauseEntity;
-            //EventManager.GameEvents.OnLevelRestarted -= OnLevelRestarted;
-            //EventManager.GameEvents.OnLevelChanged -= OnLevelRestarted;
-            
-            EventManager.GameEvents.OnLevelUpdated += OnLevelRestarted;
+            EventManager.GameEvents.OnLevelUpdated -= OnLevelUpdated;
             
             _attributesComponent.OnDead -= Die;
         }
@@ -72,11 +65,11 @@ namespace Entities
             CanTakeDamage = false;
         }
 
-        protected virtual void OnLevelRestarted()
+        protected virtual void OnLevelUpdated()
         {
-            View.RestartEntityView();
             CanTakeDamage = true;
             _attributesComponent.Reset();
+            View.RestartEntityView();
         }
 
         protected virtual ViewBase InitializeView()

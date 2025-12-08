@@ -25,6 +25,7 @@ namespace Player
             tempPlayer.GetCharacterController().enabled = true;
 
             EventManager.GameEvents.OnLevelStarted.Invoke();
+            EventManager.GameEvents.OnLevelUpdated.Invoke();
         }
     }
 }
