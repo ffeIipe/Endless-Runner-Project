@@ -15,7 +15,7 @@ Material:
   m_ValidKeywords: []
   m_InvalidKeywords: []
   m_LightmapFlags: 2
-  m_EnableInstancingVariants: 0
+  m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: -1
   stringTagMap: {}
@@ -42,7 +42,7 @@ Material:
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
-    - _FresnelColor: {r: 8, g: 0, b: 0, a: 0}
+    - _FresnelColor: {r: 19.698313, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &8569819245093134657
 MonoBehaviour:
