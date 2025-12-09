@@ -1,18 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-2291657127412847263
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 7
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -20,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: CloudsMAT
-  m_Shader: {fileID: -6465566751694194690, guid: 171685a44aa77c64ca1d0028e2f313f0,
+  m_Name: M_FullScreenDamage
+  m_Shader: {fileID: -6465566751694194690, guid: ef69fa808e017a64383e5954f254dec9,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -51,15 +38,11 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _CloudsPower: 0.33
-    - _CloudsScale: 130
-    - _CouldsAlpha: 2.38
-    - _DistortScale: 60
-    - _QueueControl: 0
-    - _QueueOffset: 0
-    - _VertexOffset: 0.001
+    - _VignetteIntensity: 1.0695893
+    - _VignettePower: 3
+    - _VoronoiIntensity: 1
+    - _VoronoiPower: 0.84
+    - _VoronoiSpeed: 0.59
     m_Colors:
-    - _CloudsColor: {r: 0.33333334, g: 0.4117647, b: 0.5647059, a: 0}
-    - _CloudsSpeed: {r: 0.002, g: 0.005, b: 0, a: 0}
-    - _DistortSpeed: {r: 0.05, g: 0.005, b: 0, a: 0}
+    - _VignetteColor: {r: 0.4433962, g: 0.02300641, b: 0.02300641, a: 0}
   m_BuildTextureStacks: []
