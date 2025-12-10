@@ -10,6 +10,10 @@ namespace Player
         
         private void Awake()
         {
+            var gameManager = GameManager.Instance;
+            
+            if (!gameManager) return;
+            
             var tempPlayer = GameManager.Instance.player;
 
             if (!tempPlayer)

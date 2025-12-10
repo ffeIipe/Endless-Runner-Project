@@ -79,6 +79,8 @@ namespace Managers
             
             isLevelFinished = false;
             EventManager.GameEvents.OnLevelUpdated.Invoke();
+            
+            EffectsManager.Instance.ResetEffects();
         }
 
         public void RestartCurrentLevel(Action onRestarted = null)
@@ -107,6 +109,8 @@ namespace Managers
             EventManager.GameEvents.OnLevelRestarted?.Invoke();
             EventManager.GameEvents.OnLevelUpdated.Invoke();
             isLevelFinished = false;
+            
+            EffectsManager.Instance.ResetEffects();
         }
 
         public void LoadNextLevel(Action onFinishLoading = null)

@@ -59,11 +59,11 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 112
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
 --- !u!136 &6536028223590771262
 CapsuleCollider:
   m_ObjectHideFlags: 0
@@ -101,6 +101,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityData: {fileID: 11400000, guid: 25437a481d7982248a577e0e92e106bc, type: 2}
   handPoint: {fileID: 2912503264830739789}
+  CanTakeDamage: 1
 --- !u!1 &2332272446560135366
 GameObject:
   m_ObjectHideFlags: 0

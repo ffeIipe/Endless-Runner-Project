@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ShieldPowerUpPoolData
   m_EditorClassIdentifier: 
   poolableType: 5
-  prefab: {fileID: 8337545607525152148, guid: e309d3c7f7cbd3a49b5341b3781953d2, type: 3}
+  prefab: {fileID: 8337545607525152148, guid: 491baf30b2af9694ebaa5df10483f391, type: 3}
   prewarmSize: 3

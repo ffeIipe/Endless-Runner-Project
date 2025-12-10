@@ -25,6 +25,7 @@ namespace Entities.Enemies
         {
             base.Awake();
             
+            //GetRigidbody().useGravity = false;
             _visionComponent = new VisionComponent(this, EnemyData, StartCoroutine, StopCoroutine);
             _stateMachine = new StateMachine(this);
         }
@@ -67,6 +68,7 @@ namespace Entities.Enemies
             base.Die();
 
             GetStateMachine().Enabled = false;
+            //GetRigidbody().useGravity = true;
             
             if (LastDamageCauser && LastDamageCauser.CompareTag("Player"))
             {
