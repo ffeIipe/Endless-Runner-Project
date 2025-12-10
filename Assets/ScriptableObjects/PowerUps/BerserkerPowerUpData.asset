@@ -14,4 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   duration: 3
   powerUpType: 9
-  speedMultiplier: 1.2
+  speedMultiplier: 1.5

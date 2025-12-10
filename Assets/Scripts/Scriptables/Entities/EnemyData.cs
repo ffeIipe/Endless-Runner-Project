@@ -16,7 +16,7 @@ namespace Scriptables.Entities
         public float attackDistance;
         public float attackCooldown;
         public float interpSpeed;
-        public int spread;
+        public float spread;
         
         [Header("Vision Settings")]
         public LayerMask targetLayer;

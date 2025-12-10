@@ -19,15 +19,15 @@ MonoBehaviour:
   maxPatrolDistance: NaN
   attackDistance: 40
   attackCooldown: 1
-  interpSpeed: 4.5
-  spread: 2
+  interpSpeed: 8
+  spread: 1.5
   targetLayer:
     serializedVersion: 2
     m_Bits: 128
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 64
-  scanInterval: 0.8
+  scanInterval: 0.5
   jumpDuration: 1
   jumpCurve:
     serializedVersion: 2

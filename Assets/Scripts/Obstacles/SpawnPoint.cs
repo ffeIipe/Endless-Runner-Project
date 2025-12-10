@@ -8,6 +8,15 @@ namespace Obstacles
     {
         [SerializeField] private PoolableType enemyToSpawn;
 
+        private void Awake()
+        {
+            if (Physics.Raycast(transform.position, Vector3.down, out var hit, 100f, LayerMask.GetMask("Ground")))
+            {
+                transform.position = hit.point;
+                Debug.Log("Setting " + name + " at " + transform.position);
+            }
+        }
+
         public void Spawn()
         {
             FactoryManager.Instance.SpawnObject(
