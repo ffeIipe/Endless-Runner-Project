@@ -62,17 +62,9 @@ namespace Managers
 
         private IEnumerator LoadLevelRoutine(int levelIndex, Action onComplete = null, Action onFailed = null)
         {
-            if (levelIndex == PersistentLevelBuildIndex)
+            if (levelIndex == _currentLevelBuildIndex || levelIndex == PersistentLevelBuildIndex)
             {
                 onFailed?.Invoke();
-                yield break;
-            }
-
-            if (levelIndex == _currentLevelBuildIndex)
-            {
-                yield return RestartLevelRoutine();
-                
-                onComplete?.Invoke();
                 yield break;
             }
             
@@ -97,13 +89,11 @@ namespace Managers
             StartCoroutine(RestartLevelRoutine(onRestarted));
         }
 
-        private IEnumerator RestartLevelRoutine(Action onRestarted = null)
+        private IEnumerator RestartLevelRoutine(Action onRestarted)
         {
             if (IsPaused) IsPaused = false;
             
-            if (Cursor.lockState != CursorLockMode.Locked) Cursor.lockState = CursorLockMode.Locked;
-
-            _currentLevelBuildIndex = SceneManager.GetActiveScene().buildIndex;
+            if(Cursor.lockState != CursorLockMode.Locked) Cursor.lockState = CursorLockMode.Locked;
             
             yield return SceneManager.UnloadSceneAsync(_currentLevelBuildIndex);
 

@@ -23,6 +23,7 @@ namespace ScreenManagerFolder
         
         public void MainMenu()
         {
+            SceneManager.UnloadSceneAsync(SceneManager.GetActiveScene());
             ScreenManager.Instance.PushScreen(ScreenType.MainMenu, true);
         }
     }

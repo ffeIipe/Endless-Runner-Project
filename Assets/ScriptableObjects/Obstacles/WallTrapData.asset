@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5243d70495146fd99e24390e64144a8, type: 3}
   m_Name: WallTrapData
   m_EditorClassIdentifier: 
-  timeTriggerSpike: 0.4
+  timeTriggerSpike: 0.5
   spikeCurve:
     serializedVersion: 2
     m_Curve:
@@ -46,5 +46,5 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  maxSpikesDistance: -8.5
+  maxSpikesDistance: -8
   damage: 1

@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: M_ShieldPowerUp
-  m_Shader: {fileID: -6465566751694194690, guid: 1e5d46d5726c01240a51baad2b3009ff,
+  m_Name: M_FullScreenShield
+  m_Shader: {fileID: -6465566751694194690, guid: c006b0776c666e8488b6a8476c04cd65,
     type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -38,24 +38,8 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Power: 0.11
-    - _QueueControl: 0
-    - _QueueOffset: 0
-    m_Colors:
-    - _BaseColor: {r: 0, g: 0.23521924, b: 1, a: 0}
-    - _Distortion: {r: -0.2, g: 0, b: 0, a: 0}
-    - _Speed: {r: 0.09, g: 0.03, b: 0, a: 0}
+    - _VignetteIntensity: 0.212
+    - _VignettePower: 5.3
+    - _VoronoiScale: 4.36
+    m_Colors: []
   m_BuildTextureStacks: []
---- !u!114 &6353313452407621893
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 7
