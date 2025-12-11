@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: PlayerData
   m_EditorClassIdentifier: 
   health: 3
-  shield: 1
+  shield: 0
   teamType: 1
   bufferDamage: 0.8
   acceleration: 140
-  maxSpeed: 20
+  maxSpeed: 21
   jumpHeight: 10.5
   jumpDuration: 1
   jumpCurve:
@@ -35,15 +35,6 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1.0056278
-      value: 1.008289
       inSlope: 0
       outSlope: 0
       tangentMode: 0

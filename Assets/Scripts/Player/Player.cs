@@ -1,4 +1,3 @@
-using System;
 using Entities;
 using Entities.MVC;
 using Managers;
@@ -140,8 +139,7 @@ namespace Player
             
             _model.OnVelocityChanged += _viewPlayer.GetVelocity;
 
-            var newSens = Mathf.Lerp(10f, 1000f, PlayerData.mouseSensitivity / 1000f);
-            EventManager.UIEvents.OnSensitivityChanged.Invoke(newSens);
+            EventManager.UIEvents.OnSensitivityChanged.Invoke(.5f);
         }
 
         private void OnHealthIncreased(float val)

@@ -110,9 +110,8 @@ namespace Managers
         {
             var healthPercent = Mathf.Clamp01(currentHealth / 3f); //max life
             var damagePercent = 1f - healthPercent;
-            var targetIntensity = damagePercent * 2f; //max vignette intensity
 
-            StartCoroutine(UpdateBloodEffect(targetIntensity));
+            StartCoroutine(UpdateBloodEffect(damagePercent));
         }
 
         private IEnumerator UpdateBloodEffect(float target)
