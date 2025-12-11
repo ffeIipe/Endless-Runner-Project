@@ -66,8 +66,9 @@ namespace Managers
                 yield break;
             }
             
-            _currentLevelBuildIndex = levelIndex;
+            yield return SceneManager.UnloadSceneAsync(_currentLevelBuildIndex);
             
+            _currentLevelBuildIndex = levelIndex;
             yield return SceneManager.LoadSceneAsync(levelIndex, LoadSceneMode.Additive);
             
             var currentScene = SceneManager.GetSceneByBuildIndex(levelIndex);
@@ -79,8 +80,6 @@ namespace Managers
             
             isLevelFinished = false;
             EventManager.GameEvents.OnLevelUpdated.Invoke();
-            
-            EffectsManager.Instance.ResetEffects();
         }
 
         public void RestartCurrentLevel(Action onRestarted = null)
@@ -109,8 +108,6 @@ namespace Managers
             EventManager.GameEvents.OnLevelRestarted?.Invoke();
             EventManager.GameEvents.OnLevelUpdated.Invoke();
             isLevelFinished = false;
-            
-            EffectsManager.Instance.ResetEffects();
         }
 
         public void LoadNextLevel(Action onFinishLoading = null)
@@ -148,11 +145,9 @@ namespace Managers
 
             onFinishLoading?.Invoke();
             
-            //EventManager.GameEvents.OnLevelChanged?.Invoke();
             EventManager.GameEvents.OnLevelUpdated.Invoke();
             
             Time.timeScale = 1;
-            EffectsManager.Instance.ResetEffects();
             
             isLevelFinished = false;
         }
@@ -163,6 +158,11 @@ namespace Managers
             {
                 ScreenManager.Instance.PopScreen();
                 return;
+            }
+
+            if (!player.GetAttributesComponent().IsAlive())
+            {
+                RestartCurrentLevel();
             }
 
             if (!player.GetAttributesComponent().IsAlive()) return;

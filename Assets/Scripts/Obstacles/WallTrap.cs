@@ -1,4 +1,5 @@
 using System.Collections;
+using Managers;
 using Scriptables;
 using UnityEngine;
 
@@ -32,12 +33,15 @@ namespace Obstacles
     
             while (timer < wallTrapData.timeTriggerSpike)
             {
-                timer += Time.deltaTime;
+                if (!GameManager.IsPaused)
+                {
+                    timer += Time.deltaTime;
         
-                var percent = timer / wallTrapData.timeTriggerSpike;
-                var curveValue = wallTrapData.spikeCurve.Evaluate(percent) * wallTrapData.maxSpikesDistance;
-                var offset = Vector3.forward * curveValue;
-                _spikes.transform.localPosition = startPosition + offset;
+                    var percent = timer / wallTrapData.timeTriggerSpike;
+                    var curveValue = wallTrapData.spikeCurve.Evaluate(percent) * wallTrapData.maxSpikesDistance;
+                    var offset = Vector3.forward * curveValue;
+                    _spikes.transform.localPosition = startPosition + offset;
+                }
         
                 yield return null;
             }

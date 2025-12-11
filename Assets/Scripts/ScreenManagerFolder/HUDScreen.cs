@@ -10,8 +10,13 @@ namespace ScreenManagerFolder
     {
         [SerializeReference] private TextMeshProUGUI velocityText;
         [SerializeReference] private TextMeshProUGUI timeText;
+        [SerializeReference] private TextMeshProUGUI fpsText;
         [SerializeReference] private Slider healthBar;
 
+        private float _time;
+        private int _frameCount;
+        
+        
         private void OnEnable()
         {
             EventManager.UIEvents.OnVelocityChanged += SetVelocityText;
@@ -21,6 +26,29 @@ namespace ScreenManagerFolder
         private void Update()
         {
             SetTimeText(GameManager.Instance.GetLevelTime());
+            
+            _time += Time.deltaTime;
+            _frameCount++;
+
+            if (!(_time >= 0.5f)) return;
+            
+            var frameRate = Mathf.RoundToInt(_frameCount / _time);
+
+            var displayColor = frameRate switch
+            {
+                < 30 => Color.red,
+                < 60 => Color.yellow,
+                _ => Color.green
+            };
+
+            if (fpsText)
+            {
+                fpsText.text = $"<color=#{ColorUtility.ToHtmlStringRGB(displayColor)}>{frameRate} FPS</color>";
+                fpsText.SetText(frameRate.ToString());
+            }
+
+            _time -= 0.5f;
+            _frameCount = 0;
         }
 
         private void SetTimeText(float time)

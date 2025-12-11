@@ -37,7 +37,12 @@ namespace ScreenManagerFolder
 
             PushScreen(ScreenType.Gameplay, false);
 
-            EventManager.PlayerEvents.OnPlayerDead += () => PushScreen(ScreenType.DeathMenu, false);
+            EventManager.PlayerEvents.OnPlayerDead += OnPlayerDead;
+        }
+
+        private void OnPlayerDead()
+        {
+            PushScreen(ScreenType.DeathMenu, true);
         }
 
         public void PopScreen()

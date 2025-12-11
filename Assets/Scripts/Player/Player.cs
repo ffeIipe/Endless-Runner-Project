@@ -1,4 +1,3 @@
-using System;
 using Entities;
 using Entities.MVC;
 using Managers;
@@ -59,9 +58,11 @@ namespace Player
             CanTakeDamage = false;
         }
 
-        protected override void Die()
+        public override void Die()
         {
             base.Die();
+            
+            GetAttributesComponent().ReceiveDamage(100f);
             
             EventManager.PlayerEvents.OnPlayerDead.Invoke();
             Cursor.lockState = CursorLockMode.None;
@@ -125,6 +126,8 @@ namespace Player
             base.OnLevelUpdated();
             
             CanTakeDamage = true;
+            
+            EffectsManager.Instance.ResetEffects();
         }
         
         private void SubscribeToEvents()
@@ -140,8 +143,7 @@ namespace Player
             
             _model.OnVelocityChanged += _viewPlayer.GetVelocity;
 
-            var newSens = Mathf.Lerp(10f, 1000f, PlayerData.mouseSensitivity / 1000f);
-            EventManager.UIEvents.OnSensitivityChanged.Invoke(newSens);
+            EventManager.UIEvents.OnSensitivityChanged.Invoke(.5f);
         }
 
         private void OnHealthIncreased(float val)

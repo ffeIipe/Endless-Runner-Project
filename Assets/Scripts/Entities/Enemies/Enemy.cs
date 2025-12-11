@@ -61,7 +61,7 @@ namespace Entities.Enemies
             View.ApplyDamageEffect(direction, hitPoint, hitNormal, force);
         }
 
-        protected override void Die()
+        public override void Die()
         {
             if (!CanTakeDamage) return;
             

@@ -11,7 +11,7 @@ namespace ScreenManagerFolder
         
         private void Start()
         {
-            sensitivitySlider.value = Mathf.Lerp(10f, 1000f, 500f/1000f);
+            sensitivitySlider.value = .5f;
         }
 
         public void Back()
@@ -21,7 +21,6 @@ namespace ScreenManagerFolder
         
         public void OnSensitivityChanged(float value)
         {
-            
             EventManager.UIEvents.OnSensitivityChanged(value);
         }
     }

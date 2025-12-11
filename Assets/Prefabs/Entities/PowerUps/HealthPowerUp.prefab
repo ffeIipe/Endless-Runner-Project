@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1847463888239247564}
-  - component: {fileID: 4202682271539409031}
-  - component: {fileID: 3769189025074134282}
+  - component: {fileID: 7515438056502863686}
+  - component: {fileID: 4681218024356671854}
   m_Layer: 0
   m_Name: HealthPowerUp
   m_TagString: Untagged
@@ -34,7 +34,7 @@ Transform:
   - {fileID: 7460788226767510823}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &4202682271539409031
+--- !u!135 &7515438056502863686
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -53,9 +53,9 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 2
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3769189025074134282
+  m_Radius: 1.5
+  m_Center: {x: 0, y: 1.5, z: 0}
+--- !u!114 &4681218024356671854
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -99,7 +99,7 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: af51a21b70bac8d42b6135d30e5a775f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: af51a21b70bac8d42b6135d30e5a775f,
         type: 3}

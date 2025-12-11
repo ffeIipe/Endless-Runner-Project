@@ -1,4 +1,5 @@
 using System.Collections;
+using Managers;
 using Scriptables;
 using UnityEngine;
 
@@ -51,9 +52,11 @@ namespace Obstacles
 
             while (elapsedTime < trapData.rotationDuration)
             {
-                hinge.localRotation = Quaternion.Slerp(startRotation, targetRotation, elapsedTime / trapData.rotationDuration);
-            
-                elapsedTime += Time.deltaTime;
+                if (!GameManager.IsPaused)
+                {
+                    hinge.localRotation = Quaternion.Slerp(startRotation, targetRotation, elapsedTime / trapData.rotationDuration);
+                    elapsedTime += Time.deltaTime;
+                }
             
                 yield return null; 
             }

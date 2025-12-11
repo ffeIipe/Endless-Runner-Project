@@ -21,7 +21,7 @@ namespace Entities.MVC
         
         public void Execute()
         {
-            if (Input.GetKeyDown(KeyCode.Q) && !GameManager.Instance.isLevelFinished)
+            if (Input.GetKeyDown(KeyCode.Escape) && !GameManager.Instance.isLevelFinished)
                 GameManager.Instance.HandlePauseInput();
             
             if (!Enabled) return;

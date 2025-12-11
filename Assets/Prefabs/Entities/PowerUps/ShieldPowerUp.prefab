@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1847463888239247564}
-  - component: {fileID: 4202682271539409031}
-  - component: {fileID: 4534047392357024221}
+  - component: {fileID: 2284569122740816007}
+  - component: {fileID: 6294971991023167831}
   m_Layer: 0
   m_Name: ShieldPowerUp
   m_TagString: Untagged
@@ -34,7 +34,7 @@ Transform:
   - {fileID: 8322171732304816350}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!135 &4202682271539409031
+--- !u!135 &2284569122740816007
 SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -53,9 +53,9 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 2
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4534047392357024221
+  m_Radius: 1.5
+  m_Center: {x: 0, y: 1.5, z: 0}
+--- !u!114 &6294971991023167831
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -79,32 +79,32 @@ PrefabInstance:
     - target: {fileID: -8679921383154817045, guid: 44d5008d5e4608a41b821d9f68981b0e,
         type: 3}
       propertyPath: m_LocalScale.x
-      value: 0.37244
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 44d5008d5e4608a41b821d9f68981b0e,
         type: 3}
       propertyPath: m_LocalScale.y
-      value: 0.37244
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 44d5008d5e4608a41b821d9f68981b0e,
         type: 3}
       propertyPath: m_LocalScale.z
-      value: 0.37244
+      value: 0.8
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 44d5008d5e4608a41b821d9f68981b0e,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.025074
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 44d5008d5e4608a41b821d9f68981b0e,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.0092426
+      value: 1.5
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 44d5008d5e4608a41b821d9f68981b0e,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.0093409
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 44d5008d5e4608a41b821d9f68981b0e,
         type: 3}
@@ -140,6 +140,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: -90
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 44d5008d5e4608a41b821d9f68981b0e,
+        type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: 44d5008d5e4608a41b821d9f68981b0e,
         type: 3}
