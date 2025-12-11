@@ -59,7 +59,7 @@ namespace Entities
             _attributesComponent.OnDead -= Die;
         }
 
-        protected virtual void Die()
+        public virtual void Die()
         {
             View.OnEntityDead();
             CanTakeDamage = false;

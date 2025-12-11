@@ -58,9 +58,11 @@ namespace Player
             CanTakeDamage = false;
         }
 
-        protected override void Die()
+        public override void Die()
         {
             base.Die();
+            
+            GetAttributesComponent().ReceiveDamage(100f);
             
             EventManager.PlayerEvents.OnPlayerDead.Invoke();
             Cursor.lockState = CursorLockMode.None;
@@ -124,6 +126,8 @@ namespace Player
             base.OnLevelUpdated();
             
             CanTakeDamage = true;
+            
+            EffectsManager.Instance.ResetEffects();
         }
         
         private void SubscribeToEvents()

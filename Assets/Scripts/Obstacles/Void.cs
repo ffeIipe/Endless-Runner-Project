@@ -1,3 +1,4 @@
+using Entities;
 using UnityEngine;
 
 namespace Obstacles
@@ -25,11 +26,10 @@ namespace Obstacles
         
         private void OnVoidTriggered(Collider coll, Vector3 contact)
         {
-            if (coll.gameObject.TryGetComponent(out Player.Player player))
+            if (coll.gameObject.TryGetComponent(out Entity entity))
             {
-                player.TakeDamage(100f, null);
+                entity.Die();
             }
-            else Debug.Log("Not the player");
         }
     }
 }
