@@ -17,10 +17,10 @@ MonoBehaviour:
   teamType: 0
   poolableType: 2
   maxPatrolDistance: NaN
-  attackDistance: 40
-  attackCooldown: 1
-  interpSpeed: 8
-  spread: 1.5
+  attackDistance: 35
+  attackCooldown: 1.2
+  interpSpeed: 5
+  spread: 2
   targetLayer:
     serializedVersion: 2
     m_Bits: 128

@@ -37,11 +37,13 @@ namespace Managers
         private void OnEnable()
         {
             EventManager.GameEvents.OnLevelStarted += StartLevelTimer;
+            EventManager.PlayerEvents.OnPlayerDead += OnPlayerDead;
         }
 
         private void OnDisable()
         {
             EventManager.GameEvents.OnLevelStarted -= StartLevelTimer;
+            EventManager.PlayerEvents.OnPlayerDead -= OnPlayerDead;
         }
 
         private void Start()
@@ -233,6 +235,11 @@ namespace Managers
             
             _currentLevelTime -= Time.deltaTime;
             return _currentLevelTime;
+        }
+        
+        private void OnPlayerDead()
+        {
+            ScreenManager.Instance.PushScreen(ScreenType.DeathMenu, true);
         }
     }
 }

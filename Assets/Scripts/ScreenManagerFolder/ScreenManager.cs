@@ -11,7 +11,7 @@ namespace ScreenManagerFolder
         public static ScreenManager Instance { get; private set; }
         public List<ScreenRegistration> screenPrefabs;
 
-        private Stack<BaseScreen> _screenStack = new();
+        private readonly Stack<BaseScreen> _screenStack = new();
 
         private void Awake()
         {
@@ -36,13 +36,6 @@ namespace ScreenManagerFolder
             }
 
             PushScreen(ScreenType.Gameplay, false);
-
-            EventManager.PlayerEvents.OnPlayerDead += OnPlayerDead;
-        }
-
-        private void OnPlayerDead()
-        {
-            PushScreen(ScreenType.DeathMenu, true);
         }
 
         public void PopScreen()

@@ -62,9 +62,10 @@ namespace Player
         {
             base.Die();
             
+            EventManager.PlayerEvents.OnPlayerDead.Invoke();
+            
             GetAttributesComponent().ReceiveDamage(100f);
             
-            EventManager.PlayerEvents.OnPlayerDead.Invoke();
             Cursor.lockState = CursorLockMode.None;
 
             _controller.Enabled = false;

@@ -92,6 +92,7 @@ namespace Entities.PowerUps
         {
             gameObject.SetActive(true);
             _collider.enabled = true;
+            _meshRenderer.enabled = true;
         }
 
         public void Deactivate()

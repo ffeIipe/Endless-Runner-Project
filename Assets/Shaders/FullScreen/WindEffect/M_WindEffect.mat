@@ -44,7 +44,7 @@ Material:
     m_Floats:
     - _Alpha: 0.5
     - _Velocity: 0.652
-    - _VignetteIntensity: 0.20382906
+    - _VignetteIntensity: 0.5393292
     - _VignettePower: 4.16
     m_Colors:
     - _Color: {r: 2, g: 2, b: 2, a: 0}
