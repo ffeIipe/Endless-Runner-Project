@@ -38,12 +38,12 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Power: 0.5
+    - _Power: 0.3
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
     - _BaseColor: {r: 5.239553, g: 0, b: 0, a: 0}
-    - _Distortion: {r: 0.03, g: 0.01, b: 0, a: 0}
+    - _Distortion: {r: 0.12, g: 0.01, b: 0, a: 0}
     - _Speed: {r: 0.05, g: 0.03, b: 0, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &6353313452407621893
