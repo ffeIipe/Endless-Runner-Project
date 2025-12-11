@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 690779489631089750}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.314, z: 0}
+  m_LocalPosition: {x: 0, y: 1.314, z: 0.262}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -98,10 +98,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.6630986
-  m_Height: 3.1268282
+  m_Radius: 0.5029034
+  m_Height: 2.2929177
   m_Direction: 1
-  m_Center: {x: 0.16309857, y: 0.5963266, z: 0}
+  m_Center: {x: 0.20278585, y: 0.40234044, z: 0.030255735}
 --- !u!1 &2332272446560135366
 GameObject:
   m_ObjectHideFlags: 0
@@ -132,8 +132,8 @@ Transform:
   m_GameObject: {fileID: 2332272446560135366}
   serializedVersion: 2
   m_LocalRotation: {x: 0.040809173, y: -0.6330503, z: -0.7719749, w: 0.040454578}
-  m_LocalPosition: {x: 0.13606, y: 2.3169, z: 0.093135}
-  m_LocalScale: {x: 0.63761, y: 0.63761, z: 0.63761}
+  m_LocalPosition: {x: 0.178, y: 1.315, z: 0.135}
+  m_LocalScale: {x: 0.46854132, y: 0.46854132, z: 0.46854132}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3950081495657313887}
@@ -274,7 +274,7 @@ Transform:
   m_GameObject: {fileID: 6486038982237076151}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.11572899, z: -0, w: 0.9932809}
-  m_LocalPosition: {x: -0.645, y: 1.247, z: 0}
+  m_LocalPosition: {x: -0.645, y: 0.526, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -307,8 +307,8 @@ Transform:
   m_GameObject: {fileID: 7369305885455526922}
   serializedVersion: 2
   m_LocalRotation: {x: 0.70710564, y: -0.0000042021275, z: -0.000003993511, w: -0.707108}
-  m_LocalPosition: {x: 0.20226, y: 1.2515, z: 0.36093}
-  m_LocalScale: {x: 0.63761, y: 0.63761, z: 0.63761}
+  m_LocalPosition: {x: 0.20346, y: 0.59158, z: 0.30171}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 3950081495657313887}
