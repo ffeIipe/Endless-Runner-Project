@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44f341e78c9149d19418cbbd1882b130, type: 3}
   m_Name: BerserkerPowerUpData
   m_EditorClassIdentifier: 
-  amplitude: 0.001
-  frequency: 1
-  rotationSpeed: 50
+  amplitude: 0.3
+  frequency: 2
+  rotationSpeed: 70
   duration: 3
   powerUpType: 9
   speedMultiplier: 1.35

@@ -62,13 +62,22 @@ namespace Managers
 
         private IEnumerator LoadLevelRoutine(int levelIndex, Action onComplete = null, Action onFailed = null)
         {
-            if (levelIndex == _currentLevelBuildIndex || levelIndex == PersistentLevelBuildIndex)
+            if (levelIndex == PersistentLevelBuildIndex)
             {
                 onFailed?.Invoke();
                 yield break;
             }
             
-            yield return SceneManager.UnloadSceneAsync(_currentLevelBuildIndex);
+            if (levelIndex == _currentLevelBuildIndex)
+            {
+                yield return RestartLevelRoutine();
+                
+                onComplete?.Invoke();
+                yield break;
+            }
+            
+            if (SceneManager.GetSceneByBuildIndex(_currentLevelBuildIndex).isLoaded)
+                yield return SceneManager.UnloadSceneAsync(_currentLevelBuildIndex);
             
             _currentLevelBuildIndex = levelIndex;
             yield return SceneManager.LoadSceneAsync(levelIndex, LoadSceneMode.Additive);
@@ -89,13 +98,14 @@ namespace Managers
             StartCoroutine(RestartLevelRoutine(onRestarted));
         }
 
-        private IEnumerator RestartLevelRoutine(Action onRestarted)
+        private IEnumerator RestartLevelRoutine(Action onRestarted = null)
         {
             if (IsPaused) IsPaused = false;
             
-            if(Cursor.lockState != CursorLockMode.Locked) Cursor.lockState = CursorLockMode.Locked;
+            if (Cursor.lockState != CursorLockMode.Locked) Cursor.lockState = CursorLockMode.Locked;
             
-            yield return SceneManager.UnloadSceneAsync(_currentLevelBuildIndex);
+            if (SceneManager.GetSceneByBuildIndex(_currentLevelBuildIndex).isLoaded)
+                yield return SceneManager.UnloadSceneAsync(_currentLevelBuildIndex);
 
             yield return SceneManager.LoadSceneAsync(_currentLevelBuildIndex, LoadSceneMode.Additive);
 

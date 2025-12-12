@@ -6,7 +6,12 @@ namespace FiniteStateMachine.States
 {
     public class JumpAttackState : AttackState
     {
-        public JumpAttackState(StateMachine stateMachine) : base(stateMachine) { }
+        private Vector3 _startPosition;
+        
+        public JumpAttackState(StateMachine stateMachine) : base(stateMachine)
+        {
+            _startPosition = Owner.transform.position;
+        }
         
         protected override void TryAttack()
         {
@@ -37,6 +42,7 @@ namespace FiniteStateMachine.States
                     var moveDeltaY = (curveValue - lastCurveValue);
                     var moveVector = new Vector3(0, moveDeltaY, 0);
 
+                    //Owner.transform.position = _startPosition + moveVector;
                     Owner.transform.position += moveVector;
 
                     lastCurveValue = curveValue;

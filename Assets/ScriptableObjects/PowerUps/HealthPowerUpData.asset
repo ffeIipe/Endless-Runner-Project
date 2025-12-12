@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 068a6baa20f445fa8656f84260a10634, type: 3}
   m_Name: HealthPowerUpData
   m_EditorClassIdentifier: 
+  amplitude: 0.3
+  frequency: 2
+  rotationSpeed: 70
   duration: 0
   powerUpType: 4
   health: 3

@@ -17,6 +17,7 @@ namespace Entities.PowerUps
         private SphereCollider _collider;
         private CountdownTimer _timer;
         private MeshRenderer _meshRenderer;
+        private Transform _childTransform;
 
         private bool _wasPickedUp;
         
@@ -29,6 +30,8 @@ namespace Entities.PowerUps
             _collider.isTrigger = true;
             
             _meshRenderer = GetComponentInChildren<MeshRenderer>();
+            
+            _childTransform = transform.GetChild(0);
         }
         
         protected virtual void OnEnable()
@@ -50,9 +53,10 @@ namespace Entities.PowerUps
         {
             _timer.Tick(Time.deltaTime);
             
-            /*var displacement = powerUpData.amplitude * Mathf.Sin(Time.time * powerUpData.frequency);
-            transform.position = _initialPos + new Vector3(0, displacement, 0);
-            transform.Rotate(Vector3.up * (powerUpData.rotationSpeed * Time.deltaTime), Space.World);*/
+            var displacement = powerUpData.amplitude * Mathf.Sin(Time.time * powerUpData.frequency);
+            _childTransform.localPosition = _initialPos + new Vector3(0, displacement, 0);
+            
+            transform.Rotate(Vector3.up * (powerUpData.rotationSpeed * Time.deltaTime), Space.World);
         }
 
         private void OnLevelUpdated()
@@ -98,6 +102,8 @@ namespace Entities.PowerUps
             gameObject.SetActive(true);
             _collider.enabled = true;
             _meshRenderer.enabled = true;
+            
+            _initialPos = _childTransform.localPosition;
         }
 
         public void Deactivate()

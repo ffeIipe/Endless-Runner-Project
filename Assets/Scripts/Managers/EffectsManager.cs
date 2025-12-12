@@ -117,13 +117,15 @@ namespace Managers
             ));
         }
 
-        public void BerserkerEffect()
+        public void BerserkerEffect(bool active)
         {
+            var f = active ? 1f : 0f;
+            
             StartCoroutine(UpdateRenderMaterialEffect(
-                1f, 
+                f, 
                 effectsManagerData.berserkerRenderMaterial,
                 effectsManagerData.berserkerLerpSpeed,
-                true
+                false
             ));
         }
 

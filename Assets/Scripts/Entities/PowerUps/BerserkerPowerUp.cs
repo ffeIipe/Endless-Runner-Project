@@ -14,7 +14,7 @@ namespace Entities.PowerUps
             if (user.TryGetComponent(out Player.Player player))
             {
                 player.GetModel().MaxSpeed *= BerserkerPowerUpData.speedMultiplier;
-                EffectsManager.Instance.BerserkerEffect();
+                EffectsManager.Instance.BerserkerEffect(true);
             }
         }
 
@@ -25,6 +25,7 @@ namespace Entities.PowerUps
             if (Owner.TryGetComponent(out Player.Player player))
             {
                 player.GetModel().MaxSpeed /= BerserkerPowerUpData.speedMultiplier;
+                EffectsManager.Instance.BerserkerEffect(false);
             }
         }
     }

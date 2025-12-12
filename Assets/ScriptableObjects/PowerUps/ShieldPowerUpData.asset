@@ -12,6 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 410b09ab471848bb8f239d1f3c8641eb, type: 3}
   m_Name: ShieldPowerUpData
   m_EditorClassIdentifier: 
+  amplitude: 0.3
+  frequency: 2
+  rotationSpeed: 70
   duration: 0
   powerUpType: 5
   shield: 1
