@@ -50,9 +50,9 @@ namespace Entities.PowerUps
         {
             _timer.Tick(Time.deltaTime);
             
-            var displacement = powerUpData.amplitude * Mathf.Sin(Time.time * powerUpData.frequency);
+            /*var displacement = powerUpData.amplitude * Mathf.Sin(Time.time * powerUpData.frequency);
             transform.position = _initialPos + new Vector3(0, displacement, 0);
-            transform.Rotate(Vector3.up * (powerUpData.rotationSpeed * Time.deltaTime), Space.World);
+            transform.Rotate(Vector3.up * (powerUpData.rotationSpeed * Time.deltaTime), Space.World);*/
         }
 
         private void OnLevelUpdated()

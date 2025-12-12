@@ -9,7 +9,7 @@ OcclusionCullingSettings:
     smallestHole: 0.25
     backfaceThreshold: 100
   m_SceneGUID: 9ad3e6587c7d8f0488fdf098087cf859
-  m_OcclusionCullingData: {fileID: 36300000, guid: 98b8801c5b826e0429f2e1670ed8db74,
+  m_OcclusionCullingData: {fileID: 36300000, guid: 11e3a61b525dfd64c8eeb0a80fb91ad1,
     type: 2}
 --- !u!104 &2
 RenderSettings:
@@ -3049,51 +3049,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 128333826}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &134809743
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 134809744}
-  - component: {fileID: 134809745}
-  m_Layer: 0
-  m_Name: SpawnPoint (4)
-  m_TagString: Untagged
-  m_Icon: {fileID: 419385456094870383, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &134809744
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 134809743}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.28, y: 0.86, z: 90.61}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1998353346}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &134809745
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 134809743}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ef2c02c31a034c909592ffb3611e186b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  enemyToSpawn: 1
 --- !u!1001 &134876681
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -40657,7 +40612,7 @@ Transform:
   m_GameObject: {fileID: 1465585786}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.41, y: 0.139, z: 120.48}
+  m_LocalPosition: {x: 0.4, y: 0.139, z: 113.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -53320,10 +53275,6 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1465585787}
-    - targetCorrespondingSourceObject: {fileID: 883678910318673247, guid: 9f3a2e6c9ede9bc4ba73960d8ec33930,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 134809744}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9f3a2e6c9ede9bc4ba73960d8ec33930, type: 3}
 --- !u!1001 &1875592694

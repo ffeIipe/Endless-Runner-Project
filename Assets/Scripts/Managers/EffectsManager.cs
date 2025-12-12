@@ -97,7 +97,7 @@ namespace Managers
             var maxFOV = _fieldOfViewMaps[FieldOfViewWarpType.Type1].fieldOfViewWarpAttributes.maxFOV;
             _targetFieldOfView = Mathf.Lerp(minFOV, maxFOV, t);
 
-            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, _targetFieldOfView, Time.deltaTime * effectsManagerData.windLerpSpeed);
+            playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, _targetFieldOfView, Time.deltaTime);
 
             var currentVignette = effectsManagerData.windRenderMaterial.GetFloat(effectsManagerData.vignetteIntensity);
             var finalVignette = Mathf.Lerp(currentVignette, t, Time.deltaTime * effectsManagerData.windLerpSpeed);
