@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5b43128d5f104bf59bf9ce27c5d55e4b, type: 3}
   m_Name: EffectsManagerData
   m_EditorClassIdentifier: 
+  vignetteIntensity: _VignetteIntensity
   hitStopMap:
   - hitStopType: 0
     hitStopAttributes:
@@ -159,5 +160,13 @@ MonoBehaviour:
   bloodRenderMaterial: {fileID: 2100000, guid: 2689ad61d9a939f41951acb93370d31d, type: 2}
   bloodLerpSpeed: 0.5
   windRenderMaterial: {fileID: 2100000, guid: b1474a118dd122740877808e09c62b90, type: 2}
-  windLerpSpeed: 2
-  vignetteIntensity: _VignetteIntensity
+  windLerpSpeed: 0.25
+  berserkerRenderMaterial: {fileID: 2100000, guid: 08255ff87265efe4299af87950d37a4a,
+    type: 2}
+  berserkerLerpSpeed: 0.25
+  healthRenderMaterial: {fileID: 2100000, guid: 725c4465d700eef4b8cdd1fd05bb4eae,
+    type: 2}
+  healthLerpSpeed: 0.25
+  shieldRenderMaterial: {fileID: 2100000, guid: f804a8234f507a44eb0283849cc43029,
+    type: 2}
+  shieldLerpSpeed: 0.25

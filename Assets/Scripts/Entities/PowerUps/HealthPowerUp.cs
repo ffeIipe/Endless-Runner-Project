@@ -1,3 +1,4 @@
+using Managers;
 using Scriptables.PowerUps;
 
 namespace Entities.PowerUps
@@ -18,6 +19,7 @@ namespace Entities.PowerUps
             base.PickUp(user);
             
             user.GetAttributesComponent().IncreaseHealth(_healthPowerUpData.health);
+            EffectsManager.Instance.HealthEffect();
         }
     }
 }

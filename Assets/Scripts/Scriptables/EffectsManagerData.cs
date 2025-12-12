@@ -7,6 +7,8 @@ namespace Scriptables
     [CreateAssetMenu(fileName = "EffectsManagerData", menuName = "Scriptables/EffectsManagerData")]
     public class EffectsManagerData : ScriptableObject
     {
+        public string vignetteIntensity = "_VignetteIntensity";
+        
         [Header("Hit Stop Settings")]
         public List<HitStopMap> hitStopMap;
         
@@ -27,6 +29,17 @@ namespace Scriptables
         [Header("Wind Effect Settings")]
         public Material windRenderMaterial;
         public float windLerpSpeed = 2f;
-        public string vignetteIntensity = "_VignetteIntensity";
+        
+        [Header("Berserker Effect Settings")]
+        public Material berserkerRenderMaterial;
+        public float berserkerLerpSpeed;
+        
+        [Header("Health Effect Settings")]
+        public Material healthRenderMaterial;
+        public float healthLerpSpeed;
+        
+        [Header("Shield Effect Settings")]
+        public Material shieldRenderMaterial;
+        public float shieldLerpSpeed;
     }
 }

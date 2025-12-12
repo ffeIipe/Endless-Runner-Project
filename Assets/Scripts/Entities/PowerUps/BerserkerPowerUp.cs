@@ -1,3 +1,4 @@
+using Managers;
 using Scriptables.PowerUps;
 
 namespace Entities.PowerUps
@@ -13,6 +14,7 @@ namespace Entities.PowerUps
             if (user.TryGetComponent(out Player.Player player))
             {
                 player.GetModel().MaxSpeed *= BerserkerPowerUpData.speedMultiplier;
+                EffectsManager.Instance.BerserkerEffect();
             }
         }
 

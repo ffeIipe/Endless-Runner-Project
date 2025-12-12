@@ -1,4 +1,4 @@
-using Scriptables;
+using Managers;
 using Scriptables.PowerUps;
 
 namespace Entities.PowerUps
@@ -12,6 +12,7 @@ namespace Entities.PowerUps
             base.PickUp(user);
 
             user.GetAttributesComponent().IncreaseShield(ShieldPowerUpData.shield);
+            EffectsManager.Instance.ShieldEffect(true);
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using Interfaces;
 using Managers;
 using Pool;
@@ -20,6 +19,8 @@ namespace Entities.PowerUps
         private MeshRenderer _meshRenderer;
 
         private bool _wasPickedUp;
+        
+         private Vector3 _initialPos;
 
         protected virtual void Awake()
         {
@@ -48,6 +49,10 @@ namespace Entities.PowerUps
         private void Update()
         {
             _timer.Tick(Time.deltaTime);
+            
+            var displacement = powerUpData.amplitude * Mathf.Sin(Time.time * powerUpData.frequency);
+            transform.position = _initialPos + new Vector3(0, displacement, 0);
+            transform.Rotate(Vector3.up * (powerUpData.rotationSpeed * Time.deltaTime), Space.World);
         }
 
         private void OnLevelUpdated()
@@ -93,6 +98,7 @@ namespace Entities.PowerUps
             gameObject.SetActive(true);
             _collider.enabled = true;
             _meshRenderer.enabled = true;
+            _initialPos = transform.position;
         }
 
         public void Deactivate()

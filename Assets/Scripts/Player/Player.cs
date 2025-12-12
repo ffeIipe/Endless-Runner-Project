@@ -64,8 +64,6 @@ namespace Player
             
             EventManager.PlayerEvents.OnPlayerDead.Invoke();
             
-            GetAttributesComponent().ReceiveDamage(100f);
-            
             Cursor.lockState = CursorLockMode.None;
 
             _controller.Enabled = false;
@@ -130,21 +128,10 @@ namespace Player
             
             EffectsManager.Instance.ResetEffects();
         }
-        
-        private void SubscribeToEvents()
-        {
-            GameManager.Instance.player = this;
-            
-            EventManager.UIEvents.OnSensitivityChanged += _model.ChangeSensitivity;
-            EventManager.GameEvents.OnLevelFinished += OnLevelFinished;
-            
-            GetAttributesComponent().OnHealthIncreased += OnHealthIncreased;
-            
-            _bufferDamage.OnTimerStop += OnBufferDamageStop;
-            
-            _model.OnVelocityChanged += _viewPlayer.GetVelocity;
 
-            EventManager.UIEvents.OnSensitivityChanged.Invoke(.5f);
+        private void OnShieldDestroyed()
+        {
+            EffectsManager.Instance.ShieldEffect(false);
         }
 
         private void OnHealthIncreased(float val)
@@ -153,13 +140,33 @@ namespace Player
             Debug.Log("Health Increased");
         }
 
+        private void SubscribeToEvents()
+        {
+            GameManager.Instance.player = this;
+            
+            EventManager.UIEvents.OnSensitivityChanged += _model.ChangeSensitivity;
+            EventManager.GameEvents.OnLevelFinished += OnLevelFinished;
+            
+            GetAttributesComponent().OnHealthIncreased += OnHealthIncreased;
+            GetAttributesComponent().OnShieldDestroyed += OnShieldDestroyed;
+            
+            _bufferDamage.OnTimerStop += OnBufferDamageStop;
+            
+            _model.OnVelocityChanged += _viewPlayer.GetVelocity;
+
+            EventManager.UIEvents.OnSensitivityChanged.Invoke(.5f);
+        }
+        
         private void UnsubscribeToEvents()
         {
-            if(GameManager.Instance && GameManager.Instance.player == this) 
+            if (GameManager.Instance && GameManager.Instance.player == this) 
                 GameManager.Instance.player = null;
 
             EventManager.UIEvents.OnSensitivityChanged -= _model.ChangeSensitivity;
             EventManager.GameEvents.OnLevelFinished -= OnLevelFinished;
+            
+            GetAttributesComponent().OnHealthIncreased -= OnHealthIncreased;
+            GetAttributesComponent().OnShieldDestroyed -= OnShieldDestroyed;
             
             _bufferDamage.OnTimerStop -= OnBufferDamageStop;
             

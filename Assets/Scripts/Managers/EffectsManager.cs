@@ -72,8 +72,9 @@ namespace Managers
         {
             effectsManagerData.bloodRenderMaterial.SetFloat(effectsManagerData.vignetteIntensity, 0f);
             effectsManagerData.windRenderMaterial.SetFloat(effectsManagerData.vignetteIntensity, 0f);
-            
-            //Time.timeScale = 1f;
+            effectsManagerData.berserkerRenderMaterial.SetFloat(effectsManagerData.vignetteIntensity, 0f);
+            effectsManagerData.healthRenderMaterial.SetFloat(effectsManagerData.vignetteIntensity, 0f);
+            effectsManagerData.shieldRenderMaterial.SetFloat(effectsManagerData.vignetteIntensity, 0f);
         }
 
         private void Start()
@@ -90,19 +91,16 @@ namespace Managers
 
         public void UpdateVelocityEffect(float vel)
         {
-            var t = Mathf.Clamp01(vel / 22f); // 22 es la vel max del player
+            var t = Mathf.Clamp01(vel / 22f); //max. velocity of the player
 
             var minFOV = _fieldOfViewMaps[FieldOfViewWarpType.Type1].fieldOfViewWarpAttributes.minFOV;
             var maxFOV = _fieldOfViewMaps[FieldOfViewWarpType.Type1].fieldOfViewWarpAttributes.maxFOV;
             _targetFieldOfView = Mathf.Lerp(minFOV, maxFOV, t);
 
-            var vignetteT = t < 0.1 ? 0f : t;
-            _targetVignetteIntensity = vignetteT * 1.5f; // multiplier hardcodeado tmb jeje
-
             playerCamera.fieldOfView = Mathf.Lerp(playerCamera.fieldOfView, _targetFieldOfView, Time.deltaTime * effectsManagerData.windLerpSpeed);
 
             var currentVignette = effectsManagerData.windRenderMaterial.GetFloat(effectsManagerData.vignetteIntensity);
-            var finalVignette = Mathf.Lerp(currentVignette, _targetVignetteIntensity, Time.deltaTime * effectsManagerData.windLerpSpeed);
+            var finalVignette = Mathf.Lerp(currentVignette, t, Time.deltaTime * effectsManagerData.windLerpSpeed);
             effectsManagerData.windRenderMaterial.SetFloat(effectsManagerData.vignetteIntensity, finalVignette); 
         }
 
@@ -111,28 +109,68 @@ namespace Managers
             var healthPercent = Mathf.Clamp01(currentHealth / 3f); //max life
             var damagePercent = 1f - healthPercent;
 
-            StartCoroutine(UpdateBloodEffect(damagePercent));
+            StartCoroutine(UpdateRenderMaterialEffect(
+                damagePercent, 
+                effectsManagerData.bloodRenderMaterial,
+                effectsManagerData.bloodLerpSpeed,
+                false
+            ));
         }
 
-        private IEnumerator UpdateBloodEffect(float target)
+        public void BerserkerEffect()
         {
-            var bloodMat = effectsManagerData.bloodRenderMaterial;
-            var start = bloodMat.GetFloat(effectsManagerData.vignetteIntensity);
+            StartCoroutine(UpdateRenderMaterialEffect(
+                1f, 
+                effectsManagerData.berserkerRenderMaterial,
+                effectsManagerData.berserkerLerpSpeed,
+                true
+            ));
+        }
+
+        public void HealthEffect()
+        {
+            StartCoroutine(UpdateRenderMaterialEffect(
+                1f, 
+                effectsManagerData.healthRenderMaterial,
+                effectsManagerData.healthLerpSpeed,
+                true
+            ));
+        }
+        
+        public void ShieldEffect(bool active)
+        {
+            var f = active ? 1f : 0f;
+            
+            StartCoroutine(UpdateRenderMaterialEffect(
+                f, 
+                effectsManagerData.shieldRenderMaterial,
+                effectsManagerData.shieldLerpSpeed,
+                false
+            ));
+        }
+
+        private IEnumerator UpdateRenderMaterialEffect(float target, Material material, float duration, bool shouldReverse)
+        {
+            var start = material.GetFloat(effectsManagerData.vignetteIntensity);
             var time = 0f;
-            var duration = effectsManagerData.bloodLerpSpeed;
 
             while (time < duration)
             {
-                time += Time.unscaledDeltaTime;
+                time += Time.deltaTime;
                 var t = time / duration;
         
                 var currentVal = Mathf.Lerp(start, target, t);
         
-                bloodMat.SetFloat(effectsManagerData.vignetteIntensity, currentVal);
+                material.SetFloat(effectsManagerData.vignetteIntensity, currentVal);
                 yield return null;
             }
 
-            bloodMat.SetFloat(effectsManagerData.vignetteIntensity, target);
+            material.SetFloat(effectsManagerData.vignetteIntensity, target);
+
+            if (shouldReverse)
+            {
+                StartCoroutine(UpdateRenderMaterialEffect(0f, material, duration, false));
+            }
         }
         
         private IEnumerator FadeOutScreen()

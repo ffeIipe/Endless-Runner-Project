@@ -40,7 +40,7 @@ Material:
     m_Floats:
     - _AngleOffset: 5.36
     - _SecondVoronoiPower: 4.09
-    - _VignetteIntensity: 0.3333333
+    - _VignetteIntensity: 0
     - _VignettePower: 4.68
     - _VoronoiIntensity: 0.35
     - _VoronoiPower: 1.34
