@@ -1,4 +1,6 @@
+using Enums;
 using Managers;
+using Managers.SoundManagerFolder;
 using Scriptables.PowerUps;
 
 namespace Entities.PowerUps
@@ -15,6 +17,8 @@ namespace Entities.PowerUps
             {
                 player.GetModel().MaxSpeed *= BerserkerPowerUpData.speedMultiplier;
                 EffectsManager.Instance.BerserkerEffect(true);
+                
+                SoundManager.Instance.PlaySound(SoundType.BerserkPowerUp, Owner.audioSource);
             }
         }
 

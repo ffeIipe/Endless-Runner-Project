@@ -3,25 +3,29 @@ using Entities.MVC;
 using Enums;
 using Interfaces;
 using Managers;
+using Managers.SoundManagerFolder;
 using Scriptables;
 using UnityEngine;
 
 namespace Entities
 {
     [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(AudioSource))]
     public abstract class Entity : MonoBehaviour, ITeammate, IPausable, IHittable
     {
         public EntityData entityData;
         public Transform handPoint;
+        public AudioSource audioSource;
         
         protected Entity LastDamageCauser;
         protected ViewBase View;
         protected RigidbodyConstraints SavedRigidbodyConstraints;
-        public bool CanTakeDamage = true;
+        protected bool CanTakeDamage = true;
         
         private Rigidbody _rigidbody;
         private Vector3 _currentVelocity;
         private Vector3 _currentAngularVelocity;
+
         
         private AttributesComponent _attributesComponent;
         private TeamComponent _teamComponent;
@@ -38,6 +42,8 @@ namespace Entities
             _rigidbody = GetComponent<Rigidbody>();
             _rigidbody.isKinematic = true;
             SavedRigidbodyConstraints = _rigidbody.constraints;
+            
+            audioSource = GetComponent<AudioSource>();
             
             _attributesComponent = new AttributesComponent(entityData.health, entityData.shield);
             _teamComponent = new TeamComponent(entityData.teamType);
@@ -103,6 +109,8 @@ namespace Entities
             {
                 View.HeadShotEffect();
             }
+            
+            SoundManager.Instance.PlaySound(SoundType.FleshImpact, audioSource);
         }
 
         public virtual void PauseEntity(bool pause)

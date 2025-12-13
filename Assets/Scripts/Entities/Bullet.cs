@@ -1,6 +1,7 @@
 using Enums;
 using Interfaces;
 using Managers;
+using Managers.SoundManagerFolder;
 using Pool;
 using Scriptables.Entities;
 using UnityEngine;
@@ -8,6 +9,7 @@ using UnityEngine;
 namespace Entities
 {
     [RequireComponent(typeof(Rigidbody))]
+    [RequireComponent(typeof(AudioSource))]
     public sealed class Bullet : MonoBehaviour, IPoolable, IPausable
     {
         [SerializeField] private BulletData bulletData;
@@ -16,6 +18,7 @@ namespace Entities
      
         private Rigidbody _rigidbody;
         private Collider _collider;
+        private AudioSource _audioSource;
         
         private TeamType _ownerTeamType;
         private Vector3 _direction;
@@ -31,6 +34,7 @@ namespace Entities
         {
             _rigidbody = GetComponent<Rigidbody>();
             _collider = GetComponent<Collider>();
+            _audioSource = GetComponent<AudioSource>();
             
             EnableBullet(false);
         }
@@ -68,6 +72,8 @@ namespace Entities
             EnableBullet(true);
             gameObject.SetActive(true);
             _hitApplied = false;
+            
+            SoundManager.Instance.PlaySound(SoundType.ThrowAxe, _audioSource);
         }
 
         public void Deactivate()
@@ -115,6 +121,8 @@ namespace Entities
             if (hitCollider.TryGetComponent(out Bullet _))
             {
                 _rigidbody.isKinematic = false;
+                
+                SoundManager.Instance.PlaySound(SoundType.ShieldImpact, _audioSource);
                 return;
             }
 
@@ -125,7 +133,9 @@ namespace Entities
                 {
                     Bounce(bulletData.bulletForce / 2f, hitEntity);
                     ApplyHit(collision, hitEntity);
-
+                    
+                    SoundManager.Instance.PlaySound(SoundType.ShieldImpact, _audioSource);
+                    
                     return;
                 }
 

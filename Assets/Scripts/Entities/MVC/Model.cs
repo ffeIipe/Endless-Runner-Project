@@ -10,6 +10,8 @@ namespace Entities.MVC
     public class Model
     {
         public Action<float> OnVelocityChanged = delegate { };
+        public Action OnJump = delegate { };
+        public Action OnSlide = delegate { };
         
         private readonly Entity _owner;
         private readonly CharacterController _characterController;
@@ -102,6 +104,8 @@ namespace Entities.MVC
             
             CancelSlide();
             
+            OnJump?.Invoke();
+            
             var timer = 0f;
             var lastCurveValue = 0f;
 
@@ -172,6 +176,8 @@ namespace Entities.MVC
             _isSliding = true;
             _stopSlideRequest = false;
 
+            OnSlide?.Invoke();
+            
             CancelJump();
             SnapToGround(); 
 
