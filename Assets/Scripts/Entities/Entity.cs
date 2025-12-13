@@ -111,6 +111,7 @@ namespace Entities
             }
             
             SoundManager.Instance.PlaySound(SoundType.FleshImpact, audioSource);
+            SoundManager.Instance.PlaySound(SoundType.Grunt, audioSource);
         }
 
         public virtual void PauseEntity(bool pause)

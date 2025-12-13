@@ -8,8 +8,11 @@ namespace Obstacles
         private float _damage;
         
         public void SetDamage(float damage) =>  _damage = damage; 
+        
         private void OnTriggerEnter(Collider other)
         {
+            
+            
             var entity = other.GetComponent<Entity>();
             if (entity)
             {

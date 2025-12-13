@@ -11,6 +11,10 @@ namespace Enums
         ShieldPowerUp,
         BerserkPowerUp,
         Wind,
-        UIClick
+        UIClick,
+        Grunt,
+        HingeTrap,
+        SideTrap,
+        MovableLog
     }
 }

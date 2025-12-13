@@ -1,16 +1,20 @@
 using System.Collections;
+using Enums;
 using Managers;
+using Managers.SoundManagerFolder;
 using Scriptables;
 using UnityEngine;
 
 namespace Obstacles
 {
+    [RequireComponent(typeof(AudioSource))]
     public class WallTrap : MonoBehaviour
     {
         [SerializeField] private WallTrapData wallTrapData;
         
         private Trigger _trigger;
         private Spikes _spikes;
+        private AudioSource _audioSource;
     
         private void Awake()
         {
@@ -19,6 +23,8 @@ namespace Obstacles
         
             _spikes = GetComponentInChildren<Spikes>();
             _spikes.SetDamage(wallTrapData.damage);
+            
+            _audioSource =  GetComponent<AudioSource>();
         }
 
         private void TriggerTrap()
@@ -31,6 +37,8 @@ namespace Obstacles
             var startPosition = _spikes.transform.localPosition;
             var timer = 0f;
     
+            SoundManager.Instance.PlaySound(SoundType.SideTrap, _audioSource);
+            
             while (timer < wallTrapData.timeTriggerSpike)
             {
                 if (!GameManager.IsPaused)

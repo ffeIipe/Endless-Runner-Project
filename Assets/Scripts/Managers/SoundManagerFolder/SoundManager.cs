@@ -13,7 +13,7 @@ namespace Managers.SoundManagerFolder
         public static SoundManager Instance { get; private set; }
         private AudioSource _audioSource;
 
-        private float _globalVolume;
+        private float _globalVolume = .2f;
         
         private void Awake()
         {
@@ -40,7 +40,7 @@ namespace Managers.SoundManagerFolder
         }
 
         // ReSharper disable Unity.PerformanceAnalysis
-        public void PlaySound(SoundType sound, AudioSource source = null, float volume = 1, float  pitchMin = 1f, float  pitchMax = 1f)
+        public void PlaySound(SoundType sound, AudioSource source = null, float volume = 1, float  pitchMin = .8f, float  pitchMax = 1.2f)
         {
             if (soundManagerData.Sounds[(int)sound].sounds.Length <= 0)
             {

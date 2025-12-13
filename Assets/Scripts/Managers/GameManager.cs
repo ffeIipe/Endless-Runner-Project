@@ -57,6 +57,9 @@ namespace Managers
 
         public void LoadLevel(int levelIndex, Action onComplete = null, Action onFailed = null)
         {
+            var fadeScreen = ScreenManager.Instance.GetScreen(ScreenType.FadeScreen);
+            if (fadeScreen.enabled) fadeScreen.enabled = false; 
+            
             StartCoroutine(LoadLevelRoutine(levelIndex, onComplete, onFailed));
         }
 

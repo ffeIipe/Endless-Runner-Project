@@ -1,10 +1,13 @@
 using System.Collections;
+using Enums;
 using Managers;
+using Managers.SoundManagerFolder;
 using Scriptables;
 using UnityEngine;
 
 namespace Obstacles
 {
+    [RequireComponent(typeof(AudioSource))]
     public class Trap : MonoBehaviour
     {
         [SerializeField] private TrapData trapData;
@@ -13,6 +16,8 @@ namespace Obstacles
         [SerializeField] private Trigger trigger;
         [SerializeField] private DamageBox damageBox;
         private bool _wasTriggered;
+        
+        private AudioSource _audioSource;
     
         private void Awake()
         {
@@ -33,6 +38,8 @@ namespace Obstacles
             {
                 Debug.Log("Trap's damage box not assigned");
             }
+            
+            _audioSource = GetComponent<AudioSource>();
         }
 
         private void RotateHinge()
@@ -50,6 +57,8 @@ namespace Obstacles
             var startRotation = hinge.localRotation;
             var targetRotation = Quaternion.Euler(0, 0, trapData.rotationAngle);
 
+            SoundManager.Instance.PlaySound(SoundType.HingeTrap, _audioSource);
+            
             while (elapsedTime < trapData.rotationDuration)
             {
                 if (!GameManager.IsPaused)

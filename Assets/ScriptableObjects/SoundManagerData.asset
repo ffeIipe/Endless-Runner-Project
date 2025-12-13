@@ -27,7 +27,6 @@ MonoBehaviour:
     volume: 1
     mixer: {fileID: 0}
     sounds:
-    - {fileID: 8300000, guid: 3306d8f878971b144aca8da3fbebc5e1, type: 3}
     - {fileID: 8300000, guid: 6dc9fe4d734ba974290aacad728875bc, type: 3}
   - name: FleshImpact
     volume: 1
@@ -62,3 +61,24 @@ MonoBehaviour:
     mixer: {fileID: 0}
     sounds:
     - {fileID: 8300000, guid: 7cce947c98be6644cbe3d1a65b6d75e1, type: 3}
+  - name: Grunt
+    volume: 1
+    mixer: {fileID: 0}
+    sounds:
+    - {fileID: 8300000, guid: bebb47a17cebc8648b08db2bdcec31dc, type: 3}
+    - {fileID: 8300000, guid: 77520e7d1013a38418fa7bbec26650a7, type: 3}
+    - {fileID: 8300000, guid: b898b95b4129cc742b5ad643d9ca8085, type: 3}
+  - name: HingeTrap
+    volume: 1
+    mixer: {fileID: 0}
+    sounds:
+    - {fileID: 8300000, guid: 25036f743af8b24439030a60097646cd, type: 3}
+  - name: SideTrap
+    volume: 1
+    mixer: {fileID: 0}
+    sounds:
+    - {fileID: 8300000, guid: 5d50e652a84c86344b89145488260da9, type: 3}
+  - name: MovableLog
+    volume: 1
+    mixer: {fileID: 0}
+    sounds: []
