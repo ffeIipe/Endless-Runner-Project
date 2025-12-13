@@ -155,6 +155,9 @@ namespace Player
             _model.OnVelocityChanged += _viewPlayer.GetVelocity;
 
             EventManager.UIEvents.OnSensitivityChanged.Invoke(.5f);
+
+            _model.OnJump += _viewPlayer.OnJump;
+            _model.OnSlide += _viewPlayer.OnSlide;
         }
         
         private void UnsubscribeToEvents()
@@ -171,6 +174,9 @@ namespace Player
             _bufferDamage.OnTimerStop -= OnBufferDamageStop;
             
             _model.OnVelocityChanged -= _viewPlayer.GetVelocity;
+            
+            _model.OnJump -= _viewPlayer.OnJump;
+            _model.OnSlide -= _viewPlayer.OnSlide;
         }
     }
 }

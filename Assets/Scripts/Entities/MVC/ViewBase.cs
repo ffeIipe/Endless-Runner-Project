@@ -1,5 +1,6 @@
 using Enums;
 using Managers;
+using Managers.SoundManagerFolder;
 using UnityEngine;
 
 namespace Entities.MVC
@@ -36,5 +37,10 @@ namespace Entities.MVC
         public virtual void HeadShotEffect() { }
 
         public virtual void RestartEntityView() { }
+        
+        public void OnJump()
+        {
+            SoundManager.Instance.PlaySound(SoundType.Jump, Owner.audioSource);
+        }
     }
 }

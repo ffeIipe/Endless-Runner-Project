@@ -1,4 +1,6 @@
+using Enums;
 using Managers;
+using Managers.SoundManagerFolder;
 using Scriptables.PowerUps;
 
 namespace Entities.PowerUps
@@ -13,6 +15,8 @@ namespace Entities.PowerUps
 
             user.GetAttributesComponent().IncreaseShield(ShieldPowerUpData.shield);
             EffectsManager.Instance.ShieldEffect(true);
+            
+            SoundManager.Instance.PlaySound(SoundType.ShieldPowerUp, Owner.audioSource);
         }
     }
 }

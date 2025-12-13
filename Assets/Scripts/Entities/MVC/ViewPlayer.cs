@@ -1,4 +1,6 @@
+using Enums;
 using Managers;
+using Managers.SoundManagerFolder;
 using UnityEngine;
 
 namespace Entities.MVC
@@ -32,6 +34,11 @@ namespace Entities.MVC
         public override void RestartEntityView()
         {
             EventManager.UIEvents.OnHealthPercentageChanged?.Invoke(Owner.GetAttributesComponent().GetHealthPercentage());
+        }
+
+        public void OnSlide()
+        {
+            SoundManager.Instance.PlaySound(SoundType.Slide, Owner.audioSource);
         }
     }
 }

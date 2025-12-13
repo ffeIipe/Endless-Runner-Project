@@ -12,11 +12,17 @@ namespace ScreenManagerFolder
         private void Start()
         {
             sensitivitySlider.value = .5f;
+            soundSlider.value = .2f;
         }
 
         public void Back()
         {
             ScreenManager.Instance.PopScreen();
+        }
+        
+        public void OnSoundChanged(float value)
+        {
+            EventManager.UIEvents.OnSoundVolumeChanged(value);
         }
         
         public void OnSensitivityChanged(float value)

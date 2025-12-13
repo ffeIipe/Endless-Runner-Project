@@ -1,4 +1,6 @@
+using Enums;
 using Managers;
+using Managers.SoundManagerFolder;
 using Scriptables.PowerUps;
 
 namespace Entities.PowerUps
@@ -20,6 +22,8 @@ namespace Entities.PowerUps
             
             user.GetAttributesComponent().IncreaseHealth(_healthPowerUpData.health);
             EffectsManager.Instance.HealthEffect();
+            
+            SoundManager.Instance.PlaySound(SoundType.HealthPowerUp, Owner.audioSource);
         }
     }
 }

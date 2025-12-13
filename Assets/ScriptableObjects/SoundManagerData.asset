@@ -1,0 +1,64 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16d4caf38c1a431494137f7aa9c2581f, type: 3}
+  m_Name: SoundManagerData
+  m_EditorClassIdentifier: 
+  Sounds:
+  - name: Slide
+    volume: 1
+    mixer: {fileID: 0}
+    sounds:
+    - {fileID: 8300000, guid: 61667fbd5faa9234b88d26acf61b65d2, type: 3}
+  - name: Jump
+    volume: 1
+    mixer: {fileID: 0}
+    sounds:
+    - {fileID: 8300000, guid: 609561f32b3e0d04e9e30d495afcc8b9, type: 3}
+  - name: ThrowAxe
+    volume: 1
+    mixer: {fileID: 0}
+    sounds:
+    - {fileID: 8300000, guid: 3306d8f878971b144aca8da3fbebc5e1, type: 3}
+    - {fileID: 8300000, guid: 6dc9fe4d734ba974290aacad728875bc, type: 3}
+  - name: FleshImpact
+    volume: 1
+    mixer: {fileID: 0}
+    sounds:
+    - {fileID: 8300000, guid: 695c14ea13481014387105db3af0cb66, type: 3}
+  - name: ShieldImpact
+    volume: 1
+    mixer: {fileID: 0}
+    sounds:
+    - {fileID: 8300000, guid: e6a78e7d1854a65428ecf3a8340f9912, type: 3}
+  - name: HealthPowerUp
+    volume: 1
+    mixer: {fileID: 0}
+    sounds: []
+  - name: ShieldPowerUp
+    volume: 1
+    mixer: {fileID: 0}
+    sounds:
+    - {fileID: 8300000, guid: b3c856b1c08e4ab44a398959109446c7, type: 3}
+  - name: BerserkPowerUp
+    volume: 1
+    mixer: {fileID: 0}
+    sounds:
+    - {fileID: 8300000, guid: 023984888072bb047bc778e6320de266, type: 3}
+  - name: Wind
+    volume: 1
+    mixer: {fileID: 0}
+    sounds: []
+  - name: UIClick
+    volume: 1
+    mixer: {fileID: 0}
+    sounds:
+    - {fileID: 8300000, guid: 7cce947c98be6644cbe3d1a65b6d75e1, type: 3}
